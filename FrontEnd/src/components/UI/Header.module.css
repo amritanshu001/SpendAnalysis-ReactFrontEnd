@@ -1,0 +1,15 @@
+.page-header {
+  padding: 4px;
+  margin: 21px 0 5px;
+  border-bottom: 1px solid #ebebeb;
+  box-sizing: border-box;
+  display: block;
+  color: white;
+  background-color: brown;
+  border-radius: 6px;
+}
+
+.page-header h2 {
+  margin: 0;
+  padding-left: 10px;
+}
