@@ -1,1 +1,10 @@
-
+.form {
+  display: grid;
+  width: 100%;
+  margin-bottom: 16px;
+  height: 30vh;
+  vertical-align: middle;
+  align-items: center;
+  /* background-color: beige; */
+  /* justify-items: center; */
+}

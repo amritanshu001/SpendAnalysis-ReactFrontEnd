@@ -3,7 +3,7 @@ import styles from "./Input.module.css";
 
 const Input = (props) => {
   return (
-    <div className={styles.form}>
+    <div className={styles.input}>
       <label for={props.id}>{props.children}</label>
       <input id={props.id} type={props.type} name={props.name}></input>
     </div>

@@ -1,9 +1,9 @@
 .container {
   margin: auto;
   margin-top: 64px;
-  width: 80%;
+  width: 100%;
   box-sizing: border-box;
-  background-color: rgb(39, 24, 5);
+  background-color: rgb(71, 48, 17);
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }

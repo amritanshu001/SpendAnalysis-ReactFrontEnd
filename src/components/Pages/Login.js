@@ -17,7 +17,7 @@ const Login = (props) => {
   return (
     <React.Fragment>
       <Header>Login</Header>
-      <form onSubmit={onLoginHandler}>
+      <form onSubmit={onLoginHandler} className={styles.form}>
         <Input id="email" type="email" name="email">
           Email Id
         </Input>

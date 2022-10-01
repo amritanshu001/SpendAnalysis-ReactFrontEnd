@@ -9,10 +9,18 @@ html {
 
 body {
   margin: 0;
-  width: 80%;
-  margin: auto;
+  width: 100%;
+  /* margin: 2rem; */
+  /* text-align: center; */
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.42857143;
+  /* line-height: 1.42857143; */
+}
+
+@media (min-width: 40rem) {
+  body {
+    width: 80%;
+    margin: auto;
+  }
 }
 
 main {

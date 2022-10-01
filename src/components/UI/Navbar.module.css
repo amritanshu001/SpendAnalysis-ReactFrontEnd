@@ -1,5 +1,7 @@
 .navbar {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -9,16 +11,21 @@
   position: fixed;
   top: 0;
   left: 0;
+  font-size: 12px;
+  /* font-weight: bold; */
 }
 
 .navbar ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   margin: 0;
   padding: 0;
 }
 
 .navbar li {
   list-style-type: none;
-  float: left;
+  /* float: left; */
   border-right: 1px solid darkkhaki;
 }
 
@@ -35,8 +42,14 @@
 }
 
 .logout {
+  height: 100%;
+  /* border-radius: 0; */
   float: right;
   background: transparent;
   color: beige;
   margin: 0;
+}
+
+.logout button {
+  border-radius: 0;
 }

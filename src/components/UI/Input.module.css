@@ -1,25 +1,28 @@
-.form {
-  width: 100%;
-  margin-bottom: 16px;
-  height: 32px;
-  vertical-align: middle;
-}
-.form label {
-  display: inline-block;
-  width: 200px;
-  margin: 10px 20px 5px 5px;
-  padding-left: 2em;
-  padding-right: 2em;
-  font-weight: bold;
-  color: beige;
+.input {
+  display: grid;
+  /* flex-direction: column; */
+  grid-template-columns: 90%;
+  justify-content: space-around;
+  align-items: center;
+  /* max-width: 20; */
 }
 
-.form input {
-  display: inline-block;
-  width: 400px;
-  height: 100%;
-  margin: 10px 20px 5px 5px;
-  padding-left: 2px;
-  padding-right: 2px;
-  border-radius: 4px;
+.input label {
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.input input {
+  font: inherit;
+  padding: 0.25rem;
+}
+
+@media (min-width: 40rem) {
+  .input {
+    display: grid;
+    grid-template-columns: 30% 60%;
+    /* flex-direction: row; */
+  }
 }
