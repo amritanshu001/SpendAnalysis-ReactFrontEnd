@@ -1,28 +1,34 @@
 .input {
   display: grid;
-  /* flex-direction: column; */
-  grid-template-columns: 90%;
-  justify-content: space-around;
-  align-items: center;
-  /* max-width: 20; */
+  /* grid-gap: 1rem; */
+  grid-template-columns: 80%;
+  justify-content: center;
 }
 
 .input label {
-  display: flex;
-  justify-content: center;
-  color: white;
+  align-self: flex-start;
+  padding: 0.25rem;
+  color: #f2f2f2;
   font-weight: bold;
 }
 
 .input input {
   font: inherit;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  outline: none;
+  border: 1px solid #ccc;
+}
+
+.input input:focus,
+.input input:active {
+  background-color: #d2daff;
 }
 
 @media (min-width: 40rem) {
   .input {
-    display: grid;
-    grid-template-columns: 30% 60%;
-    /* flex-direction: row; */
+    grid-template-columns: 20% 60%;
+    justify-content: center;
+    padding: 1rem;
   }
 }

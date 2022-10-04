@@ -1,10 +1,24 @@
-.form {
-  display: grid;
-  width: 100%;
-  margin-bottom: 16px;
-  height: 30vh;
-  vertical-align: middle;
-  align-items: center;
-  /* background-color: beige; */
-  /* justify-items: center; */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form button {
+  margin-top: 1rem;
+  width: 60%;
+  align-self: center;
+}
+
+@media (min-width: 40rem) {
+  .login-form .email,
+  .login-form .password {
+    grid-template-columns: 20% 60%;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .login-form button {
+    width: 20%;
+    align-self: left;
+  }
 }

@@ -8,7 +8,7 @@ const Navbar = (props) => {
   const ctx = useContext(NavContext);
   const mapLink = (navdata) => {
     const hyper = navdata.visible && (
-      <Hyperlink href={navdata.href} id={navdata.id}>
+      <Hyperlink key={navdata.id} href={navdata.href} id={navdata.id}>
         {navdata.title}
       </Hyperlink>
     );
@@ -16,14 +16,14 @@ const Navbar = (props) => {
   };
   console.log(props.nav);
   return (
-    <div className={styles.navbar}>
-      <ul>{props.nav.map(mapLink)}</ul>
+    <header className={styles.header}>
+      <ul className={styles.navbar}>{props.nav.map(mapLink)}</ul>
       {ctx.isLoggedIn && (
         <Button className={styles.logout} onClick={ctx.logoutHandler}>
           Logout
         </Button>
       )}
-    </div>
+    </header>
   );
 };
 

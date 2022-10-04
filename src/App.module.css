@@ -1,1 +1,3 @@
-
+.main-area {
+  grid-area: main;
+}

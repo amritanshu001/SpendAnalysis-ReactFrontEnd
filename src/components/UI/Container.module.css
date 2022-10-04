@@ -1,9 +1,10 @@
 .container {
+  width: 90%;
+  max-width: 40rem;
   margin: auto;
-  margin-top: 64px;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: rgb(71, 48, 17);
+  border: 2px solid #6e85b7;
+  padding: 1rem;
+  background-color: #6e85b7;
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 5px 2px #ccc;
 }

@@ -2,27 +2,16 @@
   box-sizing: border-box;
 }
 
-html {
-  font-family: sans-serif;
-  background: rgb(88, 77, 77);
-}
-
 body {
   margin: 0;
-  width: 100%;
-  /* margin: 2rem; */
-  /* text-align: center; */
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /* line-height: 1.42857143; */
 }
 
-@media (min-width: 40rem) {
-  body {
-    width: 80%;
-    margin: auto;
-  }
-}
-
-main {
-  margin-top: 6rem;
+#root {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: 10% 90%;
+  grid-template-areas:
+    "."
+    "main";
+  background-color: #f3efef;
 }

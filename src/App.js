@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styles from "./App.module.css";
 import Navbar from "./components/UI/Navbar";
 import Login from "./components/Pages/Login";
-import Container from "./components/UI/Container";
+// import Container from "./components/UI/Container";
 import NavContext from "./components/contexts/nav-context";
 
 const App = (props) => {
@@ -45,9 +45,9 @@ const App = (props) => {
   return (
     <React.Fragment>
       <Navbar nav={navbar_data}></Navbar>
-      <Container>
+      <main className={styles["main-area"]}>
         <Login></Login>
-      </Container>
+      </main>
     </React.Fragment>
   );
 };
