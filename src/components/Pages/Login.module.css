@@ -9,6 +9,20 @@
   align-self: center;
 }
 
+.invalid {
+  background-color: #d6bbbb;
+}
+
+.disabled {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+}
+
+.disabled:hover {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+}
+
 @media (min-width: 40rem) {
   .login-form .email,
   .login-form .password {

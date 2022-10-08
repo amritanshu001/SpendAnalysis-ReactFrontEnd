@@ -14,7 +14,7 @@ const Navbar = (props) => {
     );
     return hyper;
   };
-  console.log(props.nav);
+  // console.log(props.nav);
   return (
     <header className={styles.header}>
       <ul className={styles.navbar}>{props.nav.map(mapLink)}</ul>
