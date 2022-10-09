@@ -25,7 +25,7 @@ const Login = (props) => {
     if (
       String(email)
         .toLowerCase()
-        .match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+        .match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
     ) {
       validateEmail(true);
     } else {
