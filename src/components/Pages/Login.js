@@ -12,7 +12,7 @@ const Login = (props) => {
   const [validEmail, validateEmail] = useState(false);
   const [validPassword, validatePassword] = useState(false);
   // const [validLoginForm, setValidityLogin] = useState(false);
-  const [errormsg, setErromsg] = useState(null);
+  const [errormsg, setErromsg] = useState("");
 
   const onLoginHandler = (event) => {
     event.preventDefault();

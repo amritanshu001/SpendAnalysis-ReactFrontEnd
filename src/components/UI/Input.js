@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./Input.module.css";
 
-const Input = (props) => {
+const Input = React.forwardRef((props, ref) => {
   const [userInput, setInput] = useState("");
 
   const inputChangeHandler = (event) => {
@@ -18,6 +18,7 @@ const Input = (props) => {
     <div className={`${styles.input}`}>
       <label htmlFor={props.id}>{props.children}</label>
       <input
+        ref={ref}
         id={props.id}
         type={props.type}
         name={props.name}
@@ -28,6 +29,6 @@ const Input = (props) => {
       ></input>
     </div>
   );
-};
+});
 
 export default Input;

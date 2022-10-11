@@ -21,6 +21,7 @@
 .disabled:hover {
   background-color: #ccc;
   border: 1px solid #ccc;
+  color: white;
 }
 
 @media (min-width: 40rem) {

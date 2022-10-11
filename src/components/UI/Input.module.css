@@ -3,6 +3,8 @@
   /* grid-gap: 1rem; */
   grid-template-columns: 80%;
   justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
 }
 
 .input label {
@@ -17,6 +19,7 @@
   padding: 0.25rem 0.5rem;
   border-radius: 8px;
   outline: none;
+  height: 2rem;
   border: 1px solid #ccc;
 }
 
@@ -30,5 +33,6 @@
     grid-template-columns: 20% 60%;
     justify-content: center;
     padding: 1rem;
+    margin: 0;
   }
 }
