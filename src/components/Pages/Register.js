@@ -52,7 +52,7 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-      <Header>Register</Header>
+      <Header>{props.title}</Header>
       <Container>
         <form onSubmit={onRegisterHandler} className={styles["register-form"]}>
           <Input

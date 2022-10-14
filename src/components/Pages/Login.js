@@ -45,7 +45,7 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-      <Header>Login</Header>
+      <Header>{props.title}</Header>
       <Container>
         <form onSubmit={onLoginHandler} className={styles["login-form"]}>
           <Input
