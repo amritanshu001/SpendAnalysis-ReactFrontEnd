@@ -1,47 +1,50 @@
-import React, { useContext, useState } from "react";
 import styles from "./Login.module.css";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
-import NavContext from "../contexts/nav-context";
+
+import { passwordValidator, emailValidator } from "../../lib/validators";
+import { authActions } from "../../store/auth-slice";
+
+import useInputValidator from "../../hooks/useInputValidator";
+import { useDispatch } from "react-redux";
 
 const Login = (props) => {
-  const ctx = useContext(NavContext);
+  const dispatch = useDispatch();
 
-  const [validEmail, validateEmail] = useState(false);
-  const [validPassword, validatePassword] = useState(false);
-  // const [validLoginForm, setValidityLogin] = useState(false);
-  const [errormsg, setErromsg] = useState("");
+  const {
+    inputValue: enteredEmail,
+    inputIsValid: emailIsValid,
+    isError: emailIsError,
+    inputBlurHandler: emailBlurHandler,
+    inputChangeHandler: emailChangeHandler,
+    resetInput: resetEmail,
+  } = useInputValidator(emailValidator);
+
+  const {
+    inputValue: enteredPassword,
+    inputIsValid: passwordIsValid,
+    isError: passwordError,
+    inputBlurHandler: passwordBlurHandler,
+    inputChangeHandler: passwordChangeHandler,
+    resetInput: resetPassword,
+  } = useInputValidator(passwordValidator);
 
   const onLoginHandler = (event) => {
     event.preventDefault();
-    // let admin = true;
-    ctx.loginHandler();
-    ctx.adminHandler(false);
+
+    // send API Request Here
+
+    dispatch(
+      authActions.logUserIn({ authToken: Math.random(), isAdmin: false })
+    );
+
+    resetPassword();
+    resetEmail();
   };
 
-  const emailValidator = (email) => {
-    if (
-      String(email)
-        .toLowerCase()
-        .match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)
-    ) {
-      validateEmail(true);
-    } else {
-      validateEmail(false);
-    }
-  };
-
-  const passwordValidator = (password) => {
-    if (String(password).toLowerCase().length >= 8) {
-      validatePassword(true);
-    } else {
-      validatePassword(false);
-    }
-  };
-
-  const validClass = !(validEmail && validPassword) ? styles.disabled : "";
+  let formIsValid = emailIsValid && passwordIsValid;
 
   return (
     <React.Fragment>
@@ -52,8 +55,10 @@ const Login = (props) => {
             id="email"
             type="email"
             name="email"
-            onBlur={emailValidator}
-            className={!validEmail ? styles.invalid : ""}
+            value={enteredEmail}
+            onBlur={emailBlurHandler}
+            onChange={emailChangeHandler}
+            className={emailIsError ? styles.invalid : ""}
           >
             Email Id
           </Input>
@@ -61,16 +66,14 @@ const Login = (props) => {
             id="password"
             type="password"
             name="password"
-            onBlur={passwordValidator}
-            className={!validPassword ? styles.invalid : ""}
+            value={enteredPassword}
+            onBlur={passwordBlurHandler}
+            onChange={passwordChangeHandler}
+            className={passwordError ? styles.invalid : ""}
           >
             Password
           </Input>
-          <Button
-            type="submit"
-            className={validClass}
-            disabled={!(validEmail && validPassword)}
-          >
+          <Button type="submit" disabled={!formIsValid}>
             Login
           </Button>
         </form>

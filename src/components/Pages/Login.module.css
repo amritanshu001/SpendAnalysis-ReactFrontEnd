@@ -11,14 +11,15 @@
 
 .invalid {
   background-color: #d6bbbb;
+  border: 1px solid #dbabab;
 }
 
-.disabled {
+.login-form button:disabled {
   background-color: #ccc;
   border: 1px solid #ccc;
 }
 
-.disabled:hover {
+.login-form button:disabled:hover {
   background-color: #ccc;
   border: 1px solid #ccc;
   color: white;
