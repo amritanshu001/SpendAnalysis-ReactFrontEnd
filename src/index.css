@@ -1,10 +1,10 @@
 * {
   box-sizing: border-box;
-  font-size: 14px;
 }
 
 body {
   margin: 0;
+  font-family: "Open Sans", "Lato", sans-serif;
 }
 
 #root {

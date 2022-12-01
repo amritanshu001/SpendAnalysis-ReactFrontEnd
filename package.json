@@ -1,5 +1,5 @@
 {
-  "name": "front-end",
+  "name": "my-app1",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,6 +13,7 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.2",
     "react-redux": "^8.0.5",
+    "react-router-dom": "^5.3.4",
     "redux": "^4.2.0",
     "vite-plugin-svgr": "^2.2.2",
     "web-vitals": "^2.1.4"
