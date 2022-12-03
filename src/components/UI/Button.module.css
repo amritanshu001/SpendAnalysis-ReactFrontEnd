@@ -1,15 +1,13 @@
 .button {
-  background-color: #2b2e4a;
-  border: 1px solid #2b2e4a;
+  background-color: #9f5ccc;
+  border: 1px solid #9f5ccc;
   margin-right: 8px;
   font-weight: bold;
   padding: 0.5rem;
   border-radius: 8px;
   color: white;
-  box-shadow: inset;
 }
 
 .button:hover {
-  background-color: white;
-  color: #2b2e4a;
+  background-color: #7f4aa2;
 }

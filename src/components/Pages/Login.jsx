@@ -9,10 +9,13 @@ import { authActions } from "../../store/auth-slice";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch } from "react-redux";
-import React from "react";
+import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
 
 const Login = (props) => {
   const dispatch = useDispatch();
+  const redirect = useHistory();
+  const [loginOption, setLoginOption] = useState(true);
 
   const {
     inputValue: enteredEmail,
@@ -32,6 +35,19 @@ const Login = (props) => {
     resetInput: resetPassword,
   } = useInputValidator(passwordValidator);
 
+  const {
+    inputValue: enteredConfPassword,
+    inputIsValid: confPasswordIsValid,
+    isError: confPasswordError,
+    inputBlurHandler: confPasswordBlurHandler,
+    inputChangeHandler: confPasswordChangeHandler,
+    resetInput: resetConfPassword,
+  } = useInputValidator(passwordValidator);
+
+  const optionToggleHandler = () => {
+    setLoginOption((option) => !option);
+  };
+
   const onLoginHandler = (event) => {
     event.preventDefault();
 
@@ -43,13 +59,22 @@ const Login = (props) => {
 
     resetPassword();
     resetEmail();
+    // redirect.replace("/");
   };
 
-  let formIsValid = emailIsValid && passwordIsValid;
+  let formIsValid =
+    emailIsValid &&
+    passwordIsValid &&
+    confPasswordIsValid &&
+    enteredPassword === enteredConfPassword;
+
+  if (loginOption) {
+    formIsValid = emailIsValid && passwordIsValid;
+  }
 
   return (
     <React.Fragment>
-      <Header>{props.title}</Header>
+      <Header>{loginOption ? "Login" : "Register"}</Header>
       <Container>
         <form onSubmit={onLoginHandler} className={styles["login-form"]}>
           <Input
@@ -74,9 +99,33 @@ const Login = (props) => {
           >
             Password
           </Input>
-          <Button type="submit" disabled={!formIsValid}>
-            Login
-          </Button>
+          {!loginOption && (
+            <Input
+              id="password"
+              type="password"
+              name="password"
+              value={enteredConfPassword}
+              onBlur={confPasswordBlurHandler}
+              onChange={confPasswordChangeHandler}
+              className={confPasswordError ? styles.invalid : ""}
+            >
+              Confirm Password
+            </Input>
+          )}
+          <div className={styles.actions}>
+            <Button type="submit" disabled={!formIsValid}>
+              {loginOption ? "Login" : "Register"}
+            </Button>
+            <Button
+              type="button"
+              onClick={optionToggleHandler}
+              className={styles.toggler}
+            >
+              {loginOption
+                ? "Register New User"
+                : "Login with existing Account"}
+            </Button>
+          </div>
         </form>
       </Container>
     </React.Fragment>
