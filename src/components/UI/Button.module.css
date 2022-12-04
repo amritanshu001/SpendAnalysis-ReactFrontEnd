@@ -1,13 +1,19 @@
 .button {
-  background-color: #9f5ccc;
-  border: 1px solid #9f5ccc;
+  background-color: #fefbd8;
+  border: 1px solid #fefbd8;
   margin-right: 8px;
   font-weight: bold;
   padding: 0.5rem;
   border-radius: 8px;
-  color: white;
+  color: #3e4444;
 }
 
 .button:hover {
-  background-color: #7f4aa2;
+  background-color: #3e4444;
+  color: #fefbd8;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  color: rgb(196, 177, 177);
 }

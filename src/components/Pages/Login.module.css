@@ -22,17 +22,17 @@
   margin-top: 1rem;
   border: none;
   padding: 0.15rem 1.5rem;
-  color: #9f5ccc;
+  color: #82b74b;
   outline: none;
 }
 
 .toggler:hover {
-  color: #7f48a4;
+  color: #6f9c40;
 }
 
 .invalid {
-  background-color: #d6bbbb;
-  border: 1px solid #dbabab;
+  background-color: #f7cac9;
+  border: 2px solid #f7cac9;
 }
 
 .actions button:disabled {
@@ -45,6 +45,15 @@
   border: 1px solid #ccc;
   color: white;
 }
+
+.error {
+  text-align: center;
+  margin: 0;
+  font-size: 0.75rem;
+  color: #e06377;
+  font-weight: bold;
+}
+
 @media (min-width: 40rem) {
   .login-form .email,
   .login-form .password {

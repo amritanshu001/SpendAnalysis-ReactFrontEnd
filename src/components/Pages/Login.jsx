@@ -48,25 +48,33 @@ const Login = (props) => {
     setLoginOption((option) => !option);
   };
 
-  const onLoginHandler = (event) => {
+  const onSubmitHandler = (event) => {
     event.preventDefault();
+
+    if (loginOption) {
+      dispatch(
+        authActions.logUserIn({ authToken: Math.random(), isAdmin: false })
+      );
+
+      resetPassword();
+      resetEmail();
+    } else {
+      resetPassword();
+      resetEmail();
+      resetConfPassword();
+    }
 
     // send API Request Here
 
-    dispatch(
-      authActions.logUserIn({ authToken: Math.random(), isAdmin: false })
-    );
-
-    resetPassword();
-    resetEmail();
     // redirect.replace("/");
   };
 
+  let passwordMatch = enteredPassword === enteredConfPassword;
+
   let formIsValid =
-    emailIsValid &&
-    passwordIsValid &&
-    confPasswordIsValid &&
-    enteredPassword === enteredConfPassword;
+    emailIsValid && passwordIsValid && confPasswordIsValid && passwordMatch;
+
+  let confirmError = confPasswordError || !passwordMatch;
 
   if (loginOption) {
     formIsValid = emailIsValid && passwordIsValid;
@@ -76,7 +84,7 @@ const Login = (props) => {
     <React.Fragment>
       <Header>{loginOption ? "Login" : "Register"}</Header>
       <Container>
-        <form onSubmit={onLoginHandler} className={styles["login-form"]}>
+        <form onSubmit={onSubmitHandler} className={styles["login-form"]}>
           <Input
             id="email"
             type="email"
@@ -100,17 +108,22 @@ const Login = (props) => {
             Password
           </Input>
           {!loginOption && (
-            <Input
-              id="password"
-              type="password"
-              name="password"
-              value={enteredConfPassword}
-              onBlur={confPasswordBlurHandler}
-              onChange={confPasswordChangeHandler}
-              className={confPasswordError ? styles.invalid : ""}
-            >
-              Confirm Password
-            </Input>
+            <React.Fragment>
+              <Input
+                id="confpassword"
+                type="password"
+                name="confpassword"
+                value={enteredConfPassword}
+                onBlur={confPasswordBlurHandler}
+                onChange={confPasswordChangeHandler}
+                className={confPasswordError ? styles.invalid : ""}
+              >
+                Confirm Password
+              </Input>
+              {confirmError && (
+                <p className={styles.error}>Passwords Dont Match</p>
+              )}
+            </React.Fragment>
           )}
           <div className={styles.actions}>
             <Button type="submit" disabled={!formIsValid}>
@@ -121,9 +134,7 @@ const Login = (props) => {
               onClick={optionToggleHandler}
               className={styles.toggler}
             >
-              {loginOption
-                ? "Register New User"
-                : "Login with existing Account"}
+              {loginOption ? "New User?" : "Existing User Login"}
             </Button>
           </div>
         </form>
