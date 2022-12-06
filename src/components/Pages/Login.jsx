@@ -10,7 +10,7 @@ import { authActions } from "../../store/auth-slice";
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -47,6 +47,12 @@ const Login = (props) => {
   const optionToggleHandler = () => {
     setLoginOption((option) => !option);
   };
+
+  useEffect(() => {
+    if (loginOption) {
+      resetConfPassword();
+    }
+  }, [loginOption]);
 
   const onSubmitHandler = (event) => {
     event.preventDefault();

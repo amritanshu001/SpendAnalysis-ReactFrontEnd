@@ -19,7 +19,7 @@
 .input input {
   font: inherit;
   padding: 0.25rem 0.5rem;
-  border-radius: 8px;
+  border-radius: 4px;
   outline: none;
   height: 2rem;
   border: 1px solid #ccc;
