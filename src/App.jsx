@@ -3,6 +3,7 @@ import Navbar from "./components/UI/Navbar";
 import Login from "./components/Pages/Login";
 import Register from "./components/Pages/Register";
 import Home from "./components/Pages/Home";
+import AddBank from "./components/Pages/AddBank";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
@@ -24,7 +25,9 @@ const App = (props) => {
           <Route path="/spendanalysis"></Route>
           <Route path="/manageaccount"></Route>
           <Route path="/uploadstatement"></Route>
-          <Route path="/addbank"></Route>
+          <Route path="/addbank">
+<AddBank/>
+          </Route>
           <Route path="*">
             <Redirect to="/" />
           </Route>
