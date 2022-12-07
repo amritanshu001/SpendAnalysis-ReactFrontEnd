@@ -1,0 +1,29 @@
+.container {
+  max-width: 50rem;
+}
+
+.intro {
+  color: white;
+  font-weight: bold;
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+}
+
+.row {
+  font-size: 16px;
+  color: greenyellow;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 2rem;
+  display: grid;
+  /* justify-content: flex-start; */
+}
+
+.bold-span {
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.normal-span {
+  color: white;
+}

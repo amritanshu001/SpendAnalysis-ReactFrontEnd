@@ -1,7 +1,6 @@
 import styles from "./App.module.css";
 import Navbar from "./components/UI/Navbar";
 import Login from "./components/Pages/Login";
-import Register from "./components/Pages/Register";
 import Home from "./components/Pages/Home";
 import AddBank from "./components/Pages/AddBank";
 
