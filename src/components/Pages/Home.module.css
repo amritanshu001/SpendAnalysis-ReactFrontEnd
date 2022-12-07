@@ -1,5 +1,5 @@
 .container {
-  max-width: 50rem;
+  max-width: 60rem;
 }
 
 .intro {
@@ -25,5 +25,6 @@
 }
 
 .normal-span {
+  margin-top: 0.5rem;
   color: #f0e9e9;
 }

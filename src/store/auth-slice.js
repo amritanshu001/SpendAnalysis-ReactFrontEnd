@@ -8,9 +8,10 @@ const initialState = {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: initialState,
   reducers: {
     logUserIn: (state, action) => {
+      console.log(action.payload);
       state.userLoggedIn = true;
       state.authToken = action.payload.authToken;
       state.userIsAdmin = action.payload.isAdmin;

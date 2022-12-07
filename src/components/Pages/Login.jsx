@@ -59,7 +59,7 @@ const Login = (props) => {
 
     if (loginOption) {
       dispatch(
-        authActions.logUserIn({ authToken: Math.random(), isAdmin: false })
+        authActions.logUserIn({ authToken: Math.random(), isAdmin: true })
       );
 
       resetPassword();

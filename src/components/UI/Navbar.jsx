@@ -17,6 +17,8 @@ const Navbar = (props) => {
     redirect.replace("/login");
   };
 
+  const showAddBankRoute = isUserLoggedIn && isUserAdmin;
+
   // console.log(props.nav);
   return (
     <header className={styles.header}>
@@ -46,7 +48,7 @@ const Navbar = (props) => {
               <NavLink to="/uploadstatement">Upload Statement</NavLink>
             </li>
           )}
-          {isUserLoggedIn && isUserAdmin && (
+          {showAddBankRoute && (
             <li>
               <NavLink to="/addbank">Add Bank Details</NavLink>
             </li>
