@@ -72,7 +72,7 @@ const Login = (props) => {
 
     // send API Request Here
 
-    // redirect.replace("/");
+    redirect.replace("/");
   };
 
   let passwordMatch = enteredPassword === enteredConfPassword;

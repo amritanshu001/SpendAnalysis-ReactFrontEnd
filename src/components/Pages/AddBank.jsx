@@ -1,50 +1,51 @@
-import styles from "./AddBank.module.css"
+import styles from "./AddBank.module.css";
 
-import Container from "../UI/Container"
+import Container from "../UI/Container";
+import Header from "../UI/Header";
 
-import useHttp from "../../hooks/useHTTP"
-import { useCallback, useState } from "react"
-import { useEffect } from "react"
+import useHttp from "../../hooks/useHTTP";
+import React, { useCallback, useState } from "react";
+import { useEffect } from "react";
 
 const AddBank = (props) => {
+  // const [responseData,setResponseData] = useState(null)
 
-    // const [responseData,setResponseData] = useState(null)
+  // const processDateFormats = useCallback((rawdata) => {
+  //     console.log(rawdata)
+  //     setResponseData(rawdata)
+  // },[])
 
-    // const processDateFormats = useCallback((rawdata) => {
-    //     console.log(rawdata)
-    //     setResponseData(rawdata)
-    // },[])
+  // const {sendRequest:getDateFormats, isloading, error, resetError}=useHttp(processDateFormats)
 
-    // const {sendRequest:getDateFormats, isloading, error, resetError}=useHttp(processDateFormats)
+  // useEffect(()=>{
+  //     const dateFormatConfig = {url:"127.0.0.1:5000/dateformats", method:"GET"}
+  //     getDateFormats(dateFormatConfig)
+  // })
 
-    // useEffect(()=>{
-    //     const dateFormatConfig = {url:"127.0.0.1:5000/dateformats", method:"GET"}
-    //     getDateFormats(dateFormatConfig)
-    // })
+  const sendRequestFunction = async () => {
+    let headers = new Headers();
 
-    const sendRequestFunction = async() => {
-        let headers = new Headers();
+    headers.append("Content-Type", "application/json");
 
-        headers.append('Content-Type', 'application/json');
-      
-        headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-        headers.append('Access-Control-Allow-Credentials', 'true');
-      
-        headers.append('GET', 'OPTIONS');
-        const response = await fetch('http://localhost:5000/dateformats', {
-            mode:'no-cors'
-        })
-        const rawdata = await response.json()
-        console.log(rawdata)
-    } 
+    headers.append("Access-Control-Allow-Origin", "http://localhost:3000");
+    headers.append("Access-Control-Allow-Credentials", "true");
 
-    sendRequestFunction()
+    headers.append("GET", "OPTIONS");
+    const response = await fetch("http://localhost:5000/dateformats", {
+      mode: "no-cors",
+    });
+    const rawdata = await response.json();
+    console.log(rawdata);
+  };
 
-    return (<Container>
-        {/* {error?error:responseData} */}
+  sendRequestFunction();
 
-    </Container>)
+  return (
+    <React.Fragment>
+      <Header>Add Bank Details</Header>
+      <Container>{/* {error?error:responseData} */}</Container>
+    </React.Fragment>
+  );
+};
 
-}
-
-export default AddBank
+export default AddBank;
