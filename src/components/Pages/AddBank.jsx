@@ -31,9 +31,12 @@ const AddBank = (props) => {
     headers.append("Access-Control-Allow-Credentials", "true");
 
     headers.append("GET", "OPTIONS");
-    const response = await fetch("http://localhost:5000/dateformats", {
-      mode: "no-cors",
-    });
+    const response = await fetch(
+      "https://analyzespends.onrender.com/dateformats",
+      {
+        headers,
+      }
+    );
     const rawdata = await response.json();
     console.log(rawdata);
   };
