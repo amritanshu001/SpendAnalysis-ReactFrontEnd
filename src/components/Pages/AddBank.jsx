@@ -32,8 +32,8 @@ const AddBank = (props) => {
 
   useEffect(() => {
     const dateFormatConfig = {
-      //   url: "https://analyzespends.onrender.com/dateformats",
-      url: "http://localhost:5000/dateformats",
+      url: "https://analyzespends.onrender.com/dateformats",
+      // url: "http://localhost:5000/dateformats",
       method: "GET",
     };
     getDateFormats(dateFormatConfig);
