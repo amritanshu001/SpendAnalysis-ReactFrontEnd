@@ -6,47 +6,68 @@ import Header from "../UI/Header";
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
+import Select from "react-select";
 
 const AddBank = (props) => {
-  // const [responseData,setResponseData] = useState(null)
+  const [responseData, setResponseData] = useState(null);
 
-  // const processDateFormats = useCallback((rawdata) => {
-  //     console.log(rawdata)
-  //     setResponseData(rawdata)
-  // },[])
+  const processDateFormats = useCallback((rawdata) => {
+    const processedResponse = [];
+    for (let key in rawdata) {
+      processedResponse.push({ value: key, label: rawdata[key].dateformat });
+    }
+    setResponseData(processedResponse);
+  }, []);
 
-  // const {sendRequest:getDateFormats, isloading, error, resetError}=useHttp(processDateFormats)
-
-  // useEffect(()=>{
-  //     const dateFormatConfig = {url:"127.0.0.1:5000/dateformats", method:"GET"}
-  //     getDateFormats(dateFormatConfig)
-  // })
-
-  const sendRequestFunction = async () => {
-    let headers = new Headers();
-
-    headers.append("Content-Type", "application/json");
-
-    headers.append("Access-Control-Allow-Origin", "http://localhost:3000");
-    headers.append("Access-Control-Allow-Credentials", "true");
-
-    headers.append("GET", "OPTIONS");
-    const response = await fetch(
-      "https://analyzespends.onrender.com/dateformats",
-      {
-        headers,
-      }
-    );
-    const rawdata = await response.json();
-    console.log(rawdata);
+  const dataMapper = (format) => {
+    return <li key={format.value}>{format.label}</li>;
   };
 
-  sendRequestFunction();
+  const {
+    sendRequest: getDateFormats,
+    isloading,
+    error,
+    resetError,
+  } = useHttp(processDateFormats);
+
+  useEffect(() => {
+    const dateFormatConfig = {
+      //   url: "https://analyzespends.onrender.com/dateformats",
+      url: "http://localhost:5000/dateformats",
+      method: "GET",
+    };
+    getDateFormats(dateFormatConfig);
+  }, [getDateFormats]);
+
+  let message;
+
+  if (!error && !isloading && responseData) {
+    message = (
+      <Select options={responseData} className={styles["select-list"]}></Select>
+    );
+  }
+  if (isloading) {
+    message = <p className={styles.loading}>Loading....</p>;
+  }
+
+  if (error) {
+    message = <p className={styles.error}>{error}</p>;
+  }
+
+  //   const sendRequestFunction = async () => {
+  //     const response = await fetch(
+  //       "https://analyzespends.onrender.com/dateformats"
+  //     );
+  //     const rawdata = await response.json();
+  //     console.log(rawdata);
+  //   };
+
+  //   sendRequestFunction();
 
   return (
     <React.Fragment>
       <Header>Add Bank Details</Header>
-      <Container>{/* {error?error:responseData} */}</Container>
+      <Container>{message}</Container>
     </React.Fragment>
   );
 };
