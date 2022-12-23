@@ -6,7 +6,7 @@ const TableBody = (props) => {
     return <TableRow key={row.id} row={row} header={props.header} />;
   };
 
-  return <React.Fragment>{props.body.map(mapRows)}</React.Fragment>;
+  return <tbody>{props.body.map(mapRows)}</tbody>;
 };
 
 export default TableBody;

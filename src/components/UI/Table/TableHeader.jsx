@@ -5,7 +5,15 @@ const TableHeader = (props) => {
     return <th key={cols.tech_name}>{cols.name}</th>;
   };
 
-  return <tr>{props.header.map(mapColumns)}</tr>;
+  return (
+    <thead>
+      <tr>
+        {/* <th></th>
+        <th></th> */}
+        {props.header.map(mapColumns)}
+      </tr>
+    </thead>
+  );
 };
 
 export default TableHeader;

@@ -13,8 +13,8 @@ import Select from "react-select";
 import apiURL from "../../endpoint";
 
 const header = [
-  { name: "Balance (col)", tech_name: "bal_col" },
   { name: "Bank Name", tech_name: "bank_name" },
+  { name: "Balance (col)", tech_name: "bal_col" },
   { name: "Cheque No. (col)", tech_name: "chq_no_col" },
   { name: "Credit Amount (col)", tech_name: "crdt_amt_col" },
   { name: "Date Format", tech_name: "date_format" },
@@ -28,7 +28,6 @@ const header = [
 const AddBank = (props) => {
   const [bankData, setBankData] = useState(null);
   const authToken = useSelector((state) => state.userAuth.authToken);
-  console.log("Token: ", authToken);
 
   const processBankDetails = useCallback((rawdata) => {
     const processedData = [];
@@ -66,38 +65,6 @@ const AddBank = (props) => {
     };
     getBankDetails(bankConfig);
   }, [getBankDetails, authToken, apiURL]);
-
-  // const [responseData, setResponseData] = useState(null);
-
-  // const processDateFormats = useCallback((rawdata) => {
-  //   const processedResponse = [];
-  //   for (let key in rawdata) {
-  //     processedResponse.push({
-  //       value: rawdata[key].date_id,
-  //       label: rawdata[key].date_format,
-  //     });
-  //   }
-  //   setResponseData(processedResponse);
-  // }, []);
-
-  // const selectChangeHandler = (event) => {
-  //   console.log(event);
-  // };
-
-  // const {
-  //   sendRequest: getDateFormats,
-  //   isloading,
-  //   error,
-  //   resetError,
-  // } = useHttp(processDateFormats);
-
-  // useEffect(() => {
-  //   const dateFormatConfig = {
-  //     url: apiURL + "/dateformats",
-  //     method: "GET",
-  //   };
-  //   getDateFormats(dateFormatConfig);
-  // }, [getDateFormats]);
 
   let message;
 
