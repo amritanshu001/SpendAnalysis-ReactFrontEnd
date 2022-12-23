@@ -20,7 +20,7 @@ const useHttp = (processData) => {
         });
         if (!fetchdata.ok) {
           const errorData = await fetchdata.json();
-          throw new Error(errorData.error.message);
+          throw new Error(errorData.message);
         }
 
         const rawData = await fetchdata.json();

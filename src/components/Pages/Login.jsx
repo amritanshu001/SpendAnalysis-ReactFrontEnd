@@ -6,16 +6,38 @@ import Container from "../UI/Container";
 
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
+import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import useHttp from "../../hooks/useHTTP";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const redirect = useHistory();
   const [loginOption, setLoginOption] = useState(true);
+  const [userData, setUserData] = useState(null);
+
+  const getToken = useCallback((rawdata) => {
+    setUserData(rawdata);
+  }, []);
+
+  const {
+    isloading: loginLoading,
+    error: loginError,
+    sendRequest: sendLoginRequest,
+  } = useHttp(getToken);
+
+  const {
+    inputValue: enteredUserName,
+    inputIsValid: userNameValid,
+    isError: userNameError,
+    inputBlurHandler: userNameBlurHandler,
+    inputChangeHandler: userNameChangeHandler,
+    resetInput: resetUserName,
+  } = useInputValidator(passwordValidator);
 
   const {
     inputValue: enteredEmail,
@@ -51,6 +73,7 @@ const Login = (props) => {
   useEffect(() => {
     if (loginOption) {
       resetConfPassword();
+      resetUserName();
     }
   }, [loginOption]);
 
@@ -58,9 +81,19 @@ const Login = (props) => {
     event.preventDefault();
 
     if (loginOption) {
-      dispatch(
-        authActions.logUserIn({ authToken: Math.random(), isAdmin: true })
-      );
+      const loginConfig = {
+        url: apiURL + "/userlogin",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          email_id: enteredEmail,
+          password: enteredPassword,
+        },
+      };
+
+      sendLoginRequest(loginConfig);
 
       resetPassword();
       resetEmail();
@@ -69,16 +102,28 @@ const Login = (props) => {
       resetEmail();
       resetConfPassword();
     }
-
-    // send API Request Here
-
-    redirect.replace("/");
   };
+
+  useEffect(() => {
+    if (!loginLoading && !loginError && userData) {
+      dispatch(
+        authActions.logUserIn({
+          authToken: userData.access_token,
+          isAdmin: userData.admin,
+        })
+      );
+      redirect.replace("/");
+    }
+  }, [userData, loginLoading, loginError]);
 
   let passwordMatch = enteredPassword === enteredConfPassword;
 
   let formIsValid =
-    emailIsValid && passwordIsValid && confPasswordIsValid && passwordMatch;
+    emailIsValid &&
+    passwordIsValid &&
+    confPasswordIsValid &&
+    passwordMatch &&
+    userNameValid;
 
   let confirmError = confPasswordError || !passwordMatch;
 
@@ -86,11 +131,35 @@ const Login = (props) => {
     formIsValid = emailIsValid && passwordIsValid;
   }
 
+  let buttonName;
+  if (loginOption) {
+    if (loginLoading) {
+      buttonName = "Logging In...";
+    } else {
+      buttonName = "Login";
+    }
+  } else {
+    buttonName = "Register";
+  }
+
   return (
     <React.Fragment>
       <Header>{loginOption ? "Login" : "Register"}</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["login-form"]}>
+          {!loginOption && (
+            <Input
+              id="username"
+              type="text"
+              name="username"
+              value={enteredUserName}
+              onBlur={userNameBlurHandler}
+              onChange={userNameChangeHandler}
+              className={userNameError ? styles.invalid : ""}
+            >
+              User Name
+            </Input>
+          )}
           <Input
             id="email"
             type="email"
@@ -133,7 +202,7 @@ const Login = (props) => {
           )}
           <div className={styles.actions}>
             <Button type="submit" disabled={!formIsValid}>
-              {loginOption ? "Login" : "Register"}
+              {buttonName}
             </Button>
             <Button
               type="button"
@@ -143,6 +212,7 @@ const Login = (props) => {
               {loginOption ? "New User?" : "Existing User Login"}
             </Button>
           </div>
+          {loginError && <p className={styles.error}>{loginError}</p>}
         </form>
       </Container>
     </React.Fragment>

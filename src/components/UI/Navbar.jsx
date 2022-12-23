@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./Navbar.module.css";
 import { NavLink } from "react-router-dom";
@@ -19,7 +19,6 @@ const Navbar = (props) => {
 
   const showAddBankRoute = isUserLoggedIn && isUserAdmin;
 
-  // console.log(props.nav);
   return (
     <header className={styles.header}>
       <div>Spend Analysis</div>
