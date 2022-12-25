@@ -155,6 +155,7 @@ const Login = (props) => {
               value={enteredUserName}
               onBlur={userNameBlurHandler}
               onChange={userNameChangeHandler}
+              disabled={loginLoading}
               className={userNameError ? styles.invalid : ""}
             >
               User Name
@@ -167,6 +168,7 @@ const Login = (props) => {
             value={enteredEmail}
             onBlur={emailBlurHandler}
             onChange={emailChangeHandler}
+            disabled={loginLoading}
             className={emailIsError ? styles.invalid : ""}
           >
             Email Id
@@ -178,6 +180,7 @@ const Login = (props) => {
             value={enteredPassword}
             onBlur={passwordBlurHandler}
             onChange={passwordChangeHandler}
+            disabled={loginLoading}
             className={passwordError ? styles.invalid : ""}
           >
             Password
@@ -191,6 +194,7 @@ const Login = (props) => {
                 value={enteredConfPassword}
                 onBlur={confPasswordBlurHandler}
                 onChange={confPasswordChangeHandler}
+                disabled={loginLoading}
                 className={confPasswordError ? styles.invalid : ""}
               >
                 Confirm Password

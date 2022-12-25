@@ -12,6 +12,7 @@ const Input = (props) => {
         onChange={props.onChange}
         onBlur={props.onBlur}
         className={props.className}
+        disabled={props.disabled}
       ></input>
     </div>
   );
