@@ -42,15 +42,20 @@ const SpendAnalysis = () => {
 
   const processTransactions = useCallback((rawdata) => {
     const processedData = rawdata.transactions.map((transaction) => {
+      const convertDates = (date) => {
+        const convertDate = new Date(date);
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return convertDate.toLocaleString(undefined, options);
+      };
       return {
         id: transaction.txn_id,
         balance: +transaction.balance,
         cheque_no: transaction.cheque_no,
         deposit_amt:
           +transaction.deposit_amt === 0 ? "" : +transaction.deposit_amt,
-        txn_date: transaction.txn_date,
+        txn_date: convertDates(transaction.txn_date),
         txn_remarks: transaction.txn_remarks,
-        value_date: transaction.value_date,
+        value_date: convertDates(transaction.value_date),
         withdrawal_amt:
           +transaction.withdrawal_amt === 0 ? "" : +transaction.withdrawal_amt,
       };
@@ -67,13 +72,42 @@ const SpendAnalysis = () => {
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
+
+    if (accountId === 0) {
+      setValidation("Please select Account");
+      return;
+    }
+    const dt_fromDate = new Date(fromDate);
+    const dt_toDate = new Date(toDate);
+
+    if (dt_fromDate.getTime() > dt_toDate.getTime()) {
+      setValidation("From date cannot be greater than To Date");
+      return;
+    }
+
+    let query = "";
+    if (!fromDate && toDate) {
+      query = `?to_date=${toDate}`;
+    }
+
+    if (fromDate.length > 0 && toDate.length > 0) {
+      query = `?from_date=${fromDate}&to_date=${toDate}`;
+    }
+
+    if (fromDate && !toDate) {
+      query = `?from_date=${fromDate}`;
+    }
+
+    setValidation(null);
+
     const transactionConfig = {
-      url: apiURL + "/statement/" + accountId,
+      url: apiURL + "/statement/" + accountId + query,
       method: "GET",
       headers: {
         Authorization: "Bearer " + authToken,
       },
     };
+    console.log(transactionConfig);
     loadTransactions(transactionConfig);
   };
 
@@ -144,6 +178,7 @@ const SpendAnalysis = () => {
           <div className={styles.actions}>
             <Button>Fetch Transactions</Button>
           </div>
+          {validation && <p className={styles.error}>{validation}</p>}
         </form>
       </Container>
       <div className={styles.display}>
