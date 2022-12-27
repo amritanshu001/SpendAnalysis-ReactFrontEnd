@@ -6,10 +6,11 @@ import Container from "../UI/Container";
 
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
+import { accountsAction } from "../../store/useraccount-slice";
 import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
@@ -17,11 +18,32 @@ import useHttp from "../../hooks/useHTTP";
 const Login = (props) => {
   const dispatch = useDispatch();
   const redirect = useHistory();
+  const authToken = useSelector((state) => state.userAuth.authToken);
   const [loginOption, setLoginOption] = useState(true);
-  const [userData, setUserData] = useState(null);
 
   const getToken = useCallback((rawdata) => {
-    setUserData(rawdata);
+    dispatch(
+      authActions.logUserIn({
+        authToken: rawdata.access_token,
+        isAdmin: rawdata.admin,
+      })
+    );
+    redirect.replace("/");
+  }, []);
+
+  const processAccountDetails = useCallback((rawdata) => {
+    const processedData = [];
+    for (let key in rawdata) {
+      const row = {};
+      row["id"] = rawdata[key].account_id;
+      row.account_no = rawdata[key].account_no;
+      row.active = rawdata[key].active ? "Yes" : "No";
+      row.joint = rawdata[key].joint ? "Yes" : "No";
+      row.bank_name = rawdata[key]["bank_dets"].bank_name;
+
+      processedData.push(row);
+    }
+    dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
   }, []);
 
   const {
@@ -29,6 +51,25 @@ const Login = (props) => {
     error: loginError,
     sendRequest: sendLoginRequest,
   } = useHttp(getToken);
+
+  const {
+    isloading: accountsLoading,
+    error: accountsError,
+    sendRequest: getUserAccounts,
+    resetError: resetAccountsError,
+  } = useHttp(processAccountDetails);
+
+  useEffect(() => {
+    if (authToken) {
+      const accountsConfig = {
+        url: apiURL + "/accounts",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      getUserAccounts(accountsConfig);
+    }
+  }, [authToken, apiURL, getUserAccounts]);
 
   const {
     inputValue: enteredUserName,
@@ -103,18 +144,6 @@ const Login = (props) => {
       resetConfPassword();
     }
   };
-
-  useEffect(() => {
-    if (!loginLoading && !loginError && userData) {
-      dispatch(
-        authActions.logUserIn({
-          authToken: userData.access_token,
-          isAdmin: userData.admin,
-        })
-      );
-      redirect.replace("/");
-    }
-  }, [userData, loginLoading, loginError]);
 
   let passwordMatch = enteredPassword === enteredConfPassword;
 

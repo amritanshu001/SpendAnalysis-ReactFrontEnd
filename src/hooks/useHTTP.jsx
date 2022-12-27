@@ -18,15 +18,16 @@ const useHttp = (processData) => {
           headers: requestConfig.headers,
           body: JSON.stringify(requestConfig.body),
         });
+
         if (!fetchdata.ok) {
           const errorData = await fetchdata.json();
-          throw new Error(errorData.message);
+          throw new Error(errorData.message || errorData.msg);
         }
 
         const rawData = await fetchdata.json();
         processData(rawData);
       } catch (err) {
-        setError(err.message || "Something Went Wrong...");
+        setError(err.message || err.statusText || "Something Went Wrong...");
       }
       setIsLoading(false);
     },

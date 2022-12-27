@@ -1,0 +1,52 @@
+.dates {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.container {
+  max-width: 50rem;
+  /* color: #121512;
+  background-color: #eceeec; */
+  text-align: center;
+}
+
+.select {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.select label {
+  font: inherit;
+  color: white;
+  font-weight: bold;
+}
+
+.select select {
+  font: inherit;
+  padding: 0.25rem;
+  outline: none;
+  border: 1px solid #395322;
+  border-radius: 6px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions {
+  margin-top: 1rem;
+}
+
+.actions button {
+  padding: 0.75rem;
+}

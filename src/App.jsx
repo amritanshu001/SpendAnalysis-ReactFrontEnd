@@ -3,6 +3,8 @@ import Navbar from "./components/UI/Navbar";
 import Login from "./components/Pages/Login";
 import Home from "./components/Pages/Home";
 import AddBank from "./components/Pages/AddBank";
+import ManageAccounts from "./components/Pages/ManageAccounts";
+import SpendAnalysis from "./components/Pages/SpendAnalysis";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
@@ -19,13 +21,17 @@ const App = (props) => {
             <Home />
           </Route>
           <Route path="/login">
-            <Login title="Login" />
+            <Login />
           </Route>
-          <Route path="/spendanalysis"></Route>
-          <Route path="/manageaccount"></Route>
+          <Route path="/spendanalysis">
+            <SpendAnalysis />
+          </Route>
+          <Route path="/manageaccount">
+            <ManageAccounts />
+          </Route>
           <Route path="/uploadstatement"></Route>
           <Route path="/addbank">
-<AddBank/>
+            <AddBank />
           </Route>
           <Route path="*">
             <Redirect to="/" />

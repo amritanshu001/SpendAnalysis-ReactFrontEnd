@@ -1,4 +1,4 @@
-// const apiURL = "http://192.168.1.41:5001";
-const apiURL = "https://analyzespends.onrender.com";
+const apiURL = "http://127.0.0.1:5001";
+// const apiURL = "https://analyzespends.onrender.com";
 
 export default apiURL;

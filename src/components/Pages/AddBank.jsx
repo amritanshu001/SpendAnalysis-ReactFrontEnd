@@ -57,14 +57,16 @@ const AddBank = (props) => {
   } = useHttp(processBankDetails);
 
   useEffect(() => {
-    const bankConfig = {
-      url: apiURL + "/banks",
-      headers: {
-        Authorization: "Bearer " + authToken,
-      },
-    };
-    getBankDetails(bankConfig);
-  }, [getBankDetails, authToken, apiURL]);
+    if (!bankData) {
+      const bankConfig = {
+        url: apiURL + "/banks",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      getBankDetails(bankConfig);
+    }
+  }, [getBankDetails, authToken, apiURL, bankData]);
 
   let message;
 
@@ -82,6 +84,7 @@ const AddBank = (props) => {
   return (
     <React.Fragment>
       <Header>Add Bank Details</Header>
+      {/* {message} */}
       <Container className={styles.container}>{message}</Container>
     </React.Fragment>
   );
