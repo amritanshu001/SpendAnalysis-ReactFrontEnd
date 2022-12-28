@@ -10,7 +10,7 @@ import { accountsAction } from "../../store/useraccount-slice";
 import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
@@ -18,18 +18,8 @@ import useHttp from "../../hooks/useHTTP";
 const Login = (props) => {
   const dispatch = useDispatch();
   const redirect = useHistory();
-  const authToken = useSelector((state) => state.userAuth.authToken);
-  const [loginOption, setLoginOption] = useState(true);
 
-  const getToken = useCallback((rawdata) => {
-    dispatch(
-      authActions.logUserIn({
-        authToken: rawdata.access_token,
-        isAdmin: rawdata.admin,
-      })
-    );
-    redirect.replace("/");
-  }, []);
+  const [loginOption, setLoginOption] = useState(true);
 
   const processAccountDetails = useCallback((rawdata) => {
     const processedData = [];
@@ -46,30 +36,32 @@ const Login = (props) => {
     dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
   }, []);
 
+  const { sendRequest: getUserAccounts } = useHttp(processAccountDetails);
+
+  const getToken = useCallback((rawdata) => {
+    dispatch(
+      authActions.logUserIn({
+        authToken: rawdata.access_token,
+        isAdmin: rawdata.admin,
+        expiresIn: rawdata.expires_in,
+      })
+    );
+
+    const accountsConfig = {
+      url: apiURL + "/accounts",
+      headers: {
+        Authorization: "Bearer " + rawdata.access_token,
+      },
+    };
+    getUserAccounts(accountsConfig);
+    redirect.replace("/");
+  }, []);
+
   const {
     isloading: loginLoading,
     error: loginError,
     sendRequest: sendLoginRequest,
   } = useHttp(getToken);
-
-  const {
-    isloading: accountsLoading,
-    error: accountsError,
-    sendRequest: getUserAccounts,
-    resetError: resetAccountsError,
-  } = useHttp(processAccountDetails);
-
-  useEffect(() => {
-    if (authToken) {
-      const accountsConfig = {
-        url: apiURL + "/accounts",
-        headers: {
-          Authorization: "Bearer " + authToken,
-        },
-      };
-      getUserAccounts(accountsConfig);
-    }
-  }, [authToken, apiURL, getUserAccounts]);
 
   const {
     inputValue: enteredUserName,
@@ -110,13 +102,6 @@ const Login = (props) => {
   const optionToggleHandler = () => {
     setLoginOption((option) => !option);
   };
-
-  useEffect(() => {
-    if (loginOption) {
-      resetConfPassword();
-      resetUserName();
-    }
-  }, [loginOption]);
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -170,6 +155,15 @@ const Login = (props) => {
   } else {
     buttonName = "Register";
   }
+
+  //After Effects
+
+  useEffect(() => {
+    if (loginOption) {
+      resetConfPassword();
+      resetUserName();
+    }
+  }, [loginOption]);
 
   return (
     <React.Fragment>

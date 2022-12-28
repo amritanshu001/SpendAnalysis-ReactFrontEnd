@@ -6,12 +6,17 @@ import AddBank from "./components/Pages/AddBank";
 import ManageAccounts from "./components/Pages/ManageAccounts";
 import SpendAnalysis from "./components/Pages/SpendAnalysis";
 
+import { useSelector } from "react-redux";
+
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
 
 // import navbar_data from "./data/data";
 
 const App = (props) => {
+  const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
+  const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
+  const userAccounts = useSelector((state) => state.userAccounts.userAccounts);
   return (
     <React.Fragment>
       <Navbar></Navbar>
@@ -20,18 +25,28 @@ const App = (props) => {
           <Route path="/" exact>
             <Home />
           </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
+          {!isUserLoggedIn && (
+            <Route path="/login">
+              <Login />
+            </Route>
+          )}
           <Route path="/spendanalysis">
-            <SpendAnalysis />
+            {isUserLoggedIn ? (
+              <SpendAnalysis accounts={userAccounts} />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
           <Route path="/manageaccount">
-            <ManageAccounts />
+            {isUserLoggedIn ? (
+              <ManageAccounts accounts={userAccounts} />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
-          <Route path="/uploadstatement"></Route>
+          {isUserLoggedIn && <Route path="/uploadstatement"></Route>}
           <Route path="/addbank">
-            <AddBank />
+            {isUserLoggedIn && isUserAdmin ? <AddBank /> : <Redirect to="/" />}
           </Route>
           <Route path="*">
             <Redirect to="/" />

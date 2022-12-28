@@ -47,6 +47,7 @@ const SpendAnalysis = () => {
         const options = { year: "numeric", month: "long", day: "numeric" };
         return convertDate.toLocaleString(undefined, options);
       };
+
       return {
         id: transaction.txn_id,
         balance: +transaction.balance,

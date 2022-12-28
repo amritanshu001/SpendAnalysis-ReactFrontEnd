@@ -18,8 +18,7 @@ const header = [
   { name: "Joint", tech_name: "joint" },
 ];
 
-const ManageAccounts = () => {
-  //   const [accountData, setAccountData] = useState(null);
+const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const accountData = useSelector((state) => state.userAccounts.userAccounts);
   const dispatch = useDispatch();
