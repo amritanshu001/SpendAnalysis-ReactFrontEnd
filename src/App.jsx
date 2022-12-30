@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
+import UploadStatement from "./components/Pages/UploadStatement";
 
 // import navbar_data from "./data/data";
 
@@ -44,7 +45,11 @@ const App = (props) => {
               <Redirect to="/login" />
             )}
           </Route>
-          {isUserLoggedIn && <Route path="/uploadstatement"></Route>}
+
+          <Route path="/uploadstatement">
+            {isUserLoggedIn && <UploadStatement />}
+          </Route>
+
           <Route path="/addbank">
             {isUserLoggedIn && isUserAdmin ? <AddBank /> : <Redirect to="/" />}
           </Route>

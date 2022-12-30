@@ -1,0 +1,39 @@
+.balance {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem;
+  /* border: 1px dashed #ccc; */
+  border: #0c950c 1px solid;
+  align-items: stretch;
+  justify-content: space-around;
+  background-color: #224a04;
+}
+
+.content-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.label {
+  font: inherit;
+  font-weight: bold;
+  margin-right: 1rem;
+  color: aliceblue;
+  background-color: #405d27;
+  padding: 0.25rem;
+  border: 1px solid #405d27;
+}
+
+.content {
+  font-weight: bold;
+}
+
+.positive {
+  color: #0c950c;
+}
+
+.negative {
+  color: #7d2f2f;
+}

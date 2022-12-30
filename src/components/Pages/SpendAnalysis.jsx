@@ -5,12 +5,32 @@ import Container from "../UI/Container";
 import Header from "../UI/Header";
 import Input from "../UI/Input";
 import Table from "../UI/Table/Table";
+import BalanceGrid from "../UI/Grid/BalanceGrid";
 
 import { useSelector } from "react-redux";
 import Button from "../UI/Button";
 
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
+import TransactionGrid from "../UI/Grid/TransactionGrid";
+
+const summaryDetails = (current, transaction) => {
+  let transactionSummary = {};
+  if (transaction.deposit_amt === "") {
+    transactionSummary = {
+      ...current,
+      outgoingSum: current.outgoingSum + transaction.withdrawal_amt,
+      outgoingTxnCount: current.outgoingTxnCount + 1,
+    };
+  } else {
+    transactionSummary = {
+      ...current,
+      incomingSum: current.incomingSum + transaction.deposit_amt,
+      incomingTxnCount: current.incomingTxnCount + 1,
+    };
+  }
+  return transactionSummary;
+};
 
 const mapAccounts = (account) => {
   return (
@@ -30,7 +50,7 @@ const header = [
   { name: "Balance", tech_name: "balance" },
 ];
 
-const SpendAnalysis = () => {
+const SpendAnalysis = (props) => {
   const accounts = useSelector((state) => state.userAccounts.userAccounts);
   const authToken = useSelector((state) => state.userAuth.authToken);
 
@@ -41,13 +61,12 @@ const SpendAnalysis = () => {
   const [transactions, setTransactions] = useState(null);
 
   const processTransactions = useCallback((rawdata) => {
+    const convertDates = (date) => {
+      const convertDate = new Date(date);
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      return convertDate.toLocaleString(undefined, options);
+    };
     const processedData = rawdata.transactions.map((transaction) => {
-      const convertDates = (date) => {
-        const convertDate = new Date(date);
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return convertDate.toLocaleString(undefined, options);
-      };
-
       return {
         id: transaction.txn_id,
         balance: +transaction.balance,
@@ -108,13 +127,23 @@ const SpendAnalysis = () => {
         Authorization: "Bearer " + authToken,
       },
     };
-    console.log(transactionConfig);
     loadTransactions(transactionConfig);
   };
 
   const onSelectChangeHandler = (event) => {
     setAccountId(+event.target.value);
   };
+
+  //placeholder for more complex filteration
+  let filteredTransactions = [];
+  let statementSummary = {};
+  let closingBal;
+  let openingBal;
+  let top5Credit = [];
+  let top5Debit = [];
+  let top5CreditShare = 0.0;
+  let top5DebitShare = 0.0;
+
   let message;
   if (transactionsLoading) {
     message = <p className={styles.loading}>Loading....</p>;
@@ -129,12 +158,51 @@ const SpendAnalysis = () => {
     transactions &&
     transactions.length > 0
   ) {
-    message = <Table header={header} body={transactions} />;
+    filteredTransactions = transactions.filter((transaction) => true);
+    closingBal = filteredTransactions[0].balance;
+    openingBal =
+      filteredTransactions[filteredTransactions.length - 1].deposit_amt === ""
+        ? +filteredTransactions[filteredTransactions.length - 1].balance +
+          +filteredTransactions[filteredTransactions.length - 1].withdrawal_amt
+        : +filteredTransactions[filteredTransactions.length - 1].balance -
+          +filteredTransactions[filteredTransactions.length - 1].deposit_amt;
+    statementSummary = filteredTransactions.reduce(summaryDetails, {
+      outgoingSum: 0,
+      outgoingTxnCount: 0,
+      incomingSum: 0,
+      incomingTxnCount: 0,
+    });
+
+    top5Credit = filteredTransactions
+      .filter((txn) => txn.withdrawal_amt === "")
+      .sort((txn1, txn2) => +txn2.deposit_amt - txn1.deposit_amt)
+      .slice(0, 5);
+    top5Debit = filteredTransactions
+      .filter((txn) => txn.deposit_amt === "")
+      .sort((txn1, txn2) => +txn2.withdrawal_amt - txn1.withdrawal_amt)
+      .slice(0, 5);
+
+    top5CreditShare = (
+      (top5Credit.reduce((prev, txn) => prev + +txn.deposit_amt, 0) /
+        statementSummary.incomingSum) *
+      100
+    ).toFixed(2);
+
+    top5DebitShare = (
+      (top5Debit.reduce((prev, txn) => prev + +txn.withdrawal_amt, 0) /
+        statementSummary.outgoingSum) *
+      100
+    ).toFixed(2);
+
+    message = <Table header={header} body={filteredTransactions} />;
   }
 
   if (!transactionsLoading && transactions && transactions.length === 0) {
     message = <p className={styles.error}>No records found!</p>;
   }
+
+  console.log("Credit Share: ", top5CreditShare, "%");
+  console.log("Debit Share: ", top5DebitShare, "%");
 
   const fromDateChangeHandler = (event) => {
     setFromDate(event.target.value);
@@ -182,9 +250,14 @@ const SpendAnalysis = () => {
           {validation && <p className={styles.error}>{validation}</p>}
         </form>
       </Container>
+      {filteredTransactions.length > 0 && (
+        <div className={styles.summary}>
+          <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
+          <TransactionGrid />
+        </div>
+      )}
       <div className={styles.display}>
         <div className={styles.results}>{message}</div>
-        <div></div>
       </div>
     </React.Fragment>
   );

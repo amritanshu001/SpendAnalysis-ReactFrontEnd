@@ -20,7 +20,9 @@ const Login = (props) => {
   const redirect = useHistory();
 
   const [loginOption, setLoginOption] = useState(true);
+  const [serverResponse, setServerResponse] = useState(null);
 
+  // Setting up account Details Hook
   const processAccountDetails = useCallback((rawdata) => {
     const processedData = [];
     for (let key in rawdata) {
@@ -38,6 +40,7 @@ const Login = (props) => {
 
   const { sendRequest: getUserAccounts } = useHttp(processAccountDetails);
 
+  //Setting up Login Hook
   const getToken = useCallback((rawdata) => {
     dispatch(
       authActions.logUserIn({
@@ -61,8 +64,25 @@ const Login = (props) => {
     isloading: loginLoading,
     error: loginError,
     sendRequest: sendLoginRequest,
+    resetError: loginErrorReset,
   } = useHttp(getToken);
 
+  //Setting up registration hook
+  const processRegisteredUser = useCallback((rawdata) => {
+    setServerResponse(
+      "Registration successful! Your User Id is " + rawdata.user_id
+    );
+    setLoginOption(true);
+  }, []);
+
+  const {
+    isloading: registerLoading,
+    error: registerError,
+    sendRequest: sendRegisterRequest,
+    resetError: registerErrorReset,
+  } = useHttp(processRegisteredUser);
+
+  //Setting input Validation hooks
   const {
     inputValue: enteredUserName,
     inputIsValid: userNameValid,
@@ -107,6 +127,7 @@ const Login = (props) => {
     event.preventDefault();
 
     if (loginOption) {
+      loginErrorReset();
       const loginConfig = {
         url: apiURL + "/userlogin",
         method: "POST",
@@ -124,7 +145,23 @@ const Login = (props) => {
       resetPassword();
       resetEmail();
     } else {
+      registerErrorReset();
+      const registerConfig = {
+        url: apiURL + "/registration",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          user_name: enteredUserName,
+          email_id: enteredEmail,
+          password: enteredPassword,
+        },
+      };
+
+      sendRegisterRequest(registerConfig);
       resetPassword();
+      resetUserName();
       resetEmail();
       resetConfPassword();
     }
@@ -154,6 +191,19 @@ const Login = (props) => {
     }
   } else {
     buttonName = "Register";
+  }
+
+  let response;
+  if (registerLoading) {
+    response = (
+      <div className={styles["server-loading"]}>Setting up your account...</div>
+    );
+  }
+  if (registerError) {
+    response = <div className={styles["server-error"]}>{registerError}</div>;
+  }
+  if (!registerLoading && !registerError && serverResponse) {
+    response = <div className={styles["server-success"]}>{serverResponse}</div>;
   }
 
   //After Effects
@@ -242,6 +292,7 @@ const Login = (props) => {
           {loginError && <p className={styles.error}>{loginError}</p>}
         </form>
       </Container>
+      {response}
     </React.Fragment>
   );
 };

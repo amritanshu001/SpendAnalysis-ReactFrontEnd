@@ -74,3 +74,12 @@
   width: 80%;
   margin: auto;
 }
+
+.summary {
+  display: flex;
+  width: 60%;
+  margin: auto;
+  margin-top: 1rem;
+  border: 1px solid #0f4646;
+  border-radius: 8px;
+}
