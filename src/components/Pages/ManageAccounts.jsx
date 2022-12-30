@@ -3,11 +3,15 @@ import styles from "./ManageAccounts.module.css";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import Table from "../UI/Table/Table";
+import FormModal from "../UI/Modal/FormModal";
+
+import UserAccountForm from "../Forms/UserAccountForm";
 
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { accountsAction } from "../../store/useraccount-slice";
+import { formModalAction } from "../../store/formmodal-slice";
 
 import apiURL from "../../endpoint";
 
@@ -21,7 +25,9 @@ const header = [
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const accountData = useSelector((state) => state.userAccounts.userAccounts);
+  const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
+  const [editFormData, setEditFormData] = useState({});
 
   const processAccountDetails = useCallback((rawdata) => {
     const processedData = [];
@@ -58,6 +64,11 @@ const ManageAccounts = (props) => {
     }
   }, [authToken, getUserAccounts, accountData]);
 
+  const editRowHandler = (row) => {
+    setEditFormData(row);
+    dispatch(formModalAction.showModal());
+  };
+
   let message;
   if (accountsLoading) {
     message = <p className={styles.loading}>Loading....</p>;
@@ -67,11 +78,23 @@ const ManageAccounts = (props) => {
   }
 
   if (!accountsLoading && !accountsError && accountData) {
-    message = <Table header={header} body={accountData} />;
+    message = (
+      <Table
+        header={header}
+        body={accountData}
+        editable={true}
+        onEdit={editRowHandler}
+      />
+    );
   }
 
   return (
     <React.Fragment>
+      {formModalStatus && (
+        <FormModal>
+          <UserAccountForm data={editFormData} header={header} />
+        </FormModal>
+      )}
       <Header>My Accounts</Header>
       <Container className={styles.container}>{message}</Container>
     </React.Fragment>

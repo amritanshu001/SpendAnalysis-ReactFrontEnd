@@ -194,7 +194,9 @@ const SpendAnalysis = (props) => {
       100
     ).toFixed(2);
 
-    message = <Table header={header} body={filteredTransactions} />;
+    message = (
+      <Table header={header} body={filteredTransactions} editable={false} />
+    );
   }
 
   if (!transactionsLoading && transactions && transactions.length === 0) {

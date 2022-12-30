@@ -71,7 +71,7 @@ const AddBank = (props) => {
   let message;
 
   if (!banksError && !banksLoading && bankData) {
-    message = <Table header={header} body={bankData} />;
+    message = <Table header={header} body={bankData} editable={true} />;
   }
   if (banksLoading) {
     message = <p className={styles.loading}>Loading....</p>;

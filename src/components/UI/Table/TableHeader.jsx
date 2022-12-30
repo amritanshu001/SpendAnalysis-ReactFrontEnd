@@ -8,9 +8,8 @@ const TableHeader = (props) => {
   return (
     <thead>
       <tr>
-        {/* <th></th>
-        <th></th> */}
         {props.header.map(mapColumns)}
+        {props.editable && <th>Edit</th>}
       </tr>
     </thead>
   );
