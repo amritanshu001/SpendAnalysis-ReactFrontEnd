@@ -7,9 +7,9 @@ import Table from "../UI/Table/Table";
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import Select from "react-select";
+import { banksAction } from "../../store/banks-slice";
 import apiURL from "../../endpoint";
 
 const header = [
@@ -26,8 +26,10 @@ const header = [
 ];
 
 const AddBank = (props) => {
-  const [bankData, setBankData] = useState(null);
+  const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
+
+  const disptach = useDispatch();
 
   const processBankDetails = useCallback((rawdata) => {
     const processedData = [];
@@ -46,18 +48,17 @@ const AddBank = (props) => {
       row.date_format = rawdata[key].date.date_format;
       processedData.push(row);
     }
-    setBankData(processedData);
+    disptach(banksAction.setBanks({ banks: processedData }));
   }, []);
 
   const {
     isloading: banksLoading,
     error: banksError,
     sendRequest: getBankDetails,
-    resetError: resetBankError,
   } = useHttp(processBankDetails);
 
   useEffect(() => {
-    if (!bankData) {
+    if (!bankData || bankData.length === 0) {
       const bankConfig = {
         url: apiURL + "/banks",
         headers: {
@@ -83,8 +84,7 @@ const AddBank = (props) => {
 
   return (
     <React.Fragment>
-      <Header>Add Bank Details</Header>
-      {/* {message} */}
+      <Header>Bank Details</Header>
       <Container className={styles.container}>{message}</Container>
     </React.Fragment>
   );

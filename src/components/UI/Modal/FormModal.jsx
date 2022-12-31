@@ -9,14 +9,10 @@ import { useDispatch } from "react-redux";
 const FormModal = (props) => {
   const dispatch = useDispatch();
 
-  const backdropHideHandler = () => {
-    dispatch(formModalAction.hideModal());
-  };
-
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
-        <Backdrop onClick={backdropHideHandler}></Backdrop>,
+        <Backdrop onClick={props.onBackdropClick}></Backdrop>,
         document.getElementById("backdrop")
       )}
       {ReactDOM.createPortal(

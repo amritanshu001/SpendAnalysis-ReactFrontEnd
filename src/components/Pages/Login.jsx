@@ -7,6 +7,7 @@ import Container from "../UI/Container";
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
 import { accountsAction } from "../../store/useraccount-slice";
+import { banksAction } from "../../store/banks-slice";
 import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
@@ -38,7 +39,28 @@ const Login = (props) => {
     dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
   }, []);
 
+  const processBankDetails = useCallback((rawdata) => {
+    const processedData = [];
+    for (let key in rawdata) {
+      const row = {};
+      row["bal_col"] = rawdata[key].bal_col;
+      row["id"] = rawdata[key].bank_id;
+      row.bank_name = rawdata[key].bank_name;
+      row.chq_no_col = rawdata[key].chq_no_col;
+      row.crdt_amt_col = rawdata[key].crdt_amt_col;
+      row.start_row = rawdata[key].start_row;
+      row.txn_date_col = rawdata[key].txn_date_col;
+      row.txn_rmrk_col = rawdata[key].txn_rmrk_col;
+      row.val_date_col = rawdata[key].val_date_col;
+      row.with_amt_col = rawdata[key].with_amt_col;
+      row.date_format = rawdata[key].date.date_format;
+      processedData.push(row);
+    }
+    dispatch(banksAction.setBanks({ banks: processedData }));
+  }, []);
+
   const { sendRequest: getUserAccounts } = useHttp(processAccountDetails);
+  const { sendRequest: getBankDetails } = useHttp(processBankDetails);
 
   //Setting up Login Hook
   const getToken = useCallback((rawdata) => {
@@ -57,6 +79,15 @@ const Login = (props) => {
       },
     };
     getUserAccounts(accountsConfig);
+
+    const bankConfig = {
+      url: apiURL + "/banks",
+      headers: {
+        Authorization: "Bearer " + rawdata.access_token,
+      },
+    };
+    getBankDetails(bankConfig);
+
     redirect.replace("/");
   }, []);
 

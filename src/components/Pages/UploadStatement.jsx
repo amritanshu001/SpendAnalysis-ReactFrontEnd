@@ -103,7 +103,7 @@ const UploadStatement = (props) => {
       <Header>Spend Analysis</Header>
       <Container>
         <form
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
           className={styles.form}
           onSubmit={uploadFileHandler}
         >

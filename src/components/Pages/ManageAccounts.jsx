@@ -5,7 +5,12 @@ import Header from "../UI/Header";
 import Table from "../UI/Table/Table";
 import FormModal from "../UI/Modal/FormModal";
 
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
 import UserAccountForm from "../Forms/UserAccountForm";
+import DeleteForm from "../Forms/DeleteForm";
 
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState, useEffect } from "react";
@@ -14,6 +19,7 @@ import { accountsAction } from "../../store/useraccount-slice";
 import { formModalAction } from "../../store/formmodal-slice";
 
 import apiURL from "../../endpoint";
+import CreateAccountForm from "../Forms/CreateAccountForm";
 
 const header = [
   { name: "Account#", tech_name: "account_no" },
@@ -28,6 +34,8 @@ const ManageAccounts = (props) => {
   const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
   const [editFormData, setEditFormData] = useState({});
+  const [deleteAccount, setDeleteAccount] = useState({});
+  const [isCreateClicked, setCreateClicked] = useState(false);
 
   const processAccountDetails = useCallback((rawdata) => {
     const processedData = [];
@@ -42,7 +50,6 @@ const ManageAccounts = (props) => {
       processedData.push(row);
     }
     dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
-    // setAccountData(processedData);
   }, []);
 
   const {
@@ -69,6 +76,18 @@ const ManageAccounts = (props) => {
     dispatch(formModalAction.showModal());
   };
 
+  const deleteRowHandler = (row) => {
+    setDeleteAccount(row);
+    dispatch(formModalAction.showModal());
+  };
+
+  const backdropClick = () => {
+    setDeleteAccount({});
+    setEditFormData({});
+    setCreateClicked(false);
+    dispatch(formModalAction.hideModal());
+  };
+
   let message;
   if (accountsLoading) {
     message = <p className={styles.loading}>Loading....</p>;
@@ -84,18 +103,135 @@ const ManageAccounts = (props) => {
         body={accountData}
         editable={true}
         onEdit={editRowHandler}
+        toDelete={true}
+        onDelete={deleteRowHandler}
       />
     );
   }
 
+  const accountChangeProcess = useCallback((rawdata) => {
+    const accountsConfig = {
+      url: apiURL + "/accounts",
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+    };
+    getUserAccounts(accountsConfig);
+    backdropClick();
+  }, []);
+
+  const {
+    isloading: accountChanging,
+    error: accountChangeError,
+    sendRequest: changeAccount,
+    resetError: resetChangeError,
+  } = useHttp(accountChangeProcess);
+
+  const accountSaveHandler = (account_id, joint) => {
+    const accountChangeConfig = {
+      url: apiURL + "/accounts/" + account_id,
+      method: "PUT",
+      body: {
+        joint: joint,
+      },
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+    };
+    changeAccount(accountChangeConfig);
+  };
+
+  const {
+    isloading: deleteInProgress,
+    error: deleteError,
+    sendRequest: sendDeleteRequest,
+  } = useHttp(accountChangeProcess);
+
+  const deleteAccountHandler = (account_id) => {
+    const delectAccountConfig = {
+      url: apiURL + "/accounts/" + account_id,
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+    };
+    sendDeleteRequest(delectAccountConfig);
+  };
+
+  const addAccountClickHandler = () => {
+    setCreateClicked(true);
+    dispatch(formModalAction.showModal());
+  };
+
+  const {
+    isloading: creatingAccount,
+    error: createError,
+    sendRequest: createAccount,
+  } = useHttp(accountChangeProcess);
+
+  const newAccountSaveHandler = (bank_id, account_no, joint) => {
+    const newAccountConfig = {
+      url: apiURL + "/accounts",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+      body: {
+        joint: joint,
+        bank: bank_id,
+        account_no: account_no,
+      },
+    };
+    createAccount(newAccountConfig);
+    setCreateClicked(false);
+  };
+
   return (
     <React.Fragment>
       {formModalStatus && (
-        <FormModal>
-          <UserAccountForm data={editFormData} header={header} />
+        <FormModal onBackdropClick={backdropClick}>
+          {Object.keys(editFormData).length > 0 && (
+            <UserAccountForm
+              data={editFormData}
+              header={header}
+              onCancel={backdropClick}
+              onSave={accountSaveHandler}
+              loading={accountChanging}
+              error={accountChangeError}
+            />
+          )}
+          {Object.keys(deleteAccount).length > 0 && (
+            <DeleteForm
+              account={deleteAccount}
+              onCancel={backdropClick}
+              onDelete={deleteAccountHandler}
+              loading={deleteInProgress}
+              error={deleteError}
+            />
+          )}
+          {isCreateClicked && (
+            <CreateAccountForm
+              onCancel={backdropClick}
+              onCreate={newAccountSaveHandler}
+              loading={creatingAccount}
+              error={createError}
+            />
+          )}
         </FormModal>
       )}
-      <Header>My Accounts</Header>
+      <Header>
+        My Accounts
+        <IconButton
+          color="primary"
+          aria-label="add"
+          onClick={addAccountClickHandler}
+        >
+          <AddIcon />
+        </IconButton>
+      </Header>
       <Container className={styles.container}>{message}</Container>
     </React.Fragment>
   );

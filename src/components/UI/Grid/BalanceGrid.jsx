@@ -22,8 +22,8 @@ const BalanceGrid = (props) => {
           }`}
         >
           {props.openingBal > props.closingBal
-            ? props.openingBal - props.closingBal
-            : props.closingBal - props.openingBal}
+            ? (props.openingBal - props.closingBal).toFixed(2)
+            : (props.closingBal - props.openingBal).toFixed(2)}
         </p>
       </div>
     </div>

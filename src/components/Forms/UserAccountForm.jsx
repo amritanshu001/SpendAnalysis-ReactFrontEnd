@@ -1,9 +1,14 @@
 import React, { useState, useRef } from "react";
 import styles from "./UserAccountForm.module.css";
-import { useDispatch } from "react-redux";
-import { formModalAction } from "../../store/formmodal-slice";
 
-const UserAccountForm = ({ data, header }) => {
+const UserAccountForm = ({
+  data,
+  header,
+  loading,
+  error,
+  onSave,
+  onCancel,
+}) => {
   const [accountNo, setAccountNo] = useState(data.account_no);
   const [bankName, setBankName] = useState(data.bank_name);
   const [accountActive, setAccountActive] = useState(
@@ -13,22 +18,13 @@ const UserAccountForm = ({ data, header }) => {
     data.joint === "Yes" ? true : false
   );
 
-  const dispatch = useDispatch();
-
-  const activeChangeHandler = (event) => {
-    setAccountActive(event.target.checked);
-  };
-
   const jointChangeHandler = (event) => {
     setAccountJoint(event.target.checked);
   };
 
-  const cancelHandler = () => {
-    dispatch(formModalAction.hideModal());
-  };
-
   const accountEditHandler = (event) => {
     event.preventDefault();
+    onSave(data.id, accountJoint);
   };
 
   return (
@@ -47,12 +43,12 @@ const UserAccountForm = ({ data, header }) => {
         <div>
           <input
             type="checkbox"
-            checked={accountActive}
-            onChange={activeChangeHandler}
+            defaultChecked={accountActive}
+            disabled={true}
           ></input>
           <label>Active</label>
         </div>
-        <div>
+        <div onClick={jointChangeHandler}>
           <input
             type="checkbox"
             checked={accountJoint}
@@ -62,11 +58,12 @@ const UserAccountForm = ({ data, header }) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <button type="button" onClick={cancelHandler}>
+        <button type="button" onClick={onCancel}>
           Cancel
         </button>
-        <button type="submit">Save Changes</button>
+        <button type="submit">{loading ? "Saving..." : "Save Changes"}</button>
       </div>
+      {error && <p>{props.error}</p>}
     </form>
   );
 };

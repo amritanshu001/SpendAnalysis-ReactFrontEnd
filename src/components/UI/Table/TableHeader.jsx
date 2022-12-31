@@ -10,6 +10,7 @@ const TableHeader = (props) => {
       <tr>
         {props.header.map(mapColumns)}
         {props.editable && <th>Edit</th>}
+        {props.toDelete && <th>Delete</th>}
       </tr>
     </thead>
   );

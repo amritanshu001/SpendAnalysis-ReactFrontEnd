@@ -6,6 +6,9 @@ const TableBody = (props) => {
     const editHandler = () => {
       props.onEdit(row);
     };
+    const deleteHandler = () => {
+      props.onDelete(row);
+    };
     return (
       <TableRow
         key={row.id}
@@ -13,6 +16,8 @@ const TableBody = (props) => {
         header={props.header}
         editable={props.editable}
         onEdit={editHandler}
+        toDelete={props.toDelete}
+        onDelete={deleteHandler}
       />
     );
   };

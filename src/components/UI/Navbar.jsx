@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import Button from "./Button";
 import { authActions } from "../../store/auth-slice";
 import { accountsAction } from "../../store/useraccount-slice";
+import { banksAction } from "../../store/banks-slice";
 import { useHistory } from "react-router-dom";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
@@ -16,9 +17,14 @@ const Navbar = (props) => {
   const userToken = useSelector((state) => state.userAuth.authToken);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
 
-  const processLogout = useCallback((rawdata) => {
+  const logoutActions = () => {
     dispatch(accountsAction.resetUserAccounts());
+    dispatch(banksAction.resetBanks());
     dispatch(authActions.logUserOut());
+  };
+
+  const processLogout = useCallback((rawdata) => {
+    logoutActions();
     redirect.replace("/login");
   }, []);
 
@@ -42,8 +48,8 @@ const Navbar = (props) => {
 
   useEffect(() => {
     if (logoutError) {
-      dispatch(authActions.logUserOut());
       resetLogoutError();
+      logoutActions();
       redirect.replace("/login");
     }
   }, [logoutError]);
