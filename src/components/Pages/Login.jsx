@@ -11,7 +11,7 @@ import { banksAction } from "../../store/banks-slice";
 import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
@@ -22,6 +22,7 @@ const Login = (props) => {
 
   const [loginOption, setLoginOption] = useState(true);
   const [serverResponse, setServerResponse] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   // Setting up account Details Hook
   const processAccountDetails = useCallback((rawdata) => {
@@ -64,6 +65,7 @@ const Login = (props) => {
 
   //Setting up Login Hook
   const getToken = useCallback((rawdata) => {
+    setLoggedIn(true);
     dispatch(
       authActions.logUserIn({
         authToken: rawdata.access_token,
@@ -245,6 +247,12 @@ const Login = (props) => {
       resetUserName();
     }
   }, [loginOption]);
+
+  //auto logout
+  useEffect(() => {
+    if (loggedIn) {
+    }
+  }, [loggedIn]);
 
   return (
     <React.Fragment>

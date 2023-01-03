@@ -11,6 +11,7 @@ const TableHeader = (props) => {
         {props.header.map(mapColumns)}
         {props.editable && <th>Edit</th>}
         {props.toDelete && <th>Delete</th>}
+        {props.toCopy && <th>Copy</th>}
       </tr>
     </thead>
   );

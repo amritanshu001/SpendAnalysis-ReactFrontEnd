@@ -9,6 +9,11 @@ const TableBody = (props) => {
     const deleteHandler = () => {
       props.onDelete(row);
     };
+
+    const copyHandler = () => {
+      props.onCopy(row);
+    };
+
     return (
       <TableRow
         key={row.id}
@@ -18,6 +23,8 @@ const TableBody = (props) => {
         onEdit={editHandler}
         toDelete={props.toDelete}
         onDelete={deleteHandler}
+        toCopy={props.toCopy}
+        onCopy={copyHandler}
       />
     );
   };

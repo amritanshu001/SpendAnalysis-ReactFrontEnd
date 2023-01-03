@@ -1,7 +1,7 @@
 .modal {
-  position: relative;
+  position: absolute;
   top: 15vh;
-  /* left: 5%; */
+  left: 30%;
   width: 60%;
   min-width: 16rem;
   max-width: 37rem;

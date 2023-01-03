@@ -2,6 +2,7 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import IconButton from "@mui/material/IconButton";
 
 const TableRow = (props) => {
   const mapCells = (row) => {
@@ -13,12 +14,23 @@ const TableRow = (props) => {
       {props.header.map(mapCells)}
       {props.editable && (
         <td>
-          <EditIcon onClick={props.onEdit} />
+          <IconButton onClick={props.onEdit} color="default">
+            <EditIcon />
+          </IconButton>
         </td>
       )}
       {props.toDelete && (
         <td>
-          <DeleteForeverIcon onClick={props.onDelete} />
+          <IconButton onClick={props.onDelete} color="error">
+            <DeleteForeverIcon />
+          </IconButton>
+        </td>
+      )}
+      {props.toCopy && (
+        <td>
+          <IconButton color="primary" onClick={props.onCopy}>
+            <ContentCopyOutlinedIcon />
+          </IconButton>
         </td>
       )}
     </tr>

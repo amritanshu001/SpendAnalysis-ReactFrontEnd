@@ -3,14 +3,21 @@ import styles from "./AddBank.module.css";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import Table from "../UI/Table/Table";
+import FormModal from "../UI/Modal/FormModal";
 
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
 import { banksAction } from "../../store/banks-slice";
+import { formModalAction } from "../../store/formmodal-slice";
 import apiURL from "../../endpoint";
+import { Tooltip } from "@mui/material";
+import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 
 const header = [
   { name: "Bank Name", tech_name: "bank_name" },
@@ -28,6 +35,12 @@ const header = [
 const AddBank = (props) => {
   const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const modalStatus = useSelector((state) => state.formModal.showModal);
+  const [dateFormats, setDateFormats] = useState([]);
+  const [addBankClicked, setAddBankClicked] = useState(false);
+  const [editBankData, setEditBankData] = useState({});
+  const [copyBankData, setCopyBankData] = useState({});
+  const [deleteBankData, setDeleteBankDate] = useState({});
 
   const disptach = useDispatch();
 
@@ -46,9 +59,22 @@ const AddBank = (props) => {
       row.val_date_col = rawdata[key].val_date_col;
       row.with_amt_col = rawdata[key].with_amt_col;
       row.date_format = rawdata[key].date.date_format;
+      row.date_format_id = rawdata[key].date.date_id;
       processedData.push(row);
     }
     disptach(banksAction.setBanks({ banks: processedData }));
+  }, []);
+
+  const processDateFormats = useCallback((rawdata) => {
+    let processedData = [];
+    for (let key in rawdata) {
+      const date = {};
+      date.id = rawdata[key].date_id;
+      date.date_format = rawdata[key].date_format;
+      date.desc = rawdata[key].desc;
+      processedData.push(date);
+    }
+    setDateFormats(processedData);
   }, []);
 
   const {
@@ -56,6 +82,8 @@ const AddBank = (props) => {
     error: banksError,
     sendRequest: getBankDetails,
   } = useHttp(processBankDetails);
+
+  const { sendRequest: loadDateFormats } = useHttp(processDateFormats);
 
   useEffect(() => {
     if (!bankData || bankData.length === 0) {
@@ -67,12 +95,66 @@ const AddBank = (props) => {
       };
       getBankDetails(bankConfig);
     }
+    if (dateFormats.length === 0) {
+      const datesConfig = {
+        url: apiURL + "/dateformats",
+      };
+
+      loadDateFormats(datesConfig);
+    }
   }, [getBankDetails, authToken, apiURL, bankData]);
+
+  const refreshBankData = useCallback(() => {
+    const bankConfig = {
+      url: apiURL + "/banks",
+      headers: {
+        Authorization: "Bearer " + authToken,
+      },
+    };
+    getBankDetails(bankConfig);
+  }, [getBankDetails]);
+
+  const addBankClickHandler = () => {
+    disptach(formModalAction.showModal());
+    setAddBankClicked(true);
+  };
+
+  const hideModalHandler = () => {
+    setAddBankClicked(false);
+    setEditBankData({});
+    setCopyBankData({});
+    setDeleteBankDate({});
+    disptach(formModalAction.hideModal());
+  };
+
+  const editBankClickHandler = (row) => {
+    setEditBankData(row);
+    disptach(formModalAction.showModal());
+  };
+
+  const copyBankClickHandler = (row) => {
+    setCopyBankData(row);
+    disptach(formModalAction.showModal());
+  };
+
+  const deleteBankHandler = (row) => {
+    setDeleteBankDate(row);
+    disptach(formModalAction.showModal());
+  };
 
   let message;
 
   if (!banksError && !banksLoading && bankData) {
-    message = <Table header={header} body={bankData} editable={true} />;
+    message = (
+      <Table
+        header={header}
+        body={bankData}
+        editable={true}
+        onEdit={editBankClickHandler}
+        copy={true}
+        onCopy={copyBankClickHandler}
+      />
+    );
   }
   if (banksLoading) {
     message = <p className={styles.loading}>Loading....</p>;
@@ -82,9 +164,69 @@ const AddBank = (props) => {
     message = <p className={styles.error}>{banksError}</p>;
   }
 
+  const {
+    isloading: newBankLoading,
+    error: newBankError,
+    sendRequest: createBank,
+  } = useHttp(refreshBankData);
+
+  const createNewBankHandler = (bankData) => {
+    const bankConfig = {
+      url: apiURL + "/banks",
+      method: "POST",
+      body: {
+        ...bankData,
+      },
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+    };
+    createBank(bankConfig);
+  };
+
   return (
     <React.Fragment>
-      <Header>Bank Details</Header>
+      {modalStatus && (
+        <FormModal onBackdropClick={hideModalHandler}>
+          {addBankClicked && (
+            <CreateCopyBankForm
+              onCancel={hideModalHandler}
+              onSave={createNewBankHandler}
+              loading={newBankLoading}
+              error={newBankError}
+              dateformats={dateFormats}
+              creating
+            />
+          )}
+          {Object.keys(editBankData).length > 0 && (
+            <CreateCopyBankForm
+              onCancel={hideModalHandler}
+              dateformats={dateFormats}
+              editing
+            />
+          )}
+          {Object.keys(copyBankData).length > 0 && (
+            <CreateCopyBankForm
+              onCancel={hideModalHandler}
+              dateformats={dateFormats}
+              copying
+            />
+          )}
+        </FormModal>
+      )}
+      <Header>
+        Bank Details
+        <Tooltip title="Add New Bank" placement="top-start" arrow>
+          <IconButton
+            color="primary"
+            aria-label="add"
+            onClick={addBankClickHandler}
+          >
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      </Header>
       <Container className={styles.container}>{message}</Container>
     </React.Fragment>
   );

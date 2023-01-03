@@ -1,0 +1,82 @@
+.form {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.form label {
+  color: #405d27;
+  font: inherit;
+  font-weight: bold;
+  font-size: small;
+}
+
+.inputs {
+  display: flex;
+  gap: 2rem;
+}
+
+.readonly {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  gap: 0.25rem;
+}
+
+.readonly input {
+  padding: 0.25rem;
+  font: inherit;
+  border: 1px #ccc solid;
+  background-color: #fffefe;
+  color: #405d27;
+  border-radius: 6px;
+  outline: none;
+}
+
+.readonly input:active,
+.readonly input:focus {
+  border: 1px solid #405d27;
+  background-color: #e3e6e0;
+}
+
+.readonly select {
+  font: inherit;
+  padding: 0.25rem;
+  width: 100%;
+  outline: none;
+  border: 1px solid #395322;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.checkbox {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  width: 15rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.actions button {
+  padding: 0.5rem;
+  border-radius: 6px;
+  outline: none;
+  background-color: #405d27;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #405d27;
+}
+
+.actions button:hover {
+  color: #ccc;
+  background-color: #2e431b;
+}

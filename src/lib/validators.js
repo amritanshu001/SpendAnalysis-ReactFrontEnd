@@ -11,3 +11,11 @@ export const passwordValidator = (password) => {
 export const rePasswordValidator = (prevPassword, password) => {
   return prevPassword === password && password.length >= 8;
 };
+
+export const isFieldBlank = (input) => {
+  return input.trim().length > 0;
+};
+
+export const isNumber = (input) => {
+  return !isNaN(+input);
+};
