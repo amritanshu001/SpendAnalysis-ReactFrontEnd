@@ -16,7 +16,9 @@ const FormModal = (props) => {
         document.getElementById("backdrop")
       )}
       {ReactDOM.createPortal(
-        <div className={styles.modal}>{props.children}</div>,
+        <div className={`${props.className} ${styles.modal}`}>
+          {props.children}
+        </div>,
         document.getElementById("modal")
       )}
     </React.Fragment>

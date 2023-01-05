@@ -104,6 +104,16 @@ const AddBank = (props) => {
     }
   }, [getBankDetails, authToken, apiURL, bankData]);
 
+  const hideModalHandler = () => {
+    setAddBankClicked(false);
+    setEditBankData({});
+    setCopyBankData({});
+    setDeleteBankDate({});
+    resetBankError();
+    resetEditBankError();
+    disptach(formModalAction.hideModal());
+  };
+
   const refreshBankData = useCallback(() => {
     const bankConfig = {
       url: apiURL + "/banks",
@@ -112,19 +122,12 @@ const AddBank = (props) => {
       },
     };
     getBankDetails(bankConfig);
+    hideModalHandler();
   }, [getBankDetails]);
 
   const addBankClickHandler = () => {
     disptach(formModalAction.showModal());
     setAddBankClicked(true);
-  };
-
-  const hideModalHandler = () => {
-    setAddBankClicked(false);
-    setEditBankData({});
-    setCopyBankData({});
-    setDeleteBankDate({});
-    disptach(formModalAction.hideModal());
   };
 
   const editBankClickHandler = (row) => {
@@ -168,15 +171,22 @@ const AddBank = (props) => {
     isloading: newBankLoading,
     error: newBankError,
     sendRequest: createBank,
+    resetError: resetBankError,
+  } = useHttp(refreshBankData);
+
+  const {
+    isloading: editBankLoading,
+    error: editBankError,
+    sendRequest: editBank,
+    resetError: resetEditBankError,
   } = useHttp(refreshBankData);
 
   const createNewBankHandler = (bankData) => {
+    const { id: bankId, ...requestBody } = bankData;
     const bankConfig = {
       url: apiURL + "/banks",
       method: "POST",
-      body: {
-        ...bankData,
-      },
+      body: requestBody,
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
@@ -185,10 +195,27 @@ const AddBank = (props) => {
     createBank(bankConfig);
   };
 
+  const editBankSaveHandler = (bankData) => {
+    const { id: bankId, ...rest } = bankData;
+    const editBankConfig = {
+      url: apiURL + "/banks/" + bankId,
+      method: "PUT",
+      body: rest,
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+    };
+    editBank(editBankConfig);
+  };
+
   return (
     <React.Fragment>
       {modalStatus && (
-        <FormModal onBackdropClick={hideModalHandler}>
+        <FormModal
+          onBackdropClick={hideModalHandler}
+          className={styles.modalsize}
+        >
           {addBankClicked && (
             <CreateCopyBankForm
               onCancel={hideModalHandler}
@@ -196,6 +223,7 @@ const AddBank = (props) => {
               loading={newBankLoading}
               error={newBankError}
               dateformats={dateFormats}
+              resetError={resetBankError}
               creating
             />
           )}
@@ -203,13 +231,23 @@ const AddBank = (props) => {
             <CreateCopyBankForm
               onCancel={hideModalHandler}
               dateformats={dateFormats}
+              loading={editBankLoading}
+              error={editBankError}
+              payload={editBankData}
+              resetError={resetEditBankError}
+              onSave={editBankSaveHandler}
               editing
             />
           )}
           {Object.keys(copyBankData).length > 0 && (
             <CreateCopyBankForm
               onCancel={hideModalHandler}
+              onSave={createNewBankHandler}
               dateformats={dateFormats}
+              payload={copyBankData}
+              loading={newBankLoading}
+              error={newBankError}
+              resetError={resetBankError}
               copying
             />
           )}

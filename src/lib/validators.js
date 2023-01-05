@@ -16,6 +16,16 @@ export const isFieldBlank = (input) => {
   return input.trim().length > 0;
 };
 
-export const isNumber = (input) => {
-  return !isNaN(+input);
+export const isIntegerNumber = (input) => {
+  if (input.length === 0) {
+    return false;
+  }
+  if (!isNaN(+input)) {
+    return Number.isInteger(+input);
+  }
+  return false;
+};
+
+export const isValidSelected = (value) => {
+  return !!value;
 };

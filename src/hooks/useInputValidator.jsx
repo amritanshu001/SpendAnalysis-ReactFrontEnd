@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const useInputValidator = (inputValidator) => {
-  const [value, setValue] = useState("");
+const useInputValidator = (inputValidator, initial_value = "") => {
+  const [value, setValue] = useState(initial_value);
   const [isTouched, setIsTouched] = useState(false);
 
   const resetInput = () => {
-    setValue("");
+    setValue(initial_value);
     setIsTouched(false);
   };
 
@@ -18,6 +18,11 @@ const useInputValidator = (inputValidator) => {
     setValue(event.target.value);
   };
 
+  const removeInput = () => {
+    setValue("");
+    setIsTouched(false);
+  };
+
   let inputIsValid = inputValidator(value);
   let isError = isTouched && !inputIsValid;
 
@@ -28,6 +33,7 @@ const useInputValidator = (inputValidator) => {
     inputBlurHandler,
     inputChangeHandler,
     resetInput,
+    removeInput,
   };
 };
 

@@ -203,8 +203,8 @@ const SpendAnalysis = (props) => {
     message = <p className={styles.error}>No records found!</p>;
   }
 
-  console.log("Credit Share: ", top5CreditShare, "%");
-  console.log("Debit Share: ", top5DebitShare, "%");
+  // console.log("Credit Share: ", top5CreditShare, "%");
+  // console.log("Debit Share: ", top5DebitShare, "%");
 
   const fromDateChangeHandler = (event) => {
     setFromDate(event.target.value);

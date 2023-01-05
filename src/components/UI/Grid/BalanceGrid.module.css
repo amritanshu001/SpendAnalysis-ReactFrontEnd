@@ -5,25 +5,33 @@
   padding: 0.25rem;
   /* border: 1px dashed #ccc; */
   border: #0c950c 1px solid;
+  border-radius: 4px;
   align-items: stretch;
   justify-content: space-around;
-  background-color: #224a04;
+  background-color: #224a043b;
 }
 
 .content-box {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  border: 2px solid white;
+  padding: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  border-radius: 4px;
 }
 
 .label {
   font: inherit;
   font-weight: bold;
+  text-align: left;
   margin-right: 1rem;
-  color: aliceblue;
-  background-color: #405d27;
-  padding: 0.25rem;
-  border: 1px solid #405d27;
+  color: #031f03;
+  /* background-color: #405d27; */
+  padding: 2px;
+  /* border: 1px solid #405d27; */
 }
 
 .content {
