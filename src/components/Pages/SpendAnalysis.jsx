@@ -255,7 +255,7 @@ const SpendAnalysis = (props) => {
       {filteredTransactions.length > 0 && (
         <div className={styles.summary}>
           <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
-          <TransactionGrid />
+          <TransactionGrid summary={statementSummary} />
         </div>
       )}
       <div className={styles.display}>

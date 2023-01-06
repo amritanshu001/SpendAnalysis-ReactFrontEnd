@@ -1,0 +1,29 @@
+.average {
+  font: inherit;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: space-evenly;
+  border: #0c950c 1px solid;
+  padding: 0.25rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  background-color: #224a043b;
+}
+
+.average .labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.average .labels p {
+  margin: 0 0.25rem;
+}
+
+.blank {
+  display: inline-block;
+  width: 25%;
+}

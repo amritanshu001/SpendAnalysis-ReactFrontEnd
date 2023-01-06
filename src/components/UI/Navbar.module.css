@@ -33,6 +33,19 @@
   font-size: 14px;
 }
 
+.hamburger {
+  display: none;
+}
+
+@media (max-width: 40rem) {
+  .navbar {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
 .navbar li {
   list-style: none;
   margin: 0 1rem;

@@ -5,14 +5,14 @@ import Home from "./components/Pages/Home";
 import AddBank from "./components/Pages/AddBank";
 import ManageAccounts from "./components/Pages/ManageAccounts";
 import SpendAnalysis from "./components/Pages/SpendAnalysis";
+import MenuIcon from "@mui/icons-material/Menu";
+import { IconButton } from "@mui/material";
 
 import { useSelector } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
 import UploadStatement from "./components/Pages/UploadStatement";
-
-// import navbar_data from "./data/data";
 
 const App = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);

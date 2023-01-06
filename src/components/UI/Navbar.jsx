@@ -10,6 +10,9 @@ import { useHistory } from "react-router-dom";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
 
+import MenuIcon from "@mui/icons-material/Menu";
+import { IconButton } from "@mui/material";
+
 const Navbar = (props) => {
   const dispatch = useDispatch();
   const redirect = useHistory();
@@ -65,6 +68,11 @@ const Navbar = (props) => {
 
   return (
     <header className={styles.header}>
+      <div className={styles.hamburger}>
+        <IconButton aria-label="menu" color="success">
+          <MenuIcon />
+        </IconButton>
+      </div>
       <div>Spend Analysis</div>
       <nav className={styles.navbar}>
         <ul>
