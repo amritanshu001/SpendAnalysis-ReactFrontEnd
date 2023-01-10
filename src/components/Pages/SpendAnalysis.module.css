@@ -6,6 +6,12 @@
   margin-bottom: 1rem;
 }
 
+@media (max-width: 40rem) {
+  .dates {
+    flex-direction: column;
+  }
+}
+
 .container {
   max-width: 50rem;
   /* color: #121512;
@@ -15,11 +21,12 @@
 
 .select {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 0.5rem;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   width: 80%;
-  margin: auto;
+  /* margin: auto; */
   margin-bottom: 1rem;
   margin-top: 1rem;
 }
@@ -32,6 +39,7 @@
 
 .select select {
   font: inherit;
+  width: 100%;
   padding: 0.25rem;
   outline: none;
   border: 1px solid #395322;

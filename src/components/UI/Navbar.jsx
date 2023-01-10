@@ -1,17 +1,18 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./Navbar.module.css";
-import { NavLink } from "react-router-dom";
-import Button from "./Button";
 import { authActions } from "../../store/auth-slice";
 import { accountsAction } from "../../store/useraccount-slice";
 import { banksAction } from "../../store/banks-slice";
 import { useHistory } from "react-router-dom";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
+import NavElements from "./NavElements";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import { IconButton } from "@mui/material";
+import { useState } from "react";
+import Sidebar from "./Sidebar";
 
 const Navbar = (props) => {
   const dispatch = useDispatch();
@@ -19,6 +20,14 @@ const Navbar = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const userToken = useSelector((state) => state.userAuth.authToken);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
+
+  const [sideMenuState, setSideMenuState] = useState(false);
+  const showSideMenu = () => {
+    setSideMenuState(true);
+  };
+  const hideSideMenu = () => {
+    setSideMenuState(false);
+  };
 
   const logoutActions = () => {
     dispatch(accountsAction.resetUserAccounts());
@@ -57,7 +66,6 @@ const Navbar = (props) => {
     }
   }, [logoutError]);
 
-  const showAddBankRoute = isUserLoggedIn && isUserAdmin;
   let buttonText = "Logout";
   if (logoutLoading) {
     buttonText = "Logging Out";
@@ -67,51 +75,35 @@ const Navbar = (props) => {
   }
 
   return (
-    <header className={styles.header}>
-      <div className={styles.hamburger}>
-        <IconButton aria-label="menu" color="success">
-          <MenuIcon />
-        </IconButton>
-      </div>
-      <div>Spend Analysis</div>
-      <nav className={styles.navbar}>
-        <ul>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          {!isUserLoggedIn && (
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-          )}
-          {isUserLoggedIn && (
-            <li>
-              <NavLink to="/spendanalysis">Spend Analysis</NavLink>
-            </li>
-          )}
-          {isUserLoggedIn && (
-            <li>
-              <NavLink to="/manageaccount">Manage Accounts</NavLink>
-            </li>
-          )}
-          {isUserLoggedIn && (
-            <li>
-              <NavLink to="/uploadstatement">Upload Statement</NavLink>
-            </li>
-          )}
-          {showAddBankRoute && (
-            <li>
-              <NavLink to="/addbank">Add Bank Details</NavLink>
-            </li>
-          )}
-        </ul>
-        {isUserLoggedIn && (
-          <Button className={styles.logout} onClick={logoutHandler}>
-            {buttonText}
-          </Button>
-        )}
-      </nav>
-    </header>
+    <React.Fragment>
+      <header className={styles.header}>
+        <div className={styles.hamburger}>
+          <IconButton aria-label="menu" color="success" onClick={showSideMenu}>
+            <MenuIcon />
+          </IconButton>
+        </div>
+        <div>Spend Analysis</div>
+        <NavElements
+          className={styles.navbar}
+          isUserLoggedIn={isUserLoggedIn}
+          isUserAdmin={isUserAdmin}
+          logoutHandler={logoutHandler}
+          buttonText={buttonText}
+        />
+      </header>
+      {sideMenuState && (
+        <Sidebar hideSideBar={hideSideMenu}>
+          <NavElements
+            className={styles.sidebar}
+            isUserLoggedIn={isUserLoggedIn}
+            isUserAdmin={isUserAdmin}
+            logoutHandler={logoutHandler}
+            buttonText={buttonText}
+            hideSideBar={hideSideMenu}
+          />
+        </Sidebar>
+      )}
+    </React.Fragment>
   );
 };
 

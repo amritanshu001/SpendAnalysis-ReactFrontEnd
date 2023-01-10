@@ -1,0 +1,8 @@
+.logout {
+  margin-left: 3rem;
+  box-shadow: 2px 2px 2px #2b2e4a;
+}
+
+.logout:hover {
+  box-shadow: none;
+}

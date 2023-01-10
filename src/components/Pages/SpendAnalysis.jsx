@@ -6,6 +6,7 @@ import Header from "../UI/Header";
 import Input from "../UI/Input";
 import Table from "../UI/Table/Table";
 import BalanceGrid from "../UI/Grid/BalanceGrid";
+import SpendChart from "../UI/Chart/SpendChart";
 
 import { useSelector } from "react-redux";
 import Button from "../UI/Button";
@@ -40,6 +41,14 @@ const mapAccounts = (account) => {
   );
 };
 
+function uniqBy(a, key) {
+  var seen = {};
+  return a.filter(function (item) {
+    var k = key(item);
+    return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+  });
+}
+
 const header = [
   { name: "Transaction Date", tech_name: "txn_date" },
   { name: "Value Date", tech_name: "value_date" },
@@ -59,6 +68,7 @@ const SpendAnalysis = (props) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [transactions, setTransactions] = useState(null);
+  const [reactChartData, setReactChartData] = useState([]);
 
   const processTransactions = useCallback((rawdata) => {
     const convertDates = (date) => {
@@ -143,6 +153,7 @@ const SpendAnalysis = (props) => {
   let top5Debit = [];
   let top5CreditShare = 0.0;
   let top5DebitShare = 0.0;
+  let spendChart;
 
   let message;
   if (transactionsLoading) {
@@ -193,6 +204,60 @@ const SpendAnalysis = (props) => {
         statementSummary.outgoingSum) *
       100
     ).toFixed(2);
+
+    let monthYears = filteredTransactions.map((txn) => {
+      const txnDate = new Date(txn.txn_date);
+      return {
+        month: txnDate.getUTCMonth() + 1,
+        year: txnDate.getUTCFullYear(),
+      };
+    });
+    let uniqueMonthYears = uniqBy(monthYears, JSON.stringify);
+    // console.log(uniqueMonthYears, filteredTransactions);
+
+    let chartData = uniqueMonthYears.map((monthYear) => {
+      const chartItem = {};
+      const dateFilteredTxns = filteredTransactions
+        .filter((txn) => {
+          const convertTxnDate = new Date(txn.txn_date);
+          return (
+            convertTxnDate.getUTCFullYear() === monthYear.year &&
+            convertTxnDate.getUTCMonth() + 1 === monthYear.month
+          );
+        })
+        .sort((txn1, txn2) => {
+          const txn2Date = new Date(txn2.txn_date);
+          const txn1Date = new Date(txn1.txn_date);
+          return txn2Date.getTime() - txn1Date.getTime();
+        });
+      chartItem.date = monthYear;
+      chartItem.closingBal = dateFilteredTxns[0].balance;
+      chartItem.openingBal =
+        dateFilteredTxns[dateFilteredTxns.length - 1].deposit_amt === ""
+          ? +dateFilteredTxns[dateFilteredTxns.length - 1].balance +
+            +dateFilteredTxns[dateFilteredTxns.length - 1].withdrawal_amt
+          : +dateFilteredTxns[dateFilteredTxns.length - 1].balance -
+            +dateFilteredTxns[dateFilteredTxns.length - 1].deposit_amt;
+      chartItem.incoming = dateFilteredTxns
+        .filter((txn) => {
+          return txn.withdrawal_amt === "";
+        })
+        .reduce((prev, curr) => {
+          return prev + +curr.deposit_amt;
+        }, 0);
+      chartItem.outgoing = dateFilteredTxns
+        .filter((txn) => {
+          return txn.deposit_amt === "";
+        })
+        .reduce((prev, curr) => {
+          return prev + +curr.withdrawal_amt;
+        }, 0);
+      return chartItem;
+    });
+    console.log(chartData);
+    if (chartData.length > 0) {
+      spendChart = <SpendChart chartData={chartData} />;
+    }
 
     message = (
       <Table header={header} body={filteredTransactions} editable={false} />
@@ -258,6 +323,7 @@ const SpendAnalysis = (props) => {
           <TransactionGrid summary={statementSummary} />
         </div>
       )}
+      {spendChart}
       <div className={styles.display}>
         <div className={styles.results}>{message}</div>
       </div>
