@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./SpendChart.module.css";
-import Header from "../Header";
+import createTrend from "trendline";
+
 import {
   Chart as ChartJS,
   LinearScale,
@@ -34,6 +35,13 @@ const getMonthName = (monthNumber) => {
 };
 
 const SpendChart = (props) => {
+  const trendData = props.chartData
+    .map((chartItem) => chartItem.closingBal)
+    .map((balance, index) => {
+      return { closingBal: balance, x: index + 1 };
+    });
+  const trend = createTrend(trendData, "x", "closingBal");
+
   const data = {
     labels: props.chartData.map((chartItem) => {
       return getMonthName(chartItem.date.month) + "," + chartItem.date.year;
@@ -70,6 +78,13 @@ const SpendChart = (props) => {
         borderColor: "white",
         borderWidth: 2,
         data: props.chartData.map((chartItem) => chartItem.incoming),
+      },
+      {
+        type: "line",
+        label: "Trend",
+        borderColor: "#ccc",
+        fill: false,
+        data: trendData.map((trendPoint, index) => trend.calcY(index + 1)),
       },
     ],
   };
