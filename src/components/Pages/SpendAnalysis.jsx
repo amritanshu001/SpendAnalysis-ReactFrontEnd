@@ -49,6 +49,14 @@ function uniqBy(a, key) {
   });
 }
 
+const sortByDate = (txn1, txn2) => {
+  const txn2Date = new Date(txn2.txn_date);
+  const txn1Date = new Date(txn1.txn_date);
+  if (txn1Date.getTime() === txn2Date.getTime()) {
+    return txn1.id - txn2.id;
+  }
+  return txn1Date.getTime() - txn2Date.getTime();
+};
 const header = [
   { name: "Transaction Date", tech_name: "txn_date" },
   { name: "Value Date", tech_name: "value_date" },
@@ -68,7 +76,6 @@ const SpendAnalysis = (props) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [transactions, setTransactions] = useState(null);
-  const [reactChartData, setReactChartData] = useState([]);
 
   const processTransactions = useCallback((rawdata) => {
     const convertDates = (date) => {
@@ -208,12 +215,11 @@ const SpendAnalysis = (props) => {
     let monthYears = filteredTransactions.map((txn) => {
       const txnDate = new Date(txn.txn_date);
       return {
-        month: txnDate.getUTCMonth() + 1,
+        month: txnDate.getUTCMonth(),
         year: txnDate.getUTCFullYear(),
       };
     });
     let uniqueMonthYears = uniqBy(monthYears, JSON.stringify);
-    // console.log(uniqueMonthYears, filteredTransactions);
 
     let chartData = uniqueMonthYears.map((monthYear) => {
       const chartItem = {};
@@ -222,22 +228,20 @@ const SpendAnalysis = (props) => {
           const convertTxnDate = new Date(txn.txn_date);
           return (
             convertTxnDate.getUTCFullYear() === monthYear.year &&
-            convertTxnDate.getUTCMonth() + 1 === monthYear.month
+            convertTxnDate.getUTCMonth() === monthYear.month
           );
         })
-        .sort((txn1, txn2) => {
-          const txn2Date = new Date(txn2.txn_date);
-          const txn1Date = new Date(txn1.txn_date);
-          return txn2Date.getTime() - txn1Date.getTime();
-        });
+        .sort(sortByDate);
+
       chartItem.date = monthYear;
-      chartItem.closingBal = dateFilteredTxns[0].balance;
+      chartItem.closingBal =
+        dateFilteredTxns[dateFilteredTxns.length - 1].balance;
+
       chartItem.openingBal =
-        dateFilteredTxns[dateFilteredTxns.length - 1].deposit_amt === ""
-          ? +dateFilteredTxns[dateFilteredTxns.length - 1].balance +
-            +dateFilteredTxns[dateFilteredTxns.length - 1].withdrawal_amt
-          : +dateFilteredTxns[dateFilteredTxns.length - 1].balance -
-            +dateFilteredTxns[dateFilteredTxns.length - 1].deposit_amt;
+        dateFilteredTxns[0].deposit_amt === ""
+          ? +dateFilteredTxns[0].balance + +dateFilteredTxns[0].withdrawal_amt
+          : +dateFilteredTxns[0].balance - +dateFilteredTxns[0].deposit_amt;
+
       chartItem.incoming = dateFilteredTxns
         .filter((txn) => {
           return txn.withdrawal_amt === "";
@@ -245,6 +249,7 @@ const SpendAnalysis = (props) => {
         .reduce((prev, curr) => {
           return prev + +curr.deposit_amt;
         }, 0);
+
       chartItem.outgoing = dateFilteredTxns
         .filter((txn) => {
           return txn.deposit_amt === "";
@@ -252,15 +257,29 @@ const SpendAnalysis = (props) => {
         .reduce((prev, curr) => {
           return prev + +curr.withdrawal_amt;
         }, 0);
+
       return chartItem;
     });
-    console.log(chartData);
     if (chartData.length > 0) {
-      spendChart = <SpendChart chartData={chartData} />;
+      spendChart = (
+        <SpendChart
+          chartData={chartData.sort((date1, date2) => {
+            return (
+              date1.date.year * 100 +
+              date1.date.month -
+              (date2.date.year * 100 + date2.date.month)
+            );
+          })}
+        />
+      );
     }
 
     message = (
-      <Table header={header} body={filteredTransactions} editable={false} />
+      <Table
+        header={header}
+        body={filteredTransactions.sort(sortByDate)}
+        editable={false}
+      />
     );
   }
 

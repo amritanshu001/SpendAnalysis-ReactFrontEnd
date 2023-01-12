@@ -27,16 +27,22 @@ ChartJS.register(
   BarController
 );
 
+const getMonthName = (monthNumber) => {
+  const date = new Date();
+  date.setMonth(monthNumber);
+  return date.toLocaleString("default", { month: "long" });
+};
+
 const SpendChart = (props) => {
   const data = {
     labels: props.chartData.map((chartItem) => {
-      return chartItem.date.month + "/" + chartItem.date.year;
+      return getMonthName(chartItem.date.month) + "," + chartItem.date.year;
     }),
     datasets: [
       {
         type: "line",
         label: "Opening Balance",
-        borderColor: "rgb(255, 99, 132)",
+        borderColor: "#FF9E9E",
         borderWidth: 2,
         fill: false,
         data: props.chartData.map((chartItem) => chartItem.openingBal),
@@ -51,19 +57,19 @@ const SpendChart = (props) => {
       },
       {
         type: "bar",
-        label: "Income",
-        backgroundColor: "rgb(75, 192, 192)",
-        borderColor: "white",
-        borderWidth: 2,
-        data: props.chartData.map((chartItem) => chartItem.incoming),
-      },
-      {
-        type: "bar",
         label: "Expense",
-        backgroundColor: "rgb(53, 162, 235)",
+        backgroundColor: "#FF597B",
         borderColor: "white",
         borderWidth: 2,
         data: props.chartData.map((chartItem) => chartItem.outgoing),
+      },
+      {
+        type: "bar",
+        label: "Income",
+        backgroundColor: "#62B6B7",
+        borderColor: "white",
+        borderWidth: 2,
+        data: props.chartData.map((chartItem) => chartItem.incoming),
       },
     ],
   };
