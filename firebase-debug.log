@@ -1,13 +1,13 @@
-[debug] [2022-12-09T08:13:45.301Z] ----------------------------------------------------------------------
-[debug] [2022-12-09T08:13:45.303Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\amritanshu\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
-[debug] [2022-12-09T08:13:45.303Z] CLI Version:   11.17.0
-[debug] [2022-12-09T08:13:45.304Z] Platform:      win32
-[debug] [2022-12-09T08:13:45.304Z] Node Version:  v16.17.0
-[debug] [2022-12-09T08:13:45.305Z] Time:          Fri Dec 09 2022 13:43:45 GMT+0530 (India Standard Time)
-[debug] [2022-12-09T08:13:45.306Z] ----------------------------------------------------------------------
+[debug] [2023-01-14T21:56:09.897Z] ----------------------------------------------------------------------
+[debug] [2023-01-14T21:56:09.899Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\amritanshu\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init --debug
+[debug] [2023-01-14T21:56:09.900Z] CLI Version:   11.20.0
+[debug] [2023-01-14T21:56:09.900Z] Platform:      win32
+[debug] [2023-01-14T21:56:09.900Z] Node Version:  v16.17.0
+[debug] [2023-01-14T21:56:09.901Z] Time:          Sun Jan 15 2023 03:26:09 GMT+0530 (India Standard Time)
+[debug] [2023-01-14T21:56:09.901Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2022-12-09T08:13:45.315Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2022-12-09T08:13:45.315Z] > authorizing via signed-in user (amritanshu001@gmail.com)
+[debug] [2023-01-14T21:56:09.908Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-01-14T21:56:09.910Z] > authorizing via signed-in user (amritanshu001@gmail.com)
 [info] 
      ######## #### ########  ######## ########     ###     ######  ########
      ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
@@ -19,3 +19,86 @@ You're about to initialize a Firebase project in this directory:
 
   C:\Users\amritanshu\OneDrive - Infosys Limited\VB code\React Code\SpendAnalysis\FrontEnd\SpendAnalysis-ReactFrontEnd
 
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2023-01-14T21:56:17.998Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2023-01-14T21:56:18.491Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2023-01-14T21:56:18.491Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project react-requests-4b4d2 (React-Requests) 
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2023-01-14T21:56:49.315Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2023-01-14T21:56:49.379Z] FetchError: request to https://www.gstatic.com/firebasejs/releases.json failed, reason: unable to get local issuer certificate
+    at ClientRequest.<anonymous> (C:\Users\amritanshu\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\node-fetch\lib\index.js:1491:11)
+    at ClientRequest.emit (node:events:513:28)
+    at ClientRequest.emit (node:domain:489:12)
+    at TLSSocket.socketErrorListener (node:_http_client:481:9)
+    at TLSSocket.emit (node:events:513:28)
+    at TLSSocket.emit (node:domain:489:12)
+    at emitErrorNT (node:internal/streams/destroy:157:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)
+[error] 
+[error] Error: Failed to make request to https://www.gstatic.com/firebasejs/releases.json
+[debug] [2023-01-14T22:02:19.632Z] ----------------------------------------------------------------------
+[debug] [2023-01-14T22:02:19.633Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\amritanshu\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init --debug
+[debug] [2023-01-14T22:02:19.634Z] CLI Version:   11.20.0
+[debug] [2023-01-14T22:02:19.634Z] Platform:      win32
+[debug] [2023-01-14T22:02:19.634Z] Node Version:  v16.17.0
+[debug] [2023-01-14T22:02:19.635Z] Time:          Sun Jan 15 2023 03:32:19 GMT+0530 (India Standard Time)
+[debug] [2023-01-14T22:02:19.635Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-01-14T22:02:19.643Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-01-14T22:02:19.644Z] > authorizing via signed-in user (amritanshu001@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\amritanshu\OneDrive - Infosys Limited\VB code\React Code\SpendAnalysis\FrontEnd\SpendAnalysis-ReactFrontEnd
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2023-01-14T22:02:26.655Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2023-01-14T22:02:27.199Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2023-01-14T22:02:27.200Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project react-requests-4b4d2 (React-Requests) 
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2023-01-14T22:02:39.236Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2023-01-14T22:02:39.320Z] FetchError: request to https://www.gstatic.com/firebasejs/releases.json failed, reason: unable to get local issuer certificate
+    at ClientRequest.<anonymous> (C:\Users\amritanshu\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\node-fetch\lib\index.js:1491:11)
+    at ClientRequest.emit (node:events:513:28)
+    at ClientRequest.emit (node:domain:489:12)
+    at TLSSocket.socketErrorListener (node:_http_client:481:9)
+    at TLSSocket.emit (node:events:513:28)
+    at TLSSocket.emit (node:domain:489:12)
+    at emitErrorNT (node:internal/streams/destroy:157:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)
+[error] 
+[error] Error: Failed to make request to https://www.gstatic.com/firebasejs/releases.json
