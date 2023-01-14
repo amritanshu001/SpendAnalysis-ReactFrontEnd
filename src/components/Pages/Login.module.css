@@ -18,6 +18,7 @@
 
 .toggler,
 .toggler:hover {
+  font-weight: bold;
   background-color: transparent;
   margin-top: 1rem;
   border: none;

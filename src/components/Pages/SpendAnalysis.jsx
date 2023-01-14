@@ -14,6 +14,7 @@ import Button from "../UI/Button";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
 import TransactionGrid from "../UI/Grid/TransactionGrid";
+import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -164,7 +165,8 @@ const SpendAnalysis = (props) => {
 
   let message;
   if (transactionsLoading) {
-    message = <p className={styles.loading}>Loading....</p>;
+    message = <SpinnerCircular color="success" />;
+    // message = <p className={styles.loading}>Loading....</p>;
   }
   if (transactionsError) {
     message = <p className={styles.error}>{transactionsError}</p>;

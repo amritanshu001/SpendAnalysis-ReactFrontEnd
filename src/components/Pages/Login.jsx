@@ -320,13 +320,13 @@ const Login = (props) => {
             <Button type="submit" disabled={!formIsValid}>
               {buttonName}
             </Button>
-            <Button
+            <button
               type="button"
               onClick={optionToggleHandler}
               className={styles.toggler}
             >
               {loginOption ? "New User?" : "Existing User Login"}
-            </Button>
+            </button>
           </div>
           {loginError && <p className={styles.error}>{loginError}</p>}
         </form>

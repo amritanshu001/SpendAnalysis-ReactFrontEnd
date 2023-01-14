@@ -1,15 +1,29 @@
 import styles from "./App.module.css";
-import Navbar from "./components/UI/Navbar";
-import Login from "./components/Pages/Login";
-import Home from "./components/Pages/Home";
-import AddBank from "./components/Pages/AddBank";
-import ManageAccounts from "./components/Pages/ManageAccounts";
-import SpendAnalysis from "./components/Pages/SpendAnalysis";
+
+import React from "react";
+
+// import Navbar from "./components/UI/Navbar";
+// import Login from "./components/Pages/Login";
+// import Home from "./components/Pages/Home";
+// import AddBank from "./components/Pages/AddBank";
+// import ManageAccounts from "./components/Pages/ManageAccounts";
+// import SpendAnalysis from "./components/Pages/SpendAnalysis";
+
+const Navbar = React.lazy(() => import("./components/UI/Navbar"));
+const Login = React.lazy(() => import("./components/Pages/Login"));
+const Home = React.lazy(() => import("./components/Pages/Home"));
+const AddBank = React.lazy(() => import("./components/Pages/AddBank"));
+const ManageAccounts = React.lazy(() =>
+  import("./components/Pages/ManageAccounts")
+);
+const SpendAnalysis = React.lazy(() =>
+  import("./components/Pages/SpendAnalysis")
+);
 
 import { useSelector } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
-import React from "react";
+
 import UploadStatement from "./components/Pages/UploadStatement";
 
 const App = (props) => {
