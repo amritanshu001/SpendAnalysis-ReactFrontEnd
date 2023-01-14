@@ -3,6 +3,13 @@
   box-shadow: 2px 2px 2px #2b2e4a;
 }
 
+@media (max-width: 40rem) {
+  .logout {
+    margin-left: 1rem;
+    width: 60%;
+  }
+}
+
 .logout:hover {
   box-shadow: none;
 }
