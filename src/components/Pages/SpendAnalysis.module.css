@@ -86,6 +86,7 @@
 .summary {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
   width: 60%;
   margin: auto;
   margin-top: 1rem;

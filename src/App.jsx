@@ -2,6 +2,9 @@ import styles from "./App.module.css";
 
 import React from "react";
 
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./MUIThemeEngine/theme";
+
 // import Navbar from "./components/UI/Navbar";
 // import Login from "./components/Pages/Login";
 // import Home from "./components/Pages/Home";
@@ -31,7 +34,7 @@ const App = (props) => {
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
   const userAccounts = useSelector((state) => state.userAccounts.userAccounts);
   return (
-    <React.Fragment>
+    <ThemeProvider theme={theme}>
       <Navbar></Navbar>
       <main className={styles["main-area"]}>
         <Switch>
@@ -70,7 +73,7 @@ const App = (props) => {
           </Route>
         </Switch>
       </main>
-    </React.Fragment>
+    </ThemeProvider>
   );
 };
 
