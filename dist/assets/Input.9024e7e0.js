@@ -1,1 +1,0 @@
-import{j as a,a as e}from"./index.30f654d1.js";const l="_input_1lbc3_1",t={input:l},d=n=>a("div",{className:`${t.input}`,children:[e("label",{htmlFor:n.id,children:n.children}),e("input",{id:n.id,type:n.type,name:n.name,value:n.value,onChange:n.onChange,onBlur:n.onBlur,className:n.className,disabled:n.disabled})]});export{d as I};

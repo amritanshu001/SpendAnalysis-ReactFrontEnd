@@ -1,0 +1,1 @@
+import{j as a,a as e}from"./index.a05e5750.js";const t="_input_vtpm9_1",l={input:t},d=n=>a("div",{className:`${l.input}`,children:[e("label",{htmlFor:n.id,children:n.children}),e("input",{id:n.id,type:n.type,name:n.name,value:n.value,onChange:n.onChange,onBlur:n.onBlur,className:n.className,disabled:n.disabled})]});export{d as I};
