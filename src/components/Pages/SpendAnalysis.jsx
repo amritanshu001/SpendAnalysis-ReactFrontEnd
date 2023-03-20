@@ -15,6 +15,8 @@ import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
 import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
+import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
+import Box from "@mui/material/Box";
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -32,6 +34,12 @@ const summaryDetails = (current, transaction) => {
     };
   }
   return transactionSummary;
+};
+
+const convert2Date = (params) => {
+  const newDate = new Date(params.row.txn_date);
+  console.log(newDate);
+  return newDate;
 };
 
 const mapAccounts = (account) => {
@@ -66,6 +74,38 @@ const header = [
   { name: "Deposit Amount", tech_name: "deposit_amt" },
   { name: "Withdrawal Amount", tech_name: "withdrawal_amt" },
   { name: "Balance", tech_name: "balance" },
+];
+
+const txnCols = [
+  {
+    headerName: "Transaction Date",
+    field: "txn_date",
+    width: 180,
+    type: "date",
+    valueGetter: convert2Date,
+  },
+  {
+    headerName: "Value Date",
+    field: "value_date",
+    width: 180,
+    type: "date",
+    valueGetter: convert2Date,
+  },
+  { headerName: "Cheque No.", field: "cheque_no", width: 100 },
+  { headerName: "Transaction Details", field: "txn_remarks", width: 500 },
+  {
+    headerName: "Deposit Amount",
+    field: "deposit_amt",
+    width: 150,
+    type: "number",
+  },
+  {
+    headerName: "Withdrawal Amount",
+    field: "withdrawal_amt",
+    width: 150,
+    type: "number",
+  },
+  { headerName: "Balance", field: "balance", width: 100, type: "number" },
 ];
 
 const SpendAnalysis = (props) => {
@@ -162,6 +202,7 @@ const SpendAnalysis = (props) => {
   let top5CreditShare = 0.0;
   let top5DebitShare = 0.0;
   let spendChart;
+  let message1;
 
   let message;
   if (transactionsLoading) {
@@ -275,6 +316,12 @@ const SpendAnalysis = (props) => {
         />
       );
     }
+    message1 = (
+      <DisplayGrid
+        rows={filteredTransactions.sort(sortByDate)}
+        columns={txnCols}
+      />
+    );
 
     message = (
       <Table
@@ -288,9 +335,6 @@ const SpendAnalysis = (props) => {
   if (!transactionsLoading && transactions && transactions.length === 0) {
     message = <p className={styles.error}>No records found!</p>;
   }
-
-  // console.log("Credit Share: ", top5CreditShare, "%");
-  // console.log("Debit Share: ", top5DebitShare, "%");
 
   const fromDateChangeHandler = (event) => {
     setFromDate(event.target.value);
@@ -345,9 +389,20 @@ const SpendAnalysis = (props) => {
         </div>
       )}
       {spendChart}
-      <div className={styles.display}>
+      <Box
+        sx={{
+          margin: "auto",
+          marginTop: 2,
+          height: 1000,
+          width: "90%",
+        }}
+      >
+        {message1}
+      </Box>
+
+      {/* <div className={styles.display}>
         <div className={styles.results}>{message}</div>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 };
