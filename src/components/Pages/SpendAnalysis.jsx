@@ -38,7 +38,6 @@ const summaryDetails = (current, transaction) => {
 
 const convert2Date = (params) => {
   const newDate = new Date(params.row.txn_date);
-  console.log(newDate);
   return newDate;
 };
 
@@ -80,32 +79,52 @@ const txnCols = [
   {
     headerName: "Transaction Date",
     field: "txn_date",
-    width: 180,
+    width: 210,
     type: "date",
     valueGetter: convert2Date,
+    headerClassName: "spend-table__header",
   },
   {
     headerName: "Value Date",
     field: "value_date",
-    width: 180,
+    width: 210,
     type: "date",
     valueGetter: convert2Date,
+    headerClassName: "spend-table__header",
   },
-  { headerName: "Cheque No.", field: "cheque_no", width: 100 },
-  { headerName: "Transaction Details", field: "txn_remarks", width: 500 },
+  {
+    headerName: "Cheque No.",
+    field: "cheque_no",
+    width: 105,
+    headerClassName: "spend-table__header",
+  },
+  {
+    headerName: "Transaction Details",
+    field: "txn_remarks",
+    width: 500,
+    headerClassName: "spend-table__header",
+  },
   {
     headerName: "Deposit Amount",
     field: "deposit_amt",
     width: 150,
     type: "number",
+    headerClassName: "spend-table__header",
   },
   {
     headerName: "Withdrawal Amount",
     field: "withdrawal_amt",
     width: 150,
     type: "number",
+    headerClassName: "spend-table__header",
   },
-  { headerName: "Balance", field: "balance", width: 100, type: "number" },
+  {
+    headerName: "Balance",
+    field: "balance",
+    width: 100,
+    type: "number",
+    headerClassName: "spend-table__header",
+  },
 ];
 
 const SpendAnalysis = (props) => {
@@ -389,16 +408,8 @@ const SpendAnalysis = (props) => {
         </div>
       )}
       {spendChart}
-      <Box
-        sx={{
-          margin: "auto",
-          marginTop: 2,
-          height: 1000,
-          width: "90%",
-        }}
-      >
-        {message1}
-      </Box>
+
+      {message1}
 
       {/* <div className={styles.display}>
         <div className={styles.results}>{message}</div>

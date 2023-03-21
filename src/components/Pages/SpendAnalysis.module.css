@@ -95,3 +95,9 @@
   background-color: #b8d0c8d6;
   box-shadow: 2px 2px 5px 2px #ccc;
 }
+
+.spend-table__header {
+  background-color: #405d27;
+  color: #f3f2f2;
+  font-weight: bold;
+}
