@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import styles from "./SpendAnalysis.module.css";
 
 import Container from "../UI/Container";
@@ -16,7 +16,6 @@ import useHttp from "../../hooks/useHTTP";
 import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
-import Box from "@mui/material/Box";
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -225,11 +224,11 @@ const SpendAnalysis = (props) => {
 
   let message;
   if (transactionsLoading) {
-    message = <SpinnerCircular color="success" />;
+    message1 = <SpinnerCircular color="success" />;
     // message = <p className={styles.loading}>Loading....</p>;
   }
   if (transactionsError) {
-    message = <p className={styles.error}>{transactionsError}</p>;
+    message1 = <p className={styles.error}>{transactionsError}</p>;
   }
 
   if (
@@ -339,6 +338,7 @@ const SpendAnalysis = (props) => {
       <DisplayGrid
         rows={filteredTransactions.sort(sortByDate)}
         columns={txnCols}
+        loading={transactionsLoading}
       />
     );
 
@@ -401,6 +401,7 @@ const SpendAnalysis = (props) => {
           {validation && <p className={styles.error}>{validation}</p>}
         </form>
       </Container>
+
       {filteredTransactions.length > 0 && (
         <div className={styles.summary}>
           <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
@@ -408,12 +409,10 @@ const SpendAnalysis = (props) => {
         </div>
       )}
       {spendChart}
-
       {message1}
-
       {/* <div className={styles.display}>
         <div className={styles.results}>{message}</div>
-      </div> */}
+        </div> */}
     </React.Fragment>
   );
 };

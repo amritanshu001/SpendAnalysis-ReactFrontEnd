@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
-import { maxWidth } from "@mui/system";
 
 const DisplayGrid = (props) => {
   return (
     <Box
-      // maxWidth="lg"
       sx={{
-        height: 1000,
+        height: 2000,
         width: "90%",
         margin: "auto",
         marginTop: 2,
@@ -29,7 +27,13 @@ const DisplayGrid = (props) => {
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
           border: 1,
         }}
-        style={{ textAlign: "center" }}
+        loading={props.loading}
+        autoHeight={true}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 25, page: 0 },
+          },
+        }}
       />
     </Box>
   );
