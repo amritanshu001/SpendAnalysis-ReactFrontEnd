@@ -22,6 +22,7 @@ const DisplayGrid = (props) => {
         rows={props.rows}
         columns={props.columns}
         density="compact"
+        pageSizeOptions={[10, 25, 50, 100]}
         sx={{
           textAlign: "center",
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
@@ -31,7 +32,7 @@ const DisplayGrid = (props) => {
         autoHeight={true}
         initialState={{
           pagination: {
-            paginationModel: { pageSize: 25, page: 0 },
+            paginationModel: { pageSize: 10, page: 0 },
           },
         }}
       />
