@@ -8,11 +8,13 @@ body {
 }
 
 #root {
-  display: grid;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  /* height: 100vh;
   grid-template-rows: 10% 90%;
   grid-template-areas:
     "."
-    "main";
+    "main"; */
   background-color: #f3efef;
 }

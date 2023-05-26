@@ -4,13 +4,7 @@ import React from "react";
 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./MUIThemeEngine/theme";
-
-// import Navbar from "./components/UI/Navbar";
-// import Login from "./components/Pages/Login";
-// import Home from "./components/Pages/Home";
-// import AddBank from "./components/Pages/AddBank";
-// import ManageAccounts from "./components/Pages/ManageAccounts";
-// import SpendAnalysis from "./components/Pages/SpendAnalysis";
+import Paper from "@mui/material/Paper";
 
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
@@ -36,7 +30,8 @@ const App = (props) => {
   return (
     <ThemeProvider theme={theme}>
       <Navbar></Navbar>
-      <main className={styles["main-area"]}>
+      {/* <main className={styles["main-area"]}> */}
+      <Paper elevation={0} sx={{ marginTop: 5 }}>
         <Switch>
           <Route path="/" exact>
             <Home />
@@ -72,7 +67,8 @@ const App = (props) => {
             <Redirect to="/" />
           </Route>
         </Switch>
-      </main>
+      </Paper>
+      {/* </main> */}
     </ThemeProvider>
   );
 };
