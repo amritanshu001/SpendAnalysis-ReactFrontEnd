@@ -4,5 +4,5 @@ if (navigator.platform === "Win32") {
 } else {
   apiURL = "https://analyzespends.onrender.com";
 }
-
+console.log(apiURL)
 export default apiURL;
