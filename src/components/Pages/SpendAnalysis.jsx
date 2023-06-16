@@ -17,6 +17,12 @@ import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
   if (transaction.deposit_amt === "") {
@@ -323,23 +329,47 @@ const SpendAnalysis = (props) => {
     });
     if (chartData.length > 0) {
       spendChart = (
-        <SpendChart
-          chartData={chartData.sort((date1, date2) => {
-            return (
-              date1.date.year * 100 +
-              date1.date.month -
-              (date2.date.year * 100 + date2.date.month)
-            );
-          })}
-        />
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
+              Spend Trend
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SpendChart
+              chartData={chartData.sort((date1, date2) => {
+                return (
+                  date1.date.year * 100 +
+                  date1.date.month -
+                  (date2.date.year * 100 + date2.date.month)
+                );
+              })}
+            />
+          </AccordionDetails>
+        </Accordion>
       );
     }
     message1 = (
-      <DisplayGrid
-        rows={filteredTransactions.sort(sortByDate)}
-        columns={txnCols}
-        loading={transactionsLoading}
-      />
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
+            Transaction Details
+          </Typography>
+        </AccordionSummary>
+        <DisplayGrid
+          rows={filteredTransactions.sort(sortByDate)}
+          columns={txnCols}
+          loading={transactionsLoading}
+        />
+      </Accordion>
     );
 
     message = (
@@ -403,16 +433,26 @@ const SpendAnalysis = (props) => {
       </Container>
 
       {filteredTransactions.length > 0 && (
-        <div className={styles.summary}>
-          <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
-          <TransactionGrid summary={statementSummary} />
-        </div>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography fontWeight={"bold"} fontSize={20} fontFamily="inherit">
+              Summary
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className={styles.summary}>
+              <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
+              <TransactionGrid summary={statementSummary} />
+            </div>
+          </AccordionDetails>
+        </Accordion>
       )}
       {spendChart}
       {message1}
-      {/* <div className={styles.display}>
-        <div className={styles.results}>{message}</div>
-        </div> */}
     </React.Fragment>
   );
 };
