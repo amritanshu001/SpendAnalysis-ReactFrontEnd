@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
+import { ErrorBoundary } from "react-error-boundary";
 
+const ErrorPage = React.lazy(() => import("./components/Pages/ErrorPage"));
 import SpinnerCircular from "./components/UI/Feedback/SpinnerCircular";
 import { Suspense } from "react";
 
@@ -15,7 +17,9 @@ root.render(
   <Provider store={store}>
     <Suspense fallback={<SpinnerCircular color="success" />}>
       <BrowserRouter>
-        <App />
+        <ErrorBoundary FallbackComponent={ErrorPage}>
+          <App />
+        </ErrorBoundary>
       </BrowserRouter>
     </Suspense>
   </Provider>

@@ -41,6 +41,8 @@ const Home = (props) => {
     );
   };
 
+  // throw new Error(" a new error");
+
   return (
     <React.Fragment>
       <Header>Introduction</Header>
