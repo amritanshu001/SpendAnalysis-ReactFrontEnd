@@ -46,3 +46,8 @@
 .negative {
   color: #7d2f2f;
 }
+
+.rupee {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}

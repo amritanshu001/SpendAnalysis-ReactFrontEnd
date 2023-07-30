@@ -23,6 +23,20 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 
+//placeholder for more complex filteration
+let filteredTransactions = [];
+let statementSummary = {};
+let closingBal;
+let openingBal;
+let top5Credit = [];
+let top5Debit = [];
+let top5CreditShare = 0.0;
+let top5DebitShare = 0.0;
+let spendChart;
+let message1;
+
+let message;
+
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
   if (transaction.deposit_amt === "") {
@@ -140,7 +154,7 @@ const SpendAnalysis = (props) => {
   const [validation, setValidation] = useState(null);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [transactions, setTransactions] = useState(null);
+  const [transactions, setTransactions] = useState([]);
 
   const processTransactions = useCallback((rawdata) => {
     const convertDates = (date) => {
@@ -216,19 +230,6 @@ const SpendAnalysis = (props) => {
     setAccountId(+event.target.value);
   };
 
-  //placeholder for more complex filteration
-  let filteredTransactions = [];
-  let statementSummary = {};
-  let closingBal;
-  let openingBal;
-  let top5Credit = [];
-  let top5Debit = [];
-  let top5CreditShare = 0.0;
-  let top5DebitShare = 0.0;
-  let spendChart;
-  let message1;
-
-  let message;
   if (transactionsLoading) {
     message1 = <SpinnerCircular color="success" />;
     // message = <p className={styles.loading}>Loading....</p>;
@@ -282,8 +283,8 @@ const SpendAnalysis = (props) => {
     let monthYears = filteredTransactions.map((txn) => {
       const txnDate = new Date(txn.txn_date);
       return {
-        month: txnDate.getUTCMonth(),
-        year: txnDate.getUTCFullYear(),
+        month: txnDate.getMonth(),
+        year: txnDate.getFullYear(),
       };
     });
     let uniqueMonthYears = uniqBy(monthYears, JSON.stringify);
@@ -294,8 +295,8 @@ const SpendAnalysis = (props) => {
         .filter((txn) => {
           const convertTxnDate = new Date(txn.txn_date);
           return (
-            convertTxnDate.getUTCFullYear() === monthYear.year &&
-            convertTxnDate.getUTCMonth() === monthYear.month
+            convertTxnDate.getFullYear() === monthYear.year &&
+            convertTxnDate.getMonth() === monthYear.month
           );
         })
         .sort(sortByDate);

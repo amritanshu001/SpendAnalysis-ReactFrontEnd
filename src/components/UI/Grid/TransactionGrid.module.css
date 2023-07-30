@@ -27,3 +27,8 @@
   display: inline-block;
   width: 25%;
 }
+
+.rupee {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}

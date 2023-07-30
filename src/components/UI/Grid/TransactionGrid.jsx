@@ -11,8 +11,14 @@ const TransactionGrid = (props) => {
       </div>
       <div className={styles.labels}>
         <p>Amount</p>
-        <p>{props.summary.incomingSum.toFixed(2)}</p>
-        <p>{props.summary.outgoingSum.toFixed(2)}</p>
+        <p>
+          <span className={styles.rupee}>&#8377;</span>{" "}
+          {props.summary.incomingSum.toFixed(2)}
+        </p>
+        <p>
+          <span className={styles.rupee}>&#8377;</span>{" "}
+          {props.summary.outgoingSum.toFixed(2)}
+        </p>
       </div>
       <div className={styles.labels}>
         <p>Txn #</p>
@@ -22,11 +28,13 @@ const TransactionGrid = (props) => {
       <div className={styles.labels}>
         <p>Avg</p>
         <p>
+          <span className={styles.rupee}>&#8377;</span>
           {(props.summary.incomingSum / props.summary.incomingTxnCount).toFixed(
             2
           )}
         </p>
         <p>
+          <span className={styles.rupee}>&#8377;</span>
           {(props.summary.outgoingSum / props.summary.outgoingTxnCount).toFixed(
             2
           )}
