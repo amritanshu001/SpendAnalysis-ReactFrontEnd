@@ -6,9 +6,23 @@
 .actions {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 0.5rem;
   padding: 0.5rem;
+}
+
+.actions a {
+  margin-top:0.5rem;
+  text-decoration: none;
+  color:#d36a8b;
+  font: inherit;
+  font-weight: bold;
+  font-size: 0.9rem;
+
+}
+.actions a:hover {
+  color:#e0546b
 }
 
 .actions button {

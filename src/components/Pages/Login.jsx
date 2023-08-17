@@ -4,6 +4,8 @@ import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
 
+import { Link } from "react-router-dom";
+
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
 import { accountsAction } from "../../store/useraccount-slice";
@@ -327,6 +329,7 @@ const Login = (props) => {
             >
               {loginOption ? "New User?" : "Existing User Login"}
             </button>
+            <Link to="/request-resetpassword">Reset Password</Link>
           </div>
           {loginError && <p className={styles.error}>{loginError}</p>}
         </form>
