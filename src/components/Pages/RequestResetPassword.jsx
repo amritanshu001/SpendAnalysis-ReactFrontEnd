@@ -14,7 +14,7 @@ import { emailValidator } from "../../lib/validators";
 
 import apiURL from "../../endpoint";
 
-const siteAddress = document.location.origin;
+const siteAddress = document.location.origin + document.location.pathname;
 const sucessMessage = (
   <div className={styles["server-success"]}>
     Password Reset link has been sent successfully to the email provided. If the
@@ -82,7 +82,7 @@ const ResetPassword = () => {
 
   return (
     <React.Fragment>
-      <Header>Reset Password</Header>
+      <Header>Reset Password Request</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["reset-form"]}>
           <Input

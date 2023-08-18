@@ -27,7 +27,7 @@ const useHttp4File = (processData) => {
         const rawData = await fetchdata.json();
         processData(rawData);
       } catch (err) {
-        setError(err.message || err.statusText || "Something Went Wrong...");
+        setError(err.message || err.status || "Something Went Wrong...");
       }
       setIsLoading(false);
     },

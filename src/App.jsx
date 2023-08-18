@@ -16,8 +16,12 @@ const ManageAccounts = React.lazy(() =>
 const SpendAnalysis = React.lazy(() =>
   import("./components/Pages/SpendAnalysis")
 );
-const ResetPassword = React.lazy(() =>
+const RequestResetPassword = React.lazy(() =>
   import("./components/Pages/RequestResetPassword")
+);
+
+const ResetPassword = React.lazy(() =>
+  import("./components/Pages/ResetPassword")
 );
 
 import { useSelector } from "react-redux";
@@ -66,9 +70,13 @@ const App = (props) => {
           <Route path="/addbank">
             {isUserLoggedIn && isUserAdmin ? <AddBank /> : <Redirect to="/" />}
           </Route>
-          <Route path="/request-resetpassword">
+          <Route path="/request-resetpassword/:hash">
             <ResetPassword />
           </Route>
+          <Route path="/request-resetpassword">
+            <RequestResetPassword />
+          </Route>
+
           <Route path="*">
             <Redirect to="/" />
           </Route>
