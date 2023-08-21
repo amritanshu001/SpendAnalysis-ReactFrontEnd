@@ -37,8 +37,10 @@ const ManageAccounts = (props) => {
   const [editFormData, setEditFormData] = useState({});
   const [deleteAccount, setDeleteAccount] = useState({});
   const [isCreateClicked, setCreateClicked] = useState(false);
+  const [firstMount, setFirstMount] = useState(0);
 
   const processAccountDetails = useCallback((rawdata) => {
+    setFirstMount(1);
     const processedData = [];
     for (let key in rawdata) {
       const row = {};
@@ -61,7 +63,7 @@ const ManageAccounts = (props) => {
   } = useHttp(processAccountDetails);
 
   useEffect(() => {
-    if (accountData.length === 0) {
+    if (accountData.length === 0 && firstMount === 0) {
       const accountsConfig = {
         url: apiURL + "/accounts",
         headers: {

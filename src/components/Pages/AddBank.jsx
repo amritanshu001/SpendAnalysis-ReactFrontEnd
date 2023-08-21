@@ -41,10 +41,12 @@ const AddBank = (props) => {
   const [editBankData, setEditBankData] = useState({});
   const [copyBankData, setCopyBankData] = useState({});
   const [deleteBankData, setDeleteBankDate] = useState({});
+  const [firstMount, setFirstMount] = useState(0);
 
   const disptach = useDispatch();
 
   const processBankDetails = useCallback((rawdata) => {
+    setFirstMount(1);
     const processedData = [];
     for (let key in rawdata) {
       const row = {};
@@ -86,7 +88,8 @@ const AddBank = (props) => {
   const { sendRequest: loadDateFormats } = useHttp(processDateFormats);
 
   useEffect(() => {
-    if (!bankData || bankData.length === 0) {
+    // if (!bankData || bankData.length === 0) {
+    if (bankData.length === 0 && firstMount === 0) {
       const bankConfig = {
         url: apiURL + "/banks",
         headers: {
@@ -102,7 +105,7 @@ const AddBank = (props) => {
 
       loadDateFormats(datesConfig);
     }
-  }, [getBankDetails, authToken, apiURL, bankData]);
+  }, [getBankDetails, authToken, apiURL, firstMount, bankData]);
 
   const hideModalHandler = () => {
     setAddBankClicked(false);
