@@ -30,8 +30,7 @@ const Navbar = (props) => {
   };
 
   const processLogout = useCallback((rawdata) => {
-    dispatch(logUserOutActions());
-    redirect.replace("/login");
+    console.log("Logged Out successfully");
   }, []);
 
   const {
@@ -50,13 +49,13 @@ const Navbar = (props) => {
       },
     };
     logoutUser(logoutConfig);
+    dispatch(logUserOutActions());
+    redirect.replace("/login");
   };
 
   useEffect(() => {
     if (logoutError) {
       resetLogoutError();
-      dispatch(logUserOutActions());
-      redirect.replace("/login");
     }
   }, [logoutError]);
 
