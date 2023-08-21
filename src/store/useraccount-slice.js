@@ -14,6 +14,7 @@ const userAccountSlice = createSlice({
       }));
     },
     resetUserAccounts: (state) => {
+      console.log("reached account reset reducer")
       state.userAccounts = [];
     },
   },

@@ -14,6 +14,7 @@ const bankSlice = createSlice({
       }));
     },
     resetBanks: (state) => {
+      console.log("reached reset bank reducer")
       state.banks = [];
     },
   },

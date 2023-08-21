@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./Navbar.module.css";
-import { authActions } from "../../store/auth-slice";
-import { accountsAction } from "../../store/useraccount-slice";
-import { banksAction } from "../../store/banks-slice";
+
+import { logUserOutActions } from "../../store/auth-slice";
+
 import { useHistory } from "react-router-dom";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
@@ -29,14 +29,8 @@ const Navbar = (props) => {
     setSideMenuState(false);
   };
 
-  const logoutActions = () => {
-    dispatch(accountsAction.resetUserAccounts());
-    dispatch(banksAction.resetBanks());
-    dispatch(authActions.logUserOut());
-  };
-
   const processLogout = useCallback((rawdata) => {
-    logoutActions();
+    dispatch(logUserOutActions());
     redirect.replace("/login");
   }, []);
 
@@ -61,7 +55,7 @@ const Navbar = (props) => {
   useEffect(() => {
     if (logoutError) {
       resetLogoutError();
-      logoutActions();
+      dispatch(logUserOutActions());
       redirect.replace("/login");
     }
   }, [logoutError]);
