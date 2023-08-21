@@ -23,6 +23,7 @@ const RequestResetPassword = React.lazy(() =>
 const ResetPassword = React.lazy(() =>
   import("./components/Pages/ResetPassword")
 );
+import AppLogout from "./components/Functional/AppLogout";
 
 import { useSelector } from "react-redux";
 
@@ -50,25 +51,39 @@ const App = (props) => {
           )}
           <Route path="/spendanalysis">
             {isUserLoggedIn ? (
-              <SpendAnalysis accounts={userAccounts} />
+              <AppLogout>
+                <SpendAnalysis accounts={userAccounts} />{" "}
+              </AppLogout>
             ) : (
               <Redirect to="/login" />
             )}
           </Route>
           <Route path="/manageaccount">
             {isUserLoggedIn ? (
-              <ManageAccounts accounts={userAccounts} />
+              <AppLogout>
+                <ManageAccounts accounts={userAccounts} />
+              </AppLogout>
             ) : (
               <Redirect to="/login" />
             )}
           </Route>
 
           <Route path="/uploadstatement">
-            {isUserLoggedIn && <UploadStatement />}
+            {isUserLoggedIn && (
+              <AppLogout>
+                <UploadStatement />
+              </AppLogout>
+            )}
           </Route>
 
           <Route path="/addbank">
-            {isUserLoggedIn && isUserAdmin ? <AddBank /> : <Redirect to="/" />}
+            {isUserLoggedIn && isUserAdmin ? (
+              <AppLogout>
+                <AddBank />
+              </AppLogout>
+            ) : (
+              <Redirect to="/" />
+            )}
           </Route>
           <Route path="/request-resetpassword/:hash">
             <ResetPassword />

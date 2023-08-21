@@ -23,7 +23,6 @@ const authSlice = createSlice({
       localStorage.setItem("expiry", action.payload.expiresIn);
     },
     logUserOut: (state) => {
-      console.log("Reached logout reducer")
       state.userLoggedIn = false;
       state.authToken = null;
       state.userIsAdmin = false;
@@ -36,8 +35,8 @@ const authSlice = createSlice({
 });
 
 export const authActions = authSlice.actions;
+
 export const logUserOutActions = () => {
-  console.log("Reached Thunk action")
   return (dispatch, getState)=>{
     
     dispatch(banksAction.resetBanks())
