@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styles from "./Navbar.module.css";
 
 import { logUserOutActions } from "../../store/auth-slice";
+import { showAndHideMessages } from "../../store/message-slice";
 
 import { useHistory } from "react-router-dom";
 import apiURL from "../../endpoint";
@@ -50,6 +51,12 @@ const Navbar = (props) => {
     };
     logoutUser(logoutConfig);
     dispatch(logUserOutActions());
+    dispatch(
+      showAndHideMessages({
+        status: "success",
+        messageText: "You have been successfully logged out!",
+      })
+    );
     redirect.replace("/login");
   };
 
