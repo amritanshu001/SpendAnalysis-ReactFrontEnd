@@ -10,6 +10,7 @@ import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
 import { accountsAction } from "../../store/useraccount-slice";
 import { banksAction } from "../../store/banks-slice";
+import { showAndHideMessages } from "../../store/message-slice";
 import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
@@ -91,7 +92,12 @@ const Login = (props) => {
       },
     };
     getBankDetails(bankConfig);
-
+    dispatch(
+      showAndHideMessages({
+        status: "success",
+        messageText: "Login Successful. Welcome " + rawdata.email_id,
+      })
+    );
     redirect.replace("/");
   }, []);
 

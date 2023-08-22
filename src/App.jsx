@@ -10,6 +10,7 @@ const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
 const Home = React.lazy(() => import("./components/Pages/Home"));
 const AddBank = React.lazy(() => import("./components/Pages/AddBank"));
+const Footer = React.lazy(() => import("./components/UI/Footer"));
 const ManageAccounts = React.lazy(() =>
   import("./components/Pages/ManageAccounts")
 );
@@ -35,6 +36,8 @@ const App = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
   const userAccounts = useSelector((state) => state.userAccounts.userAccounts);
+  const globalMessage = useSelector((state) => state.globalMessages.messages);
+  const showMessage = useSelector((state) => state.globalMessages.showMessage);
   return (
     <ThemeProvider theme={theme}>
       <Navbar></Navbar>
@@ -97,7 +100,7 @@ const App = (props) => {
           </Route>
         </Switch>
       </Paper>
-      {/* </main> */}
+      {showMessage && <Footer message={globalMessage} />}
     </ThemeProvider>
   );
 };
