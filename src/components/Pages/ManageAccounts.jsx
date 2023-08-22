@@ -72,7 +72,7 @@ const ManageAccounts = (props) => {
       };
       getUserAccounts(accountsConfig);
     }
-  }, [authToken, getUserAccounts, accountData]);
+  }, [authToken, getUserAccounts, accountData, firstMount]);
 
   const editRowHandler = (row) => {
     setEditFormData(row);
