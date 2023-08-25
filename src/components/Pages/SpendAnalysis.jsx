@@ -4,7 +4,6 @@ import styles from "./SpendAnalysis.module.css";
 import Container from "../UI/Container";
 import Header from "../UI/Header";
 import Input from "../UI/Input";
-import Table from "../UI/Table/Table";
 import BalanceGrid from "../UI/Grid/BalanceGrid";
 import SpendChart from "../UI/Chart/SpendChart";
 
@@ -34,8 +33,6 @@ let top5CreditShare = 0.0;
 let top5DebitShare = 0.0;
 let spendChart;
 let message1;
-
-let message;
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -84,65 +81,77 @@ const sortByDate = (txn1, txn2) => {
   }
   return txn1Date.getTime() - txn2Date.getTime();
 };
-const header = [
-  { name: "Transaction Date", tech_name: "txn_date" },
-  { name: "Value Date", tech_name: "value_date" },
-  { name: "Cheque No.", tech_name: "cheque_no" },
-  { name: "Transaction Details", tech_name: "txn_remarks" },
-  { name: "Deposit Amount", tech_name: "deposit_amt" },
-  { name: "Withdrawal Amount", tech_name: "withdrawal_amt" },
-  { name: "Balance", tech_name: "balance" },
-];
 
 const txnCols = [
   {
     headerName: "Transaction Date",
     field: "txn_date",
-    width: 210,
+    minWidth: 120,
+    flex: 1,
     type: "date",
     valueGetter: convert2Date,
-    headerClassName: "spend-table__header",
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
     headerName: "Value Date",
     field: "value_date",
-    width: 210,
+    minWidth: 120,
+    flex: 1,
     type: "date",
     valueGetter: convert2Date,
-    headerClassName: "spend-table__header",
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
     headerName: "Cheque No.",
     field: "cheque_no",
-    width: 105,
-    headerClassName: "spend-table__header",
+    minWidth: 60,
+    flex: 1,
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
     headerName: "Transaction Details",
     field: "txn_remarks",
-    width: 500,
-    headerClassName: "spend-table__header",
+    minWidth: 500,
+    flex: 1,
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
-    headerName: "Deposit Amount",
+    headerName: "Deposit Amount(Rs.)",
     field: "deposit_amt",
-    width: 150,
+    minWidth: 120,
+    flex: 1,
     type: "number",
-    headerClassName: "spend-table__header",
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
-    headerName: "Withdrawal Amount",
+    headerName: "Withdrawal Amount(Rs.)",
     field: "withdrawal_amt",
-    width: 150,
+    minWidth: 120,
+    flex: 1,
     type: "number",
-    headerClassName: "spend-table__header",
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
   {
-    headerName: "Balance",
+    headerName: "Balance(Rs.)",
     field: "balance",
-    width: 100,
+    minWidth: 120,
+    flex: 1,
     type: "number",
-    headerClassName: "spend-table__header",
+    headerClassName: "table__header",
+    headerAlign: "center",
+    align: "center",
   },
 ];
 
@@ -232,7 +241,6 @@ const SpendAnalysis = (props) => {
 
   if (transactionsLoading) {
     message1 = <SpinnerCircular color="success" />;
-    // message = <p className={styles.loading}>Loading....</p>;
   }
   if (transactionsError) {
     message1 = <p className={styles.error}>{transactionsError}</p>;
@@ -369,21 +377,10 @@ const SpendAnalysis = (props) => {
           rows={filteredTransactions.sort(sortByDate)}
           columns={txnCols}
           loading={transactionsLoading}
+          boxWidth="90%"
         />
       </Accordion>
     );
-
-    message = (
-      <Table
-        header={header}
-        body={filteredTransactions.sort(sortByDate)}
-        editable={false}
-      />
-    );
-  }
-
-  if (!transactionsLoading && transactions && transactions.length === 0) {
-    message = <p className={styles.error}>No records found!</p>;
   }
 
   const fromDateChangeHandler = (event) => {

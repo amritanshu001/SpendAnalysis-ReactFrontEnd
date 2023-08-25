@@ -2,6 +2,7 @@ import styles from "./ManageAccounts.module.css";
 
 import Header from "../UI/Header";
 import FormModal from "../UI/Modal/FormModal";
+import Container from "../UI/Container";
 
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
@@ -25,13 +26,14 @@ import DisplayGrid, {
   RowDeleteIcon,
 } from "../UI/MUI Grid/DisplayGrid";
 
+let formData;
+
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const accountData = useSelector((state) => state.userAccounts.userAccounts);
   const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
-  const [editFormData, setEditFormData] = useState({});
-  const [deleteAccount, setDeleteAccount] = useState({});
+
   const [isCreateClicked, setCreateClicked] = useState(false);
   const [firstMount, setFirstMount] = useState(0);
 
@@ -45,7 +47,6 @@ const ManageAccounts = (props) => {
       row.active = rawdata[key].active;
       row.joint = rawdata[key].joint;
       row.bank_name = rawdata[key]["bank_dets"].bank_name;
-      console.log(row);
       processedData.push(row);
     }
     dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
@@ -58,45 +59,24 @@ const ManageAccounts = (props) => {
     resetError: resetAccountsError,
   } = useHttp(processAccountDetails);
 
-  useEffect(() => {
-    if (accountData.length === 0 && firstMount === 0) {
-      const accountsConfig = {
-        url: apiURL + "/accounts",
-        headers: {
-          Authorization: "Bearer " + authToken,
-        },
-      };
-      getUserAccounts(accountsConfig);
-    }
-  }, [authToken, getUserAccounts, accountData, firstMount]);
-
-  const editRowHandler = (row) => {
-    setEditFormData(row);
-    dispatch(formModalAction.showModal());
-  };
-
-  const deleteRowHandler = (row) => {
-    setDeleteAccount(row);
-    dispatch(formModalAction.showModal());
-  };
-
   const backdropClick = () => {
-    setDeleteAccount({});
-    setEditFormData({});
+    formData = {};
     setCreateClicked(false);
     dispatch(formModalAction.hideModal());
   };
 
   const gridRowEditHandler = (params) => {
     const clickHandler = () => {
-      editRowHandler(params.row);
+      formData = { formAction: "Edit", data: { ...params.row } };
+      dispatch(formModalAction.showModal());
     };
     return <RowEditIcon onClick={clickHandler} />;
   };
 
   const gridRowDeleteHandler = (params) => {
     const clickHandler = () => {
-      deleteRowHandler(params.row);
+      formData = { formAction: "Delete", data: { ...params.row } };
+      dispatch(formModalAction.showModal());
     };
     return <RowDeleteIcon onClick={clickHandler} />;
   };
@@ -105,48 +85,53 @@ const ManageAccounts = (props) => {
     {
       headerName: "Account#",
       field: "account_no",
-      width: 210,
-      headerClassName: "account-table__header",
+      flex: 1,
+      minWidth: 150,
+      headerClassName: "table__header",
     },
     {
       headerName: "Bank",
       field: "bank_name",
-      width: 210,
-      headerClassName: "account-table__header",
+      minWidth: 200,
+      flex: 1,
+      headerClassName: "table__header",
     },
     {
       headerName: "Active",
       field: "active",
-      width: 100,
-      headerClassName: "account-table__header",
+      width: 75,
+      headerClassName: "table__header",
       valueGetter: (params) => (params.row.active ? "Yes" : "No"),
     },
     {
       headerName: "Joint",
       field: "joint",
-      width: 100,
-      headerClassName: "account-table__header",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
       valueGetter: (params) => (params.row.joint ? "Yes" : "No"),
     },
     {
       headerName: "Edit",
       field: "edit",
-      width: 50,
+      minWidth: 75,
+      flex: 1,
       renderCell: gridRowEditHandler,
       valueGetter: (params) => {
         return params;
       },
-      headerClassName: "account-table__header",
+      headerClassName: "table__header",
     },
     {
       headerName: "Delete",
       field: "delete",
-      width: 100,
+      minWidth: 100,
+      flex: 1,
       renderCell: gridRowDeleteHandler,
       valueGetter: (params) => {
         return params;
       },
-      headerClassName: "account-table__header",
+      headerClassName: "table__header",
     },
   ];
 
@@ -159,7 +144,11 @@ const ManageAccounts = (props) => {
   }
 
   if (!accountsLoading && !accountsError && accountData) {
-    message = <DisplayGrid rows={accountData} columns={txnCols} />;
+    message = (
+      <Container className={styles.container}>
+        <DisplayGrid rows={accountData} columns={txnCols} boxWidth="90%" />
+      </Container>
+    );
   }
 
   const accountChangeProcess = useCallback((rawdata) => {
@@ -242,22 +231,43 @@ const ManageAccounts = (props) => {
     setCreateClicked(false);
   };
 
+  let showEditForm =
+    !!formData &&
+    Object.keys(formData).length > 0 &&
+    formData.formAction === "Edit";
+  let showDeleteForm =
+    !!formData &&
+    Object.keys(formData).length > 0 &&
+    formData.formAction === "Delete";
+
+  useEffect(() => {
+    if (accountData.length === 0 && firstMount === 0) {
+      const accountsConfig = {
+        url: apiURL + "/accounts",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      getUserAccounts(accountsConfig);
+    }
+  }, [authToken, getUserAccounts, accountData, firstMount]);
+
   return (
     <React.Fragment>
       {formModalStatus && (
         <FormModal onBackdropClick={backdropClick}>
-          {Object.keys(editFormData).length > 0 && (
+          {showEditForm && (
             <UserAccountForm
-              data={editFormData}
+              data={formData.data}
               onCancel={backdropClick}
               onSave={accountSaveHandler}
               loading={accountChanging}
               error={accountChangeError}
             />
           )}
-          {Object.keys(deleteAccount).length > 0 && (
+          {showDeleteForm && (
             <DeleteForm
-              account={deleteAccount}
+              account={formData.data}
               onCancel={backdropClick}
               onDelete={deleteAccountHandler}
               loading={deleteInProgress}

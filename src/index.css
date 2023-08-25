@@ -18,3 +18,20 @@ body {
     "main"; */
   background-color: #f3efef;
 }
+
+.table__header {
+  background-color: #405d27;
+  color: #f3f2f2;
+  font-weight: bold;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #d5d5d5;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: #eeeeee;
+}
