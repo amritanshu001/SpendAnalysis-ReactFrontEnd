@@ -13,9 +13,16 @@
 }
 .container {
   display: flex;
+  flex-direction: column;
   max-width: 50rem;
   color: #121512;
   background-color: #eceeec;
   text-align: center;
   justify-content: center;
+}
+
+.account-table__header {
+  background-color: #405d27;
+  color: #f3f2f2;
+  font-weight: bold;
 }

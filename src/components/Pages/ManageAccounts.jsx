@@ -1,8 +1,6 @@
 import styles from "./ManageAccounts.module.css";
 
-import Container from "../UI/Container";
 import Header from "../UI/Header";
-import Table from "../UI/Table/Table";
 import FormModal from "../UI/Modal/FormModal";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -22,12 +20,10 @@ import { formModalAction } from "../../store/formmodal-slice";
 import apiURL from "../../endpoint";
 import CreateAccountForm from "../Forms/AccountForms/CreateAccountForm";
 
-const header = [
-  { name: "Account#", tech_name: "account_no" },
-  { name: "Bank", tech_name: "bank_name" },
-  { name: "Active", tech_name: "active" },
-  { name: "Joint", tech_name: "joint" },
-];
+import DisplayGrid, {
+  RowEditIcon,
+  RowDeleteIcon,
+} from "../UI/MUI Grid/DisplayGrid";
 
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
@@ -46,10 +42,10 @@ const ManageAccounts = (props) => {
       const row = {};
       row["id"] = rawdata[key].account_id;
       row.account_no = rawdata[key].account_no;
-      row.active = rawdata[key].active ? "Yes" : "No";
-      row.joint = rawdata[key].joint ? "Yes" : "No";
+      row.active = rawdata[key].active;
+      row.joint = rawdata[key].joint;
       row.bank_name = rawdata[key]["bank_dets"].bank_name;
-
+      console.log(row);
       processedData.push(row);
     }
     dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
@@ -91,6 +87,69 @@ const ManageAccounts = (props) => {
     dispatch(formModalAction.hideModal());
   };
 
+  const gridRowEditHandler = (params) => {
+    const clickHandler = () => {
+      editRowHandler(params.row);
+    };
+    return <RowEditIcon onClick={clickHandler} />;
+  };
+
+  const gridRowDeleteHandler = (params) => {
+    const clickHandler = () => {
+      deleteRowHandler(params.row);
+    };
+    return <RowDeleteIcon onClick={clickHandler} />;
+  };
+
+  const txnCols = [
+    {
+      headerName: "Account#",
+      field: "account_no",
+      width: 210,
+      headerClassName: "account-table__header",
+    },
+    {
+      headerName: "Bank",
+      field: "bank_name",
+      width: 210,
+      headerClassName: "account-table__header",
+    },
+    {
+      headerName: "Active",
+      field: "active",
+      width: 100,
+      headerClassName: "account-table__header",
+      valueGetter: (params) => (params.row.active ? "Yes" : "No"),
+    },
+    {
+      headerName: "Joint",
+      field: "joint",
+      width: 100,
+      headerClassName: "account-table__header",
+      valueGetter: (params) => (params.row.joint ? "Yes" : "No"),
+    },
+    {
+      headerName: "Edit",
+      field: "edit",
+      width: 50,
+      renderCell: gridRowEditHandler,
+      valueGetter: (params) => {
+        return params;
+      },
+      headerClassName: "account-table__header",
+    },
+    {
+      headerName: "Delete",
+      field: "delete",
+      width: 100,
+      renderCell: gridRowDeleteHandler,
+      valueGetter: (params) => {
+        return params;
+      },
+      headerClassName: "account-table__header",
+    },
+  ];
+
   let message;
   if (accountsLoading) {
     message = <p className={styles.loading}>Loading....</p>;
@@ -100,16 +159,7 @@ const ManageAccounts = (props) => {
   }
 
   if (!accountsLoading && !accountsError && accountData) {
-    message = (
-      <Table
-        header={header}
-        body={accountData}
-        editable={true}
-        onEdit={editRowHandler}
-        toDelete={true}
-        onDelete={deleteRowHandler}
-      />
-    );
+    message = <DisplayGrid rows={accountData} columns={txnCols} />;
   }
 
   const accountChangeProcess = useCallback((rawdata) => {
@@ -199,7 +249,6 @@ const ManageAccounts = (props) => {
           {Object.keys(editFormData).length > 0 && (
             <UserAccountForm
               data={editFormData}
-              header={header}
               onCancel={backdropClick}
               onSave={accountSaveHandler}
               loading={accountChanging}
@@ -237,7 +286,8 @@ const ManageAccounts = (props) => {
           </IconButton>
         </Tooltip>
       </Header>
-      <Container className={styles.container}>{message}</Container>
+      {/* <Container className={styles.container}>{message}</Container> */}
+      {message}
     </React.Fragment>
   );
 };

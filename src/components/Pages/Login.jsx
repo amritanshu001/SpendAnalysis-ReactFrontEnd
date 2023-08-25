@@ -34,8 +34,8 @@ const Login = (props) => {
       const row = {};
       row["id"] = rawdata[key].account_id;
       row.account_no = rawdata[key].account_no;
-      row.active = rawdata[key].active ? "Yes" : "No";
-      row.joint = rawdata[key].joint ? "Yes" : "No";
+      row.active = rawdata[key].active;
+      row.joint = rawdata[key].joint;
       row.bank_name = rawdata[key]["bank_dets"].bank_name;
 
       processedData.push(row);

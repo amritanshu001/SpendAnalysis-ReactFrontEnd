@@ -1,22 +1,8 @@
 import React, { useState, useRef } from "react";
 import styles from "./UserAccountForm.module.css";
 
-const UserAccountForm = ({
-  data,
-  header,
-  loading,
-  error,
-  onSave,
-  onCancel,
-}) => {
-  const [accountNo, setAccountNo] = useState(data.account_no);
-  const [bankName, setBankName] = useState(data.bank_name);
-  const [accountActive, setAccountActive] = useState(
-    data.active === "Yes" ? true : false
-  );
-  const [accountJoint, setAccountJoint] = useState(
-    data.joint === "Yes" ? true : false
-  );
+const UserAccountForm = ({ data, loading, error, onSave, onCancel }) => {
+  const [accountJoint, setAccountJoint] = useState(data.joint);
 
   const jointChangeHandler = (event) => {
     setAccountJoint(event.target.checked);
@@ -32,18 +18,18 @@ const UserAccountForm = ({
       <div className={styles.inputs}>
         <div className={styles.readonly}>
           <label htmlFor="account_no">Account#</label>
-          <input id="account_no" readOnly={true} value={accountNo} />
+          <input id="account_no" readOnly={true} value={data.account_no} />
         </div>
         <div className={styles.readonly}>
           <label htmlFor="bank_name">Bank Name</label>
-          <input id="bank_name" readOnly={true} value={bankName} />
+          <input id="bank_name" readOnly={true} value={data.bank_name} />
         </div>
       </div>
       <div className={styles.checkbox}>
         <div>
           <input
             type="checkbox"
-            defaultChecked={accountActive}
+            defaultChecked={data.active}
             disabled={true}
           ></input>
           <label>Active</label>
