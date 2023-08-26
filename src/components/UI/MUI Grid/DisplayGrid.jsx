@@ -30,7 +30,7 @@ export const RowDeleteIcon = (props) => {
 export const RowCopyIcon = (props) => {
   return (
     <Tooltip title="Copy" placement="bottom-start" arrow>
-      <IconButton color="primary" onClick={props.onCopy}>
+      <IconButton color="primary" onClick={props.onClick}>
         <ContentCopyOutlinedIcon />
       </IconButton>
     </Tooltip>

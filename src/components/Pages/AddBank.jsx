@@ -2,8 +2,9 @@ import styles from "./AddBank.module.css";
 
 import Container from "../UI/Container";
 import Header from "../UI/Header";
-import Table from "../UI/Table/Table";
 import FormModal from "../UI/Modal/FormModal";
+import { RowCopyIcon, RowEditIcon } from "../UI/MUI Grid/DisplayGrid";
+import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState } from "react";
@@ -19,18 +20,7 @@ import apiURL from "../../endpoint";
 import { Tooltip } from "@mui/material";
 import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 
-const header = [
-  { name: "Bank Name", tech_name: "bank_name" },
-  { name: "Balance (col)", tech_name: "bal_col" },
-  { name: "Cheque No. (col)", tech_name: "chq_no_col" },
-  { name: "Credit Amount (col)", tech_name: "crdt_amt_col" },
-  { name: "Date Format", tech_name: "date_format" },
-  { name: "Start row", tech_name: "start_row" },
-  { name: "Transaction Date (col)", tech_name: "txn_date_col" },
-  { name: "Transaction Remark (col)", tech_name: "txn_rmrk_col" },
-  { name: "Value Date (col)", tech_name: "val_date_col" },
-  { name: "Withdrawal Amount (col)", tech_name: "with_amt_col" },
-];
+let bankFormData = {};
 
 const AddBank = (props) => {
   const bankData = useSelector((state) => state.banks.banks);
@@ -38,9 +28,6 @@ const AddBank = (props) => {
   const modalStatus = useSelector((state) => state.formModal.showModal);
   const [dateFormats, setDateFormats] = useState([]);
   const [addBankClicked, setAddBankClicked] = useState(false);
-  const [editBankData, setEditBankData] = useState({});
-  const [copyBankData, setCopyBankData] = useState({});
-  const [deleteBankData, setDeleteBankDate] = useState({});
   const [firstMount, setFirstMount] = useState(0);
 
   const disptach = useDispatch();
@@ -88,7 +75,6 @@ const AddBank = (props) => {
   const { sendRequest: loadDateFormats } = useHttp(processDateFormats);
 
   useEffect(() => {
-    // if (!bankData || bankData.length === 0) {
     if (bankData.length === 0 && firstMount === 0) {
       const bankConfig = {
         url: apiURL + "/banks",
@@ -109,9 +95,7 @@ const AddBank = (props) => {
 
   const hideModalHandler = () => {
     setAddBankClicked(false);
-    setEditBankData({});
-    setCopyBankData({});
-    setDeleteBankDate({});
+    bankFormData = {};
     resetBankError();
     resetEditBankError();
     disptach(formModalAction.hideModal());
@@ -133,33 +117,147 @@ const AddBank = (props) => {
     setAddBankClicked(true);
   };
 
-  const editBankClickHandler = (row) => {
-    setEditBankData(row);
-    disptach(formModalAction.showModal());
+  const editBankClickHandler = (params) => {
+    const clickHandler = () => {
+      bankFormData = { action: "Edit", data: { ...params.row } };
+      disptach(formModalAction.showModal());
+    };
+    return <RowEditIcon onClick={clickHandler} />;
   };
 
-  const copyBankClickHandler = (row) => {
-    setCopyBankData(row);
-    disptach(formModalAction.showModal());
+  const copyBankClickHandler = (params) => {
+    const clickHandler = () => {
+      bankFormData = { action: "Copy", data: { ...params.row } };
+      disptach(formModalAction.showModal());
+    };
+    return <RowCopyIcon onClick={clickHandler} />;
   };
 
-  const deleteBankHandler = (row) => {
-    setDeleteBankDate(row);
-    disptach(formModalAction.showModal());
-  };
+  const txnCols = [
+    {
+      headerName: "Bank Name",
+      field: "bank_name",
+      flex: 1,
+      minWidth: 100,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Balance (col)",
+      field: "bal_col",
+      minWidth: 100,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Cheque No. (col)",
+      field: "chq_no_col",
+      minWidth: 100,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Credit Amount (col)",
+      field: "crdt_amt_col",
+      minWidth: 100,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+
+    {
+      headerName: "Date Format",
+      field: "date_format",
+      minWidth: 125,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Start row",
+      field: "start_row",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Transaction Date (col)",
+      field: "txn_date_col",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Transaction Remark (col)",
+      field: "txn_rmrk_col",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Value Date (col)",
+      field: "val_date_col",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Withdrawal Amount (col)",
+      field: "with_amt_col",
+      minWidth: 75,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Copy",
+      field: "copy",
+      minWidth: 100,
+      flex: 1,
+      renderCell: copyBankClickHandler,
+      valueGetter: (params) => {
+        return params;
+      },
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      headerName: "Edit",
+      field: "edit",
+      minWidth: 75,
+      flex: 1,
+      renderCell: editBankClickHandler,
+      valueGetter: (params) => {
+        return params;
+      },
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+    },
+  ];
 
   let message;
-
   if (!banksError && !banksLoading && bankData) {
     message = (
-      <Table
-        header={header}
-        body={bankData}
-        editable={true}
-        onEdit={editBankClickHandler}
-        copy={true}
-        onCopy={copyBankClickHandler}
-      />
+      <Container className={styles.container}>
+        <DisplayGrid rows={bankData} columns={txnCols} boxWidth="95%" />
+      </Container>
     );
   }
   if (banksLoading) {
@@ -212,6 +310,15 @@ const AddBank = (props) => {
     editBank(editBankConfig);
   };
 
+  let showEditForm =
+    !!bankFormData &&
+    Object.keys(bankFormData).length > 0 &&
+    bankFormData.action === "Edit";
+  let showCopyForm =
+    !!bankFormData &&
+    Object.keys(bankFormData).length > 0 &&
+    bankFormData.action === "Copy";
+
   return (
     <React.Fragment>
       {modalStatus && (
@@ -230,24 +337,24 @@ const AddBank = (props) => {
               creating
             />
           )}
-          {Object.keys(editBankData).length > 0 && (
+          {showEditForm && (
             <CreateCopyBankForm
               onCancel={hideModalHandler}
               dateformats={dateFormats}
               loading={editBankLoading}
               error={editBankError}
-              payload={editBankData}
+              payload={bankFormData.data}
               resetError={resetEditBankError}
               onSave={editBankSaveHandler}
               editing
             />
           )}
-          {Object.keys(copyBankData).length > 0 && (
+          {showCopyForm && (
             <CreateCopyBankForm
               onCancel={hideModalHandler}
               onSave={createNewBankHandler}
               dateformats={dateFormats}
-              payload={copyBankData}
+              payload={bankFormData.data}
               loading={newBankLoading}
               error={newBankError}
               resetError={resetBankError}
@@ -268,7 +375,7 @@ const AddBank = (props) => {
           </IconButton>
         </Tooltip>
       </Header>
-      <Container className={styles.container}>{message}</Container>
+      {message}
     </React.Fragment>
   );
 };

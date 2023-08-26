@@ -128,7 +128,6 @@ const CreateCopyBankForm = (props) => {
   );
 
   const dateformatChangeHandler = (event) => {
-    console.log(event);
     setDateformats(event);
   };
 
