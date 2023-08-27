@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
-import { accountsAction } from "../../store/useraccount-slice";
-import { banksAction } from "../../store/banks-slice";
+import { logUserInActions } from "../../store/auth-slice";
 import { showAndHideMessages } from "../../store/message-slice";
 import apiURL from "../../endpoint";
 
@@ -24,47 +23,8 @@ const Login = (props) => {
   const redirect = useHistory();
 
   const [loginOption, setLoginOption] = useState(true);
-  const [serverResponse, setServerResponse] = useState(null);
+  const [serverResponse, setServerResponse] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-
-  // Setting up account Details Hook
-  const processAccountDetails = useCallback((rawdata) => {
-    const processedData = [];
-    for (let key in rawdata) {
-      const row = {};
-      row["id"] = rawdata[key].account_id;
-      row.account_no = rawdata[key].account_no;
-      row.active = rawdata[key].active;
-      row.joint = rawdata[key].joint;
-      row.bank_name = rawdata[key]["bank_dets"].bank_name;
-
-      processedData.push(row);
-    }
-    dispatch(accountsAction.setUserAccounts({ accounts: processedData }));
-  }, []);
-
-  const processBankDetails = useCallback((rawdata) => {
-    const processedData = [];
-    for (let key in rawdata) {
-      const row = {};
-      row["bal_col"] = rawdata[key].bal_col;
-      row["id"] = rawdata[key].bank_id;
-      row.bank_name = rawdata[key].bank_name;
-      row.chq_no_col = rawdata[key].chq_no_col;
-      row.crdt_amt_col = rawdata[key].crdt_amt_col;
-      row.start_row = rawdata[key].start_row;
-      row.txn_date_col = rawdata[key].txn_date_col;
-      row.txn_rmrk_col = rawdata[key].txn_rmrk_col;
-      row.val_date_col = rawdata[key].val_date_col;
-      row.with_amt_col = rawdata[key].with_amt_col;
-      row.date_format = rawdata[key].date.date_format;
-      processedData.push(row);
-    }
-    dispatch(banksAction.setBanks({ banks: processedData }));
-  }, []);
-
-  const { sendRequest: getUserAccounts } = useHttp(processAccountDetails);
-  const { sendRequest: getBankDetails } = useHttp(processBankDetails);
 
   //Setting up Login Hook
   const getToken = useCallback((rawdata) => {
@@ -76,22 +36,7 @@ const Login = (props) => {
         expiresIn: rawdata.expires_in,
       })
     );
-
-    const accountsConfig = {
-      url: apiURL + "/accounts",
-      headers: {
-        Authorization: "Bearer " + rawdata.access_token,
-      },
-    };
-    getUserAccounts(accountsConfig);
-
-    const bankConfig = {
-      url: apiURL + "/banks",
-      headers: {
-        Authorization: "Bearer " + rawdata.access_token,
-      },
-    };
-    getBankDetails(bankConfig);
+    dispatch(logUserInActions(rawdata.access_token));
     dispatch(
       showAndHideMessages({
         status: "success",
@@ -110,9 +55,17 @@ const Login = (props) => {
 
   //Setting up registration hook
   const processRegisteredUser = useCallback((rawdata) => {
-    setServerResponse(
-      "Registration successful! Your User Id is " + rawdata.user_id
+    dispatch(
+      showAndHideMessages({
+        status: "success",
+        messageText:
+          "Registration successful! Your User Id is " + rawdata.user_id,
+      })
     );
+    setServerResponse(true);
+    // setServerResponse(
+    //   "Registration successful! Your User Id is " + rawdata.user_id
+    // );
     setLoginOption(true);
   }, []);
 
@@ -199,7 +152,7 @@ const Login = (props) => {
           password: enteredPassword,
         },
       };
-
+      setServerResponse(false);
       sendRegisterRequest(registerConfig);
       resetPassword();
       resetUserName();
@@ -234,18 +187,24 @@ const Login = (props) => {
     buttonName = "Register";
   }
 
-  let response;
-  if (registerLoading) {
-    response = (
-      <div className={styles["server-loading"]}>Setting up your account...</div>
-    );
-  }
+  // let response;
+  // if (registerLoading) {
+  //   response = (
+  //     <div className={styles["server-loading"]}>Setting up your account...</div>
+  //   );
+  // }
   if (registerError) {
-    response = <div className={styles["server-error"]}>{registerError}</div>;
+    dispatch(
+      showAndHideMessages({
+        status: "error",
+        messageText: registerError,
+      })
+    );
+    // response = <div className={styles["server-error"]}>{registerError}</div>;
   }
-  if (!registerLoading && !registerError && serverResponse) {
-    response = <div className={styles["server-success"]}>{serverResponse}</div>;
-  }
+  // if (!registerLoading && !registerError && serverResponse) {
+  //   response = <div className={styles["server-success"]}>{serverResponse}</div>;
+  // }
 
   //After Effects
 
@@ -255,12 +214,6 @@ const Login = (props) => {
       resetUserName();
     }
   }, [loginOption]);
-
-  //auto logout
-  useEffect(() => {
-    if (loggedIn) {
-    }
-  }, [loggedIn]);
 
   return (
     <React.Fragment>
@@ -340,7 +293,11 @@ const Login = (props) => {
           {loginError && <p className={styles.error}>{loginError}</p>}
         </form>
       </Container>
-      {response}
+      {registerLoading && (
+        <div className={styles["server-loading"]}>
+          Setting up your account...
+        </div>
+      )}
     </React.Fragment>
   );
 };

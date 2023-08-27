@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { banksAction } from "./banks-slice";
 import { accountsAction } from "./useraccount-slice";
+import { fetchBanks } from "./banks-slice";
+import { fetchAccounts } from "./useraccount-slice";
 
 const initialState = {
   authToken: localStorage.getItem("token"),
@@ -44,6 +46,14 @@ export const logUserOutActions = () => {
     dispatch(authActions.logUserOut())
   }
 }
+
+export const logUserInActions = (accessToken) => {
+  return (dispatch, getState) => {
+    dispatch(fetchBanks(accessToken))
+    dispatch(fetchAccounts(accessToken))
+  }
+}
+
 
 
 export default authSlice.reducer;
