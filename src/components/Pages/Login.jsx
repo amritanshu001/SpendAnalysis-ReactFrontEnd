@@ -14,13 +14,13 @@ import apiURL from "../../endpoint";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
 
 const Login = (props) => {
   const dispatch = useDispatch();
-  const redirect = useHistory();
+  const redirect = useNavigate();
 
   const [loginOption, setLoginOption] = useState(true);
   const [serverResponse, setServerResponse] = useState(false);

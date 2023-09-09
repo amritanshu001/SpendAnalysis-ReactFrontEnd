@@ -5,7 +5,7 @@ import styles from "./Navbar.module.css";
 import { logUserOutActions } from "../../store/auth-slice";
 import { showAndHideMessages } from "../../store/message-slice";
 
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import apiURL from "../../endpoint";
 import useHttp from "../../hooks/useHTTP";
 import NavElements from "./NavElements";
@@ -17,7 +17,7 @@ import Sidebar from "./Sidebar";
 
 const Navbar = (props) => {
   const dispatch = useDispatch();
-  const redirect = useHistory();
+  const redirect = useNavigate();
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const userToken = useSelector((state) => state.userAuth.authToken);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
@@ -57,7 +57,7 @@ const Navbar = (props) => {
         messageText: "You have been successfully logged out!",
       })
     );
-    redirect.replace("/login");
+    redirect("/login", { replace: true });
   };
 
   useEffect(() => {

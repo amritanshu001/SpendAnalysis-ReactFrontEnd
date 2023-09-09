@@ -22,7 +22,7 @@
     "react-error-boundary": "^4.0.10",
     "react-query": "^3.39.2",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^6.15.0",
     "react-select": "^5.7.0",
     "redux": "^4.2.0",
     "trendline": "^0.3.1",

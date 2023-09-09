@@ -30,7 +30,7 @@ import AppLogout from "./components/Functional/AppLogout";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import UploadStatement from "./components/Pages/UploadStatement";
 
@@ -56,96 +56,72 @@ const App = (props) => {
   return (
     <ThemeProvider theme={theme}>
       <Navbar></Navbar>
-      {/* <main className={styles["main-area"]}> */}
       <Paper elevation={0} sx={{ marginTop: 5 }}>
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          {!isUserLoggedIn && (
-            <Route path="/login">
-              <Login />
-            </Route>
-          )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {!isUserLoggedIn && <Route path="/login" element={<Login />} />}
           <Route
             path="/spendanalysis"
-            render={() => {
-              messageRenderer(
-                isUserLoggedIn,
-                dispatch,
-                "Please login to access this page"
-              );
-              return isUserLoggedIn ? (
+            element={
+              isUserLoggedIn ? (
                 <AppLogout>
                   <SpendAnalysis accounts={userAccounts} />
                 </AppLogout>
               ) : (
-                <Redirect to="/login" />
-              );
-            }}
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/manageaccount"
-            render={() => {
-              messageRenderer(
-                isUserLoggedIn,
-                dispatch,
-                "Please login to access this page"
-              );
-              return isUserLoggedIn ? (
+            element={
+              isUserLoggedIn ? (
                 <AppLogout>
                   <ManageAccounts accounts={userAccounts} />
                 </AppLogout>
               ) : (
-                <Redirect to="/login" />
-              );
-            }}
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/uploadstatement"
-            render={() => {
-              messageRenderer(
-                isUserLoggedIn,
-                dispatch,
-                "Please login to access this page"
-              );
-              return isUserLoggedIn ? (
+            element={
+              isUserLoggedIn ? (
                 <AppLogout>
                   <UploadStatement />
                 </AppLogout>
               ) : (
-                <Redirect to="/login" />
-              );
-            }}
+                <Navigate to="/login" />
+              )
+            }
           />
 
           <Route
             path="/addbank"
-            render={() => {
-              messageRenderer(
-                isUserLoggedIn && isUserAdmin,
-                dispatch,
-                "Need to have admin access to view this page"
-              );
-              return isUserLoggedIn && isUserAdmin ? (
+            element={
+              isUserLoggedIn && isUserAdmin ? (
                 <AppLogout>
                   <AddBank />
                 </AppLogout>
               ) : (
-                <Redirect to="/" />
-              );
-            }}
+                <Navigate to="/" />
+              )
+            }
           />
-          <Route path="/request-resetpassword/:hash">
-            <ResetPassword />
-          </Route>
-          <Route path="/request-resetpassword">
-            <RequestResetPassword />
-          </Route>
+          <Route
+            path="/request-resetpassword/:hash"
+            element={<ResetPassword />}
+          />
 
-          <Route path="*" render={() => <Redirect to="/" />} />
-        </Switch>
+          <Route
+            path="/request-resetpassword"
+            element={<RequestResetPassword />}
+          />
+          <Route path="index.html" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
       </Paper>
       {showMessage && <Footer message={globalMessage} />}
     </ThemeProvider>
