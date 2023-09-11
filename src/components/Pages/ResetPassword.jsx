@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styles from "./ResetPassword.module.css";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -22,7 +22,7 @@ const sucessMessage = (
 
 const ResetPassword = () => {
   const { hash: userHash } = useParams();
-  const history = useHistory();
+  const history = useNavigate();
   const [responseMessage, setResponseMessage] = useState(null);
   const {
     inputValue: enteredPassword,
@@ -98,7 +98,7 @@ const ResetPassword = () => {
   useEffect(() => {
     setTimeout(() => {
       if (!passwordResetLoading && (responseMessage || passwordResetError)) {
-        history.replace("/login");
+        history("/login", {replace:true});
       }
     }, 2000);
   }, [passwordResetLoading, responseMessage, passwordResetError]);
