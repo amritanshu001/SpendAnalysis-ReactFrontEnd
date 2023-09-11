@@ -13,3 +13,9 @@
 .logout:hover {
   box-shadow: none;
 }
+
+.link-active {
+  /* text-decoration: underline; */
+  padding-bottom: 0.2rem;
+  border-bottom: 0.2rem whitesmoke solid;
+}

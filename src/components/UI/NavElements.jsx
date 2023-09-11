@@ -3,6 +3,9 @@ import styles from "./NavElements.module.css";
 import { NavLink } from "react-router-dom";
 import Button from "./Button";
 
+const activeLink = ({ isActive }) =>
+  isActive ? styles["link-active"] : undefined;
+
 const NavElements = (props) => {
   const logout = () => {
     props.logoutHandler();
@@ -14,41 +17,61 @@ const NavElements = (props) => {
     <nav className={props.className}>
       <ul>
         <li>
-          <NavLink to="/" onClick={props.hideSideBar}>
+          <NavLink to="/" onClick={props.hideSideBar} className={activeLink}>
             Home
           </NavLink>
         </li>
         {!props.isUserLoggedIn && (
           <li>
-            <NavLink to="/login" onClick={props.hideSideBar}>
+            <NavLink
+              to="/login"
+              onClick={props.hideSideBar}
+              className={activeLink}
+            >
               Login
             </NavLink>
           </li>
         )}
         {props.isUserLoggedIn && (
           <li>
-            <NavLink to="/spendanalysis" onClick={props.hideSideBar}>
+            <NavLink
+              to="/spendanalysis"
+              onClick={props.hideSideBar}
+              className={activeLink}
+            >
               Spend Analysis
             </NavLink>
           </li>
         )}
         {props.isUserLoggedIn && (
           <li>
-            <NavLink to="/manageaccount" onClick={props.hideSideBar}>
+            <NavLink
+              to="/manageaccount"
+              onClick={props.hideSideBar}
+              className={activeLink}
+            >
               Manage Accounts
             </NavLink>
           </li>
         )}
         {props.isUserLoggedIn && (
           <li>
-            <NavLink to="/uploadstatement" onClick={props.hideSideBar}>
+            <NavLink
+              to="/uploadstatement"
+              onClick={props.hideSideBar}
+              className={activeLink}
+            >
               Upload Statement
             </NavLink>
           </li>
         )}
         {props.isUserLoggedIn && props.isUserAdmin && (
           <li>
-            <NavLink to="/addbank" onClick={props.hideSideBar}>
+            <NavLink
+              to="/addbank"
+              onClick={props.hideSideBar}
+              className={activeLink}
+            >
               Add Bank Details
             </NavLink>
           </li>
