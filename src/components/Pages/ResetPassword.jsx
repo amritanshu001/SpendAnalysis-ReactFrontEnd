@@ -7,6 +7,7 @@ import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import useHttp from "../../hooks/useHTTP";
@@ -107,6 +108,7 @@ const ResetPassword = () => {
 
   return (
     <React.Fragment>
+      <HeadMetaData pathname={`/${currentPathArray[1]}/:hash`} />
       <Header>Reset Password</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["reset-form"]}>

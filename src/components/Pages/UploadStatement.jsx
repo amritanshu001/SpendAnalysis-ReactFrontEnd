@@ -4,13 +4,11 @@ import Button from "../UI/Button";
 
 import styles from "./UploadStatement.module.css";
 import useHttp4File from "../../hooks/useHTTP4File";
-
-import SearchOptimizer from "../Metadata/SearchOptimizer";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import { useSelector } from "react-redux";
 import Header from "../UI/Header";
 import apiURL from "../../endpoint";
-import { higherMetaData as metadata } from "../../lib/metadata";
 import { useRef } from "react";
 
 import { useLocation } from "react-router-dom";
@@ -106,9 +104,7 @@ const UploadStatement = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       <Header>Upload Statement</Header>
       <Container>
         <form

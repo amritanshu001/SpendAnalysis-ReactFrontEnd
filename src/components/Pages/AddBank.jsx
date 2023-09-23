@@ -20,8 +20,7 @@ import apiURL from "../../endpoint";
 import { Tooltip } from "@mui/material";
 import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 import { useLocation } from "react-router-dom";
-import { higherMetaData as metadata } from "../../lib/metadata";
-import SearchOptimizer from "../Metadata/SearchOptimizer";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 let bankFormData = {};
 
@@ -325,9 +324,7 @@ const AddBank = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       {modalStatus && (
         <FormModal
           onBackdropClick={hideModalHandler}

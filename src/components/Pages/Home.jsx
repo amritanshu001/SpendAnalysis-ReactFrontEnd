@@ -2,15 +2,14 @@ import Container from "../UI/Container";
 import Header from "../UI/Header";
 import styles from "./Home.module.css";
 import React from "react";
-import homeContent, { higherMetaData } from "../../lib/metadata";
-import SearchOptimizer from "../Metadata/SearchOptimizer";
+import homeContent from "../../lib/metadata";
+
 import { useLocation } from "react-router-dom";
-import { higherMetaData as metadata } from "../../lib/metadata";
+
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 const Home = (props) => {
   const location = useLocation();
-  console.log("current path", location.pathname);
-  console.log(higherMetaData);
 
   const mapHomeContent = (content) => {
     return (
@@ -25,9 +24,7 @@ const Home = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       <Header>Introduction</Header>
       <Container className={styles.container}>
         <div className={styles.intro}>

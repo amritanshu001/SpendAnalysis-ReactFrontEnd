@@ -6,6 +6,7 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
@@ -85,6 +86,7 @@ const ResetPassword = () => {
 
   return (
     <React.Fragment>
+      <HeadMetaData pathname={location.pathname} />
       <Header>Reset Password Request</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["reset-form"]}>

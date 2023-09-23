@@ -10,14 +10,12 @@ import Button from "../UI/Button";
 import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
-
-import SearchOptimizer from "../Metadata/SearchOptimizer";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import apiURL from "../../endpoint";
-import { higherMetaData as metadata } from "../../lib/metadata";
 import useHttp from "../../hooks/useHTTP";
 
 import Accordion from "@mui/material/Accordion";
@@ -398,9 +396,7 @@ const SpendAnalysis = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       <Header>Spend Analysis</Header>
       <Container className={styles.container}>
         <form className={styles.form} onSubmit={formSubmitHandler}>

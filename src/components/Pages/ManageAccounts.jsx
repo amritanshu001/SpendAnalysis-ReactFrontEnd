@@ -5,6 +5,7 @@ import FormModal from "../UI/Modal/FormModal";
 import Container from "../UI/Container";
 
 import SearchOptimizer from "../Metadata/SearchOptimizer";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
@@ -259,9 +260,7 @@ const ManageAccounts = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       {formModalStatus && (
         <FormModal onBackdropClick={backdropClick}>
           {showEditForm && (

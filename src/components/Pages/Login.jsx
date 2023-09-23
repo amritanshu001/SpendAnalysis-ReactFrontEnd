@@ -17,8 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
-import { higherMetaData as metadata } from "../../lib/metadata";
-import SearchOptimizer from "../Metadata/SearchOptimizer";
+import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -26,12 +25,9 @@ const Login = (props) => {
   const location = useLocation();
 
   const [loginOption, setLoginOption] = useState(true);
-  const [serverResponse, setServerResponse] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   //Setting up Login Hook
   const getToken = useCallback((rawdata) => {
-    setLoggedIn(true);
     dispatch(
       authActions.logUserIn({
         authToken: rawdata.access_token,
@@ -65,10 +61,6 @@ const Login = (props) => {
           "Registration successful! Your User Id is " + rawdata.user_id,
       })
     );
-    setServerResponse(true);
-    // setServerResponse(
-    //   "Registration successful! Your User Id is " + rawdata.user_id
-    // );
     setLoginOption(true);
   }, []);
 
@@ -190,12 +182,6 @@ const Login = (props) => {
     buttonName = "Register";
   }
 
-  // let response;
-  // if (registerLoading) {
-  //   response = (
-  //     <div className={styles["server-loading"]}>Setting up your account...</div>
-  //   );
-  // }
   if (registerError) {
     dispatch(
       showAndHideMessages({
@@ -203,11 +189,7 @@ const Login = (props) => {
         messageText: registerError,
       })
     );
-    // response = <div className={styles["server-error"]}>{registerError}</div>;
   }
-  // if (!registerLoading && !registerError && serverResponse) {
-  //   response = <div className={styles["server-success"]}>{serverResponse}</div>;
-  // }
 
   //After Effects
 
@@ -220,9 +202,7 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
-      <SearchOptimizer
-        metadata={metadata.find((page) => page.path === location.pathname)}
-      />
+      <HeadMetaData pathname={location.pathname} />
       <Header>{loginOption ? "Login" : "Register"}</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["login-form"]}>
