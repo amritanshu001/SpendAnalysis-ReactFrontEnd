@@ -4,22 +4,26 @@ import Header from "../UI/Header";
 import FormModal from "../UI/Modal/FormModal";
 import Container from "../UI/Container";
 
+import SearchOptimizer from "../Metadata/SearchOptimizer";
+
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
 import UserAccountForm from "../Forms/AccountForms/UserAccountForm";
 import DeleteForm from "../Forms/AccountForms/DeleteForm";
+import CreateAccountForm from "../Forms/AccountForms/CreateAccountForm";
 
 import useHttp from "../../hooks/useHTTP";
 import React, { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 import { accountsAction } from "../../store/useraccount-slice";
 import { formModalAction } from "../../store/formmodal-slice";
 
 import apiURL from "../../endpoint";
-import CreateAccountForm from "../Forms/AccountForms/CreateAccountForm";
+import { higherMetaData as metadata } from "../../lib/metadata";
 
 import DisplayGrid, {
   RowEditIcon,
@@ -33,6 +37,7 @@ const ManageAccounts = (props) => {
   const accountData = useSelector((state) => state.userAccounts.userAccounts);
   const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [isCreateClicked, setCreateClicked] = useState(false);
   const [firstMount, setFirstMount] = useState(0);
@@ -254,6 +259,9 @@ const ManageAccounts = (props) => {
 
   return (
     <React.Fragment>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
       {formModalStatus && (
         <FormModal onBackdropClick={backdropClick}>
           {showEditForm && (

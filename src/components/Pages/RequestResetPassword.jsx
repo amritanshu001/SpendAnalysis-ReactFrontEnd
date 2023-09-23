@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./RequestResetPassword.module.css";
 
 import Input from "../UI/Input";
@@ -24,6 +25,8 @@ const sucessMessage = (
 );
 
 const ResetPassword = () => {
+  const location = useLocation();
+  console.log(location.pathname);
   const [responseMessage, setResponseMessage] = useState(null);
   const {
     inputValue: enteredEmail,

@@ -2,41 +2,21 @@ import Container from "../UI/Container";
 import Header from "../UI/Header";
 import styles from "./Home.module.css";
 import React from "react";
-
-const homeContent = [
-  {
-    id: "01",
-    title: "Login/Register",
-    desc: "User can register themselves on the site and set their password OR can login into the system with the registered credentials.",
-  },
-  {
-    id: "02",
-    title: "Manage Bank Accounts",
-    desc: "User can add / removed their bank accounts in the database.",
-  },
-  {
-    id: "03",
-    title: "Upload Statement",
-    desc: "Users can select their bank account and upload their statements in excel format into the system.",
-  },
-  {
-    id: "04",
-    title: "Spend Analysis",
-    desc: "Users can generate spend analysis on the uploaded statement for a specific account and a date period.",
-  },
-  {
-    id: "05",
-    title: "Add Bank Details (Admin Only)",
-    desc: "Admin users can maintain the Bank names and the format of excel statement to assist the system in uploading the data into the system.",
-  },
-];
+import homeContent, { higherMetaData } from "../../lib/metadata";
+import SearchOptimizer from "../Metadata/SearchOptimizer";
+import { useLocation } from "react-router-dom";
+import { higherMetaData as metadata } from "../../lib/metadata";
 
 const Home = (props) => {
+  const location = useLocation();
+  console.log("current path", location.pathname);
+  console.log(higherMetaData);
+
   const mapHomeContent = (content) => {
     return (
       <div className={styles.row} key={content.id}>
         <span className={styles["bold-span"]}>{content.title}</span>
-        <span className={styles["normal-span"]}>{content.desc}</span>
+        <span className={styles["normal-span"]}>{content.description}</span>
       </div>
     );
   };
@@ -45,6 +25,9 @@ const Home = (props) => {
 
   return (
     <React.Fragment>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
       <Header>Introduction</Header>
       <Container className={styles.container}>
         <div className={styles.intro}>

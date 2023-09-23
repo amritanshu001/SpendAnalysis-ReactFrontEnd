@@ -6,15 +6,19 @@ import Header from "../UI/Header";
 import Input from "../UI/Input";
 import BalanceGrid from "../UI/Grid/BalanceGrid";
 import SpendChart from "../UI/Chart/SpendChart";
-
-import { useSelector } from "react-redux";
 import Button from "../UI/Button";
-
-import apiURL from "../../endpoint";
-import useHttp from "../../hooks/useHTTP";
 import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
+
+import SearchOptimizer from "../Metadata/SearchOptimizer";
+
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
+import apiURL from "../../endpoint";
+import { higherMetaData as metadata } from "../../lib/metadata";
+import useHttp from "../../hooks/useHTTP";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -158,6 +162,7 @@ const txnCols = [
 const SpendAnalysis = (props) => {
   const accounts = useSelector((state) => state.userAccounts.userAccounts);
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const location = useLocation();
 
   const [accountId, setAccountId] = useState(0);
   const [validation, setValidation] = useState(null);
@@ -393,6 +398,9 @@ const SpendAnalysis = (props) => {
 
   return (
     <React.Fragment>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
       <Header>Spend Analysis</Header>
       <Container className={styles.container}>
         <form className={styles.form} onSubmit={formSubmitHandler}>

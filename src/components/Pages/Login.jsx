@@ -4,7 +4,7 @@ import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
@@ -17,10 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
+import { higherMetaData as metadata } from "../../lib/metadata";
+import SearchOptimizer from "../Metadata/SearchOptimizer";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const redirect = useNavigate();
+  const location = useLocation();
 
   const [loginOption, setLoginOption] = useState(true);
   const [serverResponse, setServerResponse] = useState(false);
@@ -217,6 +220,9 @@ const Login = (props) => {
 
   return (
     <React.Fragment>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
       <Header>{loginOption ? "Login" : "Register"}</Header>
       <Container>
         <form onSubmit={onSubmitHandler} className={styles["login-form"]}>

@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
 import { ErrorBoundary } from "react-error-boundary";
+import { HelmetProvider } from "react-helmet-async";
 
 const ErrorPage = React.lazy(() => import("./components/Pages/ErrorPage"));
 import SpinnerCircular from "./components/UI/Feedback/SpinnerCircular";
@@ -18,7 +19,9 @@ root.render(
     <Suspense fallback={<SpinnerCircular color="success" />}>
       <BrowserRouter>
         <ErrorBoundary FallbackComponent={ErrorPage}>
-          <App />
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
         </ErrorBoundary>
       </BrowserRouter>
     </Suspense>

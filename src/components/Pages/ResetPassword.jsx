@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styles from "./ResetPassword.module.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import Input from "../UI/Input";
 import Button from "../UI/Button";
@@ -22,6 +22,8 @@ const sucessMessage = (
 
 const ResetPassword = () => {
   const { hash: userHash } = useParams();
+  const location = useLocation();
+  const currentPathArray = location.pathname.split("/");
   const history = useNavigate();
   const [responseMessage, setResponseMessage] = useState(null);
   const {
@@ -98,7 +100,7 @@ const ResetPassword = () => {
   useEffect(() => {
     setTimeout(() => {
       if (!passwordResetLoading && (responseMessage || passwordResetError)) {
-        history("/login", {replace:true});
+        history("/login", { replace: true });
       }
     }, 2000);
   }, [passwordResetLoading, responseMessage, passwordResetError]);

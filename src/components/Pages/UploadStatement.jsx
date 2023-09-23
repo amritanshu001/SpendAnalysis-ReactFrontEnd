@@ -5,10 +5,15 @@ import Button from "../UI/Button";
 import styles from "./UploadStatement.module.css";
 import useHttp4File from "../../hooks/useHTTP4File";
 
+import SearchOptimizer from "../Metadata/SearchOptimizer";
+
 import { useSelector } from "react-redux";
 import Header from "../UI/Header";
 import apiURL from "../../endpoint";
+import { higherMetaData as metadata } from "../../lib/metadata";
 import { useRef } from "react";
+
+import { useLocation } from "react-router-dom";
 
 const mapAccounts = (account) => {
   return (
@@ -21,6 +26,7 @@ const mapAccounts = (account) => {
 const UploadStatement = (props) => {
   const accounts = useSelector((state) => state.userAccounts.userAccounts);
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const location = useLocation();
 
   const fileInputRef = useRef();
   const [accountId, setAccountId] = useState(0);
@@ -100,7 +106,10 @@ const UploadStatement = (props) => {
 
   return (
     <React.Fragment>
-      <Header>Spend Analysis</Header>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
+      <Header>Upload Statement</Header>
       <Container>
         <form
           encType="multipart/form-data"

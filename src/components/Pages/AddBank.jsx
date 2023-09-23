@@ -19,10 +19,14 @@ import { formModalAction } from "../../store/formmodal-slice";
 import apiURL from "../../endpoint";
 import { Tooltip } from "@mui/material";
 import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
+import { useLocation } from "react-router-dom";
+import { higherMetaData as metadata } from "../../lib/metadata";
+import SearchOptimizer from "../Metadata/SearchOptimizer";
 
 let bankFormData = {};
 
 const AddBank = (props) => {
+  const location = useLocation();
   const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
   const modalStatus = useSelector((state) => state.formModal.showModal);
@@ -321,6 +325,9 @@ const AddBank = (props) => {
 
   return (
     <React.Fragment>
+      <SearchOptimizer
+        metadata={metadata.find((page) => page.path === location.pathname)}
+      />
       {modalStatus && (
         <FormModal
           onBackdropClick={hideModalHandler}
