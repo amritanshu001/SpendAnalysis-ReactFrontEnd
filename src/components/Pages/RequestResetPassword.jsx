@@ -27,7 +27,6 @@ const sucessMessage = (
 
 const ResetPassword = () => {
   const location = useLocation();
-  console.log(location.pathname);
   const [responseMessage, setResponseMessage] = useState(null);
   const {
     inputValue: enteredEmail,
