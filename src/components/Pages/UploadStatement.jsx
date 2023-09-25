@@ -8,7 +8,7 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import { useSelector } from "react-redux";
 import Header from "../UI/Header";
-import apiURL from "../../endpoint";
+const apiURL = import.meta.env.VITE_API_URL;
 import { useRef } from "react";
 
 import { useLocation } from "react-router-dom";

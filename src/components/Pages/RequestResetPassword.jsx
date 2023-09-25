@@ -14,7 +14,7 @@ import useInputValidator from "../../hooks/useInputValidator";
 import useHttp from "../../hooks/useHTTP";
 import { emailValidator } from "../../lib/validators";
 
-import apiURL from "../../endpoint";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const siteAddress = document.location.origin + document.location.pathname;
 const sucessMessage = (

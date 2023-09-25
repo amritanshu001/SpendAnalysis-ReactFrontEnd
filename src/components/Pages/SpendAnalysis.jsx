@@ -15,7 +15,7 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-import apiURL from "../../endpoint";
+const apiURL = import.meta.env.VITE_API_URL;
 import useHttp from "../../hooks/useHTTP";
 
 import Accordion from "@mui/material/Accordion";
@@ -248,6 +248,8 @@ const SpendAnalysis = (props) => {
   if (transactionsError) {
     message1 = <p className={styles.error}>{transactionsError}</p>;
   }
+
+  console.log("Loading:", transactionsLoading, "Error:", transactionsError);
 
   if (
     !transactionsLoading &&

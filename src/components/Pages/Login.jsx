@@ -10,7 +10,9 @@ import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
 import { logUserInActions } from "../../store/auth-slice";
 import { showAndHideMessages } from "../../store/message-slice";
-import apiURL from "../../endpoint";
+// import apiURL from "../../endpoint";
+
+const apiURL = import.meta.env.VITE_API_URL;
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch, useSelector } from "react-redux";

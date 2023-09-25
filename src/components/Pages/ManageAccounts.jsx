@@ -4,7 +4,6 @@ import Header from "../UI/Header";
 import FormModal from "../UI/Modal/FormModal";
 import Container from "../UI/Container";
 
-import SearchOptimizer from "../Metadata/SearchOptimizer";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -23,8 +22,7 @@ import { useLocation } from "react-router-dom";
 import { accountsAction } from "../../store/useraccount-slice";
 import { formModalAction } from "../../store/formmodal-slice";
 
-import apiURL from "../../endpoint";
-import { higherMetaData as metadata } from "../../lib/metadata";
+const apiURL = import.meta.env.VITE_API_URL;
 
 import DisplayGrid, {
   RowEditIcon,

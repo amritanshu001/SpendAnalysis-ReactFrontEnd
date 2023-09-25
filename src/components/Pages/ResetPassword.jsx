@@ -13,7 +13,7 @@ import useInputValidator from "../../hooks/useInputValidator";
 import useHttp from "../../hooks/useHTTP";
 import { passwordValidator } from "../../lib/validators";
 
-import apiURL from "../../endpoint";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const sucessMessage = (
   <div className={styles["server-success"]}>

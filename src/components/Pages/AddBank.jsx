@@ -16,7 +16,7 @@ import IconButton from "@mui/material/IconButton";
 
 import { banksAction } from "../../store/banks-slice";
 import { formModalAction } from "../../store/formmodal-slice";
-import apiURL from "../../endpoint";
+const apiURL = import.meta.env.VITE_API_URL;
 import { Tooltip } from "@mui/material";
 import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 import { useLocation } from "react-router-dom";
