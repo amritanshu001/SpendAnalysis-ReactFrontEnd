@@ -14,12 +14,12 @@ import { showAndHideMessages } from "../../store/message-slice";
 const apiURL = import.meta.env.VITE_API_URL;
 
 import useInputValidator from "../../hooks/useInputValidator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
-import React, { useState, useEffect, useCallback } from "react";
-import useHttp from "../../hooks/useHTTP";
+import React, { useState, useEffect } from "react";
+// import useHttp from "../../hooks/useHTTP";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 const Login = (props) => {
@@ -27,12 +27,7 @@ const Login = (props) => {
   const redirect = useNavigate();
   const location = useLocation();
 
-  const {
-    isPending: isLoginPending,
-    isError: isLoginError,
-    error: loggingInError,
-    mutate: sendLoginRequest,
-  } = useMutation({
+  const { isPending: isLoginPending, mutate: sendLoginRequest } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: (data) => {
       dispatch(
@@ -49,7 +44,7 @@ const Login = (props) => {
           messageText: "Login Successful. Welcome " + data.email_id,
         })
       );
-      redirect.replace("/");
+      redirect("/", { replace: true });
     },
     onError: (err) => {
       dispatch(
@@ -63,51 +58,28 @@ const Login = (props) => {
 
   const [loginOption, setLoginOption] = useState(true);
 
-  const {
-    mutate: sendUserRegistration,
-    isPending: registrationPending,
-    isError: isRegistrationError,
-    error: registrationError,
-  } = useMutation({
-    mutationFn: sendMutationRequest,
-    onSuccess: (data) => {
-      dispatch(
-        showAndHideMessages({
-          status: "success",
-          messageText:
-            "Registration successful! Your User Id is " + data.user_id,
-        })
-      );
-      setLoginOption(true);
-    },
-    onError: (err) => {
-      dispatch(
-        showAndHideMessages({
-          status: "error",
-          messageText: err.status + ":" + err.message,
-        })
-      );
-    },
-  });
-
-  //Setting up registration hook
-  const processRegisteredUser = useCallback((rawdata) => {
-    dispatch(
-      showAndHideMessages({
-        status: "success",
-        messageText:
-          "Registration successful! Your User Id is " + rawdata.user_id,
-      })
-    );
-    setLoginOption(true);
-  }, []);
-
-  const {
-    isloading: registerLoading,
-    error: registerError,
-    sendRequest: sendRegisterRequest,
-    resetError: registerErrorReset,
-  } = useHttp(processRegisteredUser);
+  const { mutate: sendUserRegistration, isPending: registrationPending } =
+    useMutation({
+      mutationFn: sendMutationRequest,
+      onSuccess: (data) => {
+        dispatch(
+          showAndHideMessages({
+            status: "success",
+            messageText:
+              "Registration successful! Your User Id is " + data.user_id,
+          })
+        );
+        setLoginOption(true);
+      },
+      onError: (err) => {
+        dispatch(
+          showAndHideMessages({
+            status: "error",
+            messageText: err.status + ":" + err.message,
+          })
+        );
+      },
+    });
 
   //Setting input Validation hooks
   const {
@@ -172,20 +144,20 @@ const Login = (props) => {
       resetPassword();
       resetEmail();
     } else {
-      registerErrorReset();
       const registerConfig = {
         url: apiURL + "/registration",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: {
+        body: JSON.stringify({
           user_name: enteredUserName,
           email_id: enteredEmail,
           password: enteredPassword,
-        },
+        }),
       };
-      sendRegisterRequest(registerConfig);
+      sendUserRegistration({ requestConfig: registerConfig });
+
       resetPassword();
       resetUserName();
       resetEmail();
@@ -217,15 +189,6 @@ const Login = (props) => {
     }
   } else {
     buttonName = "Register";
-  }
-
-  if (registerError) {
-    dispatch(
-      showAndHideMessages({
-        status: "error",
-        messageText: registerError,
-      })
-    );
   }
 
   //After Effects
@@ -315,7 +278,7 @@ const Login = (props) => {
           </div>
         </form>
       </Container>
-      {registerLoading && (
+      {registrationPending && (
         <div className={styles["server-loading"]}>
           Setting up your account...
         </div>
