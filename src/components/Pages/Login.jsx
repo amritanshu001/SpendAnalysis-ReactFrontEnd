@@ -10,13 +10,14 @@ import { passwordValidator, emailValidator } from "../../lib/validators";
 import { authActions } from "../../store/auth-slice";
 import { logUserInActions } from "../../store/auth-slice";
 import { showAndHideMessages } from "../../store/message-slice";
-// import apiURL from "../../endpoint";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { sendMutationRequest } from "../../lib/endpoint-configs";
 import React, { useState, useEffect, useCallback } from "react";
 import useHttp from "../../hooks/useHTTP";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
@@ -26,33 +27,68 @@ const Login = (props) => {
   const redirect = useNavigate();
   const location = useLocation();
 
+  const {
+    isPending: isLoginPending,
+    isError: isLoginError,
+    error: loggingInError,
+    mutate: sendLoginRequest,
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSuccess: (data) => {
+      dispatch(
+        authActions.logUserIn({
+          authToken: data.access_token,
+          isAdmin: data.admin,
+          expiresIn: data.expires_in,
+        })
+      );
+      dispatch(logUserInActions(data.access_token));
+      dispatch(
+        showAndHideMessages({
+          status: "success",
+          messageText: "Login Successful. Welcome " + data.email_id,
+        })
+      );
+      redirect.replace("/");
+    },
+    onError: (err) => {
+      dispatch(
+        showAndHideMessages({
+          status: "error",
+          messageText: err.status + ":" + err.message,
+        })
+      );
+    },
+  });
+
   const [loginOption, setLoginOption] = useState(true);
 
-  //Setting up Login Hook
-  const getToken = useCallback((rawdata) => {
-    dispatch(
-      authActions.logUserIn({
-        authToken: rawdata.access_token,
-        isAdmin: rawdata.admin,
-        expiresIn: rawdata.expires_in,
-      })
-    );
-    dispatch(logUserInActions(rawdata.access_token));
-    dispatch(
-      showAndHideMessages({
-        status: "success",
-        messageText: "Login Successful. Welcome " + rawdata.email_id,
-      })
-    );
-    redirect.replace("/");
-  }, []);
-
   const {
-    isloading: loginLoading,
-    error: loginError,
-    sendRequest: sendLoginRequest,
-    resetError: loginErrorReset,
-  } = useHttp(getToken);
+    mutate: sendUserRegistration,
+    isPending: registrationPending,
+    isError: isRegistrationError,
+    error: registrationError,
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSuccess: (data) => {
+      dispatch(
+        showAndHideMessages({
+          status: "success",
+          messageText:
+            "Registration successful! Your User Id is " + data.user_id,
+        })
+      );
+      setLoginOption(true);
+    },
+    onError: (err) => {
+      dispatch(
+        showAndHideMessages({
+          status: "error",
+          messageText: err.status + ":" + err.message,
+        })
+      );
+    },
+  });
 
   //Setting up registration hook
   const processRegisteredUser = useCallback((rawdata) => {
@@ -118,20 +154,20 @@ const Login = (props) => {
     event.preventDefault();
 
     if (loginOption) {
-      loginErrorReset();
+      // loginErrorReset();
       const loginConfig = {
         url: apiURL + "/userlogin",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: {
+        body: JSON.stringify({
           email_id: enteredEmail,
           password: enteredPassword,
-        },
+        }),
       };
 
-      sendLoginRequest(loginConfig);
+      sendLoginRequest({ requestConfig: loginConfig });
 
       resetPassword();
       resetEmail();
@@ -149,7 +185,6 @@ const Login = (props) => {
           password: enteredPassword,
         },
       };
-      setServerResponse(false);
       sendRegisterRequest(registerConfig);
       resetPassword();
       resetUserName();
@@ -175,7 +210,7 @@ const Login = (props) => {
 
   let buttonName;
   if (loginOption) {
-    if (loginLoading) {
+    if (isLoginPending) {
       buttonName = "Logging In...";
     } else {
       buttonName = "Login";
@@ -216,7 +251,7 @@ const Login = (props) => {
               value={enteredUserName}
               onBlur={userNameBlurHandler}
               onChange={userNameChangeHandler}
-              disabled={loginLoading}
+              disabled={isLoginPending}
               className={userNameError ? styles.invalid : ""}
             >
               User Name
@@ -229,7 +264,7 @@ const Login = (props) => {
             value={enteredEmail}
             onBlur={emailBlurHandler}
             onChange={emailChangeHandler}
-            disabled={loginLoading}
+            disabled={isLoginPending}
             className={emailIsError ? styles.invalid : ""}
           >
             Email Id
@@ -241,7 +276,7 @@ const Login = (props) => {
             value={enteredPassword}
             onBlur={passwordBlurHandler}
             onChange={passwordChangeHandler}
-            disabled={loginLoading}
+            disabled={isLoginPending}
             className={passwordError ? styles.invalid : ""}
           >
             Password
@@ -255,7 +290,7 @@ const Login = (props) => {
                 value={enteredConfPassword}
                 onBlur={confPasswordBlurHandler}
                 onChange={confPasswordChangeHandler}
-                disabled={loginLoading}
+                disabled={isLoginPending}
                 className={confPasswordError ? styles.invalid : ""}
               >
                 Confirm Password
@@ -274,11 +309,10 @@ const Login = (props) => {
               onClick={optionToggleHandler}
               className={styles.toggler}
             >
-              {loginOption ? "New User?" : "Existing User Login"}
+              {loginOption ? "New User?" : "Login"}
             </button>
             <Link to="/request-resetpassword">Reset Password</Link>
           </div>
-          {loginError && <p className={styles.error}>{loginError}</p>}
         </form>
       </Container>
       {registerLoading && (

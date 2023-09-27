@@ -30,9 +30,13 @@ import AppLogout from "./components/Functional/AppLogout";
 
 import { useSelector, useDispatch } from "react-redux";
 
+import { QueryClientProvider } from "@tanstack/react-query";
+
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import UploadStatement from "./components/Pages/UploadStatement";
+
+import { queryClient } from "../src/lib/endpoint-configs";
 
 const messageRenderer = (condition, dispatch, message) => {
   if (!condition) {
@@ -54,77 +58,79 @@ const App = (props) => {
   const showMessage = useSelector((state) => state.globalMessages.showMessage);
   const dispatch = useDispatch();
   return (
-    <ThemeProvider theme={theme}>
-      <Navbar></Navbar>
-      <Paper elevation={0} sx={{ marginTop: 5 }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          {!isUserLoggedIn && <Route path="/login" element={<Login />} />}
-          <Route
-            path="/spendanalysis"
-            element={
-              isUserLoggedIn ? (
-                <AppLogout>
-                  <SpendAnalysis accounts={userAccounts} />
-                </AppLogout>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            path="/manageaccount"
-            element={
-              isUserLoggedIn ? (
-                <AppLogout>
-                  <ManageAccounts accounts={userAccounts} />
-                </AppLogout>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Navbar></Navbar>
+        <Paper elevation={0} sx={{ marginTop: 5 }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            {!isUserLoggedIn && <Route path="/login" element={<Login />} />}
+            <Route
+              path="/spendanalysis"
+              element={
+                isUserLoggedIn ? (
+                  <AppLogout>
+                    <SpendAnalysis accounts={userAccounts} />
+                  </AppLogout>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/manageaccount"
+              element={
+                isUserLoggedIn ? (
+                  <AppLogout>
+                    <ManageAccounts accounts={userAccounts} />
+                  </AppLogout>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
 
-          <Route
-            path="/uploadstatement"
-            element={
-              isUserLoggedIn ? (
-                <AppLogout>
-                  <UploadStatement />
-                </AppLogout>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+            <Route
+              path="/uploadstatement"
+              element={
+                isUserLoggedIn ? (
+                  <AppLogout>
+                    <UploadStatement />
+                  </AppLogout>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
 
-          <Route
-            path="/addbank"
-            element={
-              isUserLoggedIn && isUserAdmin ? (
-                <AppLogout>
-                  <AddBank />
-                </AppLogout>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            path="/request-resetpassword/:hash"
-            element={<ResetPassword />}
-          />
+            <Route
+              path="/addbank"
+              element={
+                isUserLoggedIn && isUserAdmin ? (
+                  <AppLogout>
+                    <AddBank />
+                  </AppLogout>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/request-resetpassword/:hash"
+              element={<ResetPassword />}
+            />
 
-          <Route
-            path="/request-resetpassword"
-            element={<RequestResetPassword />}
-          />
-          <Route path="index.html" element={<Navigate to="/" />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Paper>
-      {showMessage && <Footer message={globalMessage} />}
-    </ThemeProvider>
+            <Route
+              path="/request-resetpassword"
+              element={<RequestResetPassword />}
+            />
+            <Route path="index.html" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Paper>
+        {showMessage && <Footer message={globalMessage} />}
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 
