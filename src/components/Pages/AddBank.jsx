@@ -6,9 +6,8 @@ import FormModal from "../UI/Modal/FormModal";
 import { RowCopyIcon, RowEditIcon } from "../UI/MUI Grid/DisplayGrid";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 
-import useHttp from "../../hooks/useHTTP";
-import React, { useCallback, useState } from "react";
-import { useEffect } from "react";
+import { useFetchBanks } from "../../hooks/useTanstackQueryFetch";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -22,6 +21,17 @@ import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 import { useLocation } from "react-router-dom";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
+import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+  sendMutationRequest,
+  sendQueryRequest,
+  queryClient,
+} from "../../lib/endpoint-configs";
+import {
+  convert2DateFormat,
+  convert2BankFormat,
+} from "../../lib/server-communication";
+
 let bankFormData = {};
 
 const AddBank = (props) => {
@@ -29,91 +39,70 @@ const AddBank = (props) => {
   const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
   const modalStatus = useSelector((state) => state.formModal.showModal);
-  const [dateFormats, setDateFormats] = useState([]);
   const [addBankClicked, setAddBankClicked] = useState(false);
-  const [firstMount, setFirstMount] = useState(0);
 
   const disptach = useDispatch();
 
-  const processBankDetails = useCallback((rawdata) => {
-    setFirstMount(1);
-    const processedData = [];
-    for (let key in rawdata) {
-      const row = {};
-      row["bal_col"] = rawdata[key].bal_col;
-      row["id"] = rawdata[key].bank_id;
-      row.bank_name = rawdata[key].bank_name;
-      row.chq_no_col = rawdata[key].chq_no_col;
-      row.crdt_amt_col = rawdata[key].crdt_amt_col;
-      row.start_row = rawdata[key].start_row;
-      row.txn_date_col = rawdata[key].txn_date_col;
-      row.txn_rmrk_col = rawdata[key].txn_rmrk_col;
-      row.val_date_col = rawdata[key].val_date_col;
-      row.with_amt_col = rawdata[key].with_amt_col;
-      row.date_format = rawdata[key].date.date_format;
-      row.date_format_id = rawdata[key].date.date_id;
-      processedData.push(row);
-    }
-    disptach(banksAction.setBanks({ banks: processedData }));
-  }, []);
-
-  const processDateFormats = useCallback((rawdata) => {
-    let processedData = [];
-    for (let key in rawdata) {
-      const date = {};
-      date.id = rawdata[key].date_id;
-      date.date_format = rawdata[key].date_format;
-      date.desc = rawdata[key].desc;
-      processedData.push(date);
-    }
-    setDateFormats(processedData);
-  }, []);
-
-  const {
-    isloading: banksLoading,
-    error: banksError,
-    sendRequest: getBankDetails,
-  } = useHttp(processBankDetails);
-
-  const { sendRequest: loadDateFormats } = useHttp(processDateFormats);
-
-  useEffect(() => {
-    if (bankData.length === 0 && firstMount === 0) {
-      const bankConfig = {
-        url: apiURL + "/banks",
-        headers: {
-          Authorization: "Bearer " + authToken,
-        },
-      };
-      getBankDetails(bankConfig);
-    }
-    if (dateFormats.length === 0) {
+  const { data: dateFormatData } = useQuery({
+    queryKey: ["dateformats"],
+    queryFn: ({ signal }) => {
       const datesConfig = {
         url: apiURL + "/dateformats",
       };
+      return sendQueryRequest({ signal, requestConfig: datesConfig });
+    },
+    refetchInterval: (data) => {
+      return data ? 300000 : 1;
+    },
+    staleTime: 300000,
+  });
 
-      loadDateFormats(datesConfig);
-    }
-  }, [getBankDetails, authToken, apiURL, firstMount, bankData]);
+  const {
+    data: bankFetchData,
+    error: bankfetchError,
+    isLoading: bankFetchLoading,
+    isError: isBankFetchError,
+  } = useFetchBanks(authToken);
+
+  if (!bankData) {
+    disptach(
+      banksAction.setBanks({ banks: convert2BankFormat(bankFetchData) })
+    );
+  }
+
+  const dateFormats = convert2DateFormat(dateFormatData);
+
+  const {
+    mutate: createNewBank,
+    isPending: isCreateBankPending,
+    isError: isCreateBankError,
+    error: createBankError,
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSuccess: () => {
+      hideModalHandler();
+      queryClient.invalidateQueries({ queryKey: ["banks"] });
+    },
+  });
+
+  const {
+    mutate: editOldBank,
+    isPending: isEditBankPending,
+    isError: isEditBankError,
+    error: editOldBankError,
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSuccess: () => {
+      hideModalHandler();
+      queryClient.invalidateQueries({ queryKey: ["banks"] });
+    },
+  });
 
   const hideModalHandler = () => {
     setAddBankClicked(false);
     bankFormData = {};
-    resetBankError();
-    resetEditBankError();
     disptach(formModalAction.hideModal());
   };
-
-  const refreshBankData = useCallback(() => {
-    const bankConfig = {
-      url: apiURL + "/banks",
-      headers: {
-        Authorization: "Bearer " + authToken,
-      },
-    };
-    getBankDetails(bankConfig);
-    hideModalHandler();
-  }, [getBankDetails]);
 
   const addBankClickHandler = () => {
     disptach(formModalAction.showModal());
@@ -256,47 +245,55 @@ const AddBank = (props) => {
   ];
 
   let message;
-  if (!banksError && !banksLoading && bankData) {
+  if (bankFetchData) {
     message = (
       <Container className={styles.container}>
-        <DisplayGrid rows={bankData} columns={txnCols} boxWidth="95%" />
+        <DisplayGrid
+          rows={convert2BankFormat(bankFetchData)}
+          columns={txnCols}
+          boxWidth="95%"
+        />
       </Container>
     );
   }
-  if (banksLoading) {
+  if (bankFetchLoading) {
     message = <p className={styles.loading}>Loading....</p>;
   }
 
-  if (banksError) {
-    message = <p className={styles.error}>{banksError}</p>;
+  if (isBankFetchError) {
+    message = (
+      <p className={styles.error}>
+        {bankfetchError.status + ":" + bankfetchError.message}
+      </p>
+    );
   }
 
-  const {
-    isloading: newBankLoading,
-    error: newBankError,
-    sendRequest: createBank,
-    resetError: resetBankError,
-  } = useHttp(refreshBankData);
+  // const {
+  //   isloading: newBankLoading,
+  //   error: newBankError,
+  //   sendRequest: createBank,
+  //   resetError: resetBankError,
+  // } = useHttp(refreshBankData);
 
-  const {
-    isloading: editBankLoading,
-    error: editBankError,
-    sendRequest: editBank,
-    resetError: resetEditBankError,
-  } = useHttp(refreshBankData);
+  // const {
+  //   isloading: editBankLoading,
+  //   error: editBankError,
+  //   sendRequest: editBank,
+  //   resetError: resetEditBankError,
+  // } = useHttp(refreshBankData);
 
   const createNewBankHandler = (bankData) => {
     const { id: bankId, ...requestBody } = bankData;
     const bankConfig = {
       url: apiURL + "/banks",
       method: "POST",
-      body: requestBody,
+      body: JSON.stringify(requestBody),
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
     };
-    createBank(bankConfig);
+    createNewBank({ requestConfig: bankConfig });
   };
 
   const editBankSaveHandler = (bankData) => {
@@ -304,13 +301,13 @@ const AddBank = (props) => {
     const editBankConfig = {
       url: apiURL + "/banks/" + bankId,
       method: "PUT",
-      body: rest,
+      body: JSON.stringify(rest),
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
     };
-    editBank(editBankConfig);
+    editOldBank({ requestConfig: editBankConfig });
   };
 
   let showEditForm =
@@ -334,10 +331,10 @@ const AddBank = (props) => {
             <CreateCopyBankForm
               onCancel={hideModalHandler}
               onSave={createNewBankHandler}
-              loading={newBankLoading}
-              error={newBankError}
+              loading={isCreateBankPending}
+              error={createBankError}
+              isError={isCreateBankError}
               dateformats={dateFormats}
-              resetError={resetBankError}
               creating
             />
           )}
@@ -345,10 +342,10 @@ const AddBank = (props) => {
             <CreateCopyBankForm
               onCancel={hideModalHandler}
               dateformats={dateFormats}
-              loading={editBankLoading}
-              error={editBankError}
+              loading={isEditBankPending}
+              error={editOldBankError}
+              isError={isEditBankError}
               payload={bankFormData.data}
-              resetError={resetEditBankError}
               onSave={editBankSaveHandler}
               editing
             />
@@ -358,10 +355,10 @@ const AddBank = (props) => {
               onCancel={hideModalHandler}
               onSave={createNewBankHandler}
               dateformats={dateFormats}
+              loading={isCreateBankPending}
+              error={createBankError}
+              isError={isCreateBankError}
               payload={bankFormData.data}
-              loading={newBankLoading}
-              error={newBankError}
-              resetError={resetBankError}
               copying
             />
           )}

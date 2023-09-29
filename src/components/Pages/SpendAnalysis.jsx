@@ -249,7 +249,7 @@ const SpendAnalysis = (props) => {
     message1 = <p className={styles.error}>{transactionsError}</p>;
   }
 
-  console.log("Loading:", transactionsLoading, "Error:", transactionsError);
+  // console.log("Loading:", transactionsLoading, "Error:", transactionsError);
 
   if (
     !transactionsLoading &&

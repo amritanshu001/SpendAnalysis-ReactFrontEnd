@@ -171,7 +171,6 @@ const CreateCopyBankForm = (props) => {
     resetValue();
     resetTransaction();
     resetWithdrawal();
-    props.resetError();
   };
 
   let formIsValid =
@@ -344,8 +343,10 @@ const CreateCopyBankForm = (props) => {
           </button>
         </div>
       </form>
-      {props.error && (
-        <div className={styles["server-error"]}>{props.error}</div>
+      {props.isError && (
+        <div className={styles["server-error"]}>
+          {props.error.status + ": " + props.error.message}
+        </div>
       )}
     </React.Fragment>
   );
