@@ -10,14 +10,16 @@ import { convert2DateFormat } from "../../../lib/server-communication";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
-const CreateBankForm = (props) => {
+const EditBankForm = (props) => {
+  //   const dispatch = useDispatch()
   const authToken = useSelector((state) => state.userAuth.authToken);
-  //   const dispatch = useDispatch();
+  const { data: dateFormats } = useFetchDates();
+
   const {
-    mutate: createNewBank,
-    isPending,
-    isError,
-    error,
+    mutate: editOldBank,
+    isPending: isEditBankPending,
+    isError: isEditBankError,
+    error: editOldBankError,
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
@@ -26,35 +28,34 @@ const CreateBankForm = (props) => {
     },
   });
 
-  const { data: dateFormats } = useFetchDates();
-
-  const createNewBankHandler = (bankData) => {
-    const { id: bankId, ...requestBody } = bankData;
-    const bankConfig = {
-      url: apiURL + "/banks",
-      method: "POST",
-      body: JSON.stringify(requestBody),
+  const editBankSaveHandler = (bankData) => {
+    const { id: bankId, ...rest } = bankData;
+    const editBankConfig = {
+      url: apiURL + "/banks/" + bankId,
+      method: "PUT",
+      body: JSON.stringify(rest),
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
     };
-    createNewBank({ requestConfig: bankConfig });
+    editOldBank({ requestConfig: editBankConfig });
   };
 
   return (
     <FormModal onBackdropClick={props.hideModalHandler}>
       <CreateCopyBankForm
         onCancel={props.hideModalHandler}
-        onSave={createNewBankHandler}
-        loading={isPending}
-        error={error}
-        isError={isError}
         dateformats={convert2DateFormat(dateFormats)}
-        creating
+        loading={isEditBankPending}
+        error={editOldBankError}
+        isError={isEditBankError}
+        payload={props.editFormData.data}
+        onSave={editBankSaveHandler}
+        editing
       />
     </FormModal>
   );
 };
 
-export default CreateBankForm;
+export default EditBankForm;

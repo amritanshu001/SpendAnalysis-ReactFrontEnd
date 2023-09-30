@@ -16,7 +16,7 @@ const CreateCopyBankForm = (props) => {
   const [dateformats, setDateformats] = useState(
     "creating" in props
       ? 0
-      : { value: props.payload.id, label: props.payload.date_format }
+      : { value: props.payload.date_id, label: props.payload.date_format }
   );
 
   const {
@@ -191,16 +191,16 @@ const CreateCopyBankForm = (props) => {
       return;
     }
     const bankData = {
-      bal_col: balance,
+      bal_col: +balance,
       bank_name: bankName,
-      chq_no_col: cheque,
-      crdt_amt_col: credit,
+      chq_no_col: +cheque,
+      crdt_amt_col: +credit,
       date_id: dateformats.value,
-      start_row: start,
-      txn_date_col: transaction,
-      txn_rmrk_col: remarks,
-      val_date_col: value,
-      with_amt_col: withdrawal,
+      start_row: +start,
+      txn_date_col: +transaction,
+      txn_rmrk_col: +remarks,
+      val_date_col: +value,
+      with_amt_col: +withdrawal,
       id: "creating" in props ? "" : props.payload.id,
     };
     props.onSave(bankData);

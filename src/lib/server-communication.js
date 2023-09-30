@@ -32,6 +32,7 @@ export const convert2BankFormat = (bankData) =>{
         row.val_date_col = bankData[key].val_date_col;
         row.with_amt_col = bankData[key].with_amt_col;
         row.date_format = bankData[key].date.date_format;
+        row.date_id = bankData[key].date.date_id
         processedBankData.push(row);
       }
     return processedBankData

@@ -10,14 +10,16 @@ import { convert2DateFormat } from "../../../lib/server-communication";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
-const CreateBankForm = (props) => {
+const CopyBankForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  //   const dispatch = useDispatch();
+  //   const dispatch = useDispatch()
+  const { data: dateFormats } = useFetchDates();
+
   const {
     mutate: createNewBank,
-    isPending,
-    isError,
-    error,
+    isPending: isCreateBankPending,
+    isError: isCreateBankError,
+    error: createBankError,
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
@@ -25,8 +27,6 @@ const CreateBankForm = (props) => {
       queryClient.invalidateQueries({ queryKey: ["banks"] });
     },
   });
-
-  const { data: dateFormats } = useFetchDates();
 
   const createNewBankHandler = (bankData) => {
     const { id: bankId, ...requestBody } = bankData;
@@ -47,14 +47,15 @@ const CreateBankForm = (props) => {
       <CreateCopyBankForm
         onCancel={props.hideModalHandler}
         onSave={createNewBankHandler}
-        loading={isPending}
-        error={error}
-        isError={isError}
         dateformats={convert2DateFormat(dateFormats)}
-        creating
+        loading={isCreateBankPending}
+        error={createBankError}
+        isError={isCreateBankError}
+        payload={props.copyFormData.data}
+        copying
       />
     </FormModal>
   );
 };
 
-export default CreateBankForm;
+export default CopyBankForm;

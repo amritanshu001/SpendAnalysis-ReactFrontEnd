@@ -44,3 +44,20 @@ export const useFetchAccounts = (
     staleTime,
   });
 };
+
+export const useFetchDates = (enabled = true, staleTime = 300000) => {
+  return useQuery({
+    queryKey: ["dateformats"],
+    queryFn: ({ signal }) => {
+      const datesConfig = {
+        url: apiURL + "/dateformats",
+      };
+      return sendQueryRequest({ signal, requestConfig: datesConfig });
+    },
+    refetchInterval: (data) => {
+      return data ? 300000 : 1;
+    },
+    staleTime,
+    enabled,
+  });
+};
