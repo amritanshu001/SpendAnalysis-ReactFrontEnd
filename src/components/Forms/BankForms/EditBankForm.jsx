@@ -13,6 +13,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 const EditBankForm = (props) => {
   //   const dispatch = useDispatch()
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const modalStatus = useSelector((state) => state.formModal.showModal);
   const { data: dateFormats } = useFetchDates();
 
   const {
@@ -43,18 +44,22 @@ const EditBankForm = (props) => {
   };
 
   return (
-    <FormModal onBackdropClick={props.hideModalHandler}>
-      <CreateCopyBankForm
-        onCancel={props.hideModalHandler}
-        dateformats={convert2DateFormat(dateFormats)}
-        loading={isEditBankPending}
-        error={editOldBankError}
-        isError={isEditBankError}
-        payload={props.editFormData.data}
-        onSave={editBankSaveHandler}
-        editing
-      />
-    </FormModal>
+    <>
+      {modalStatus && (
+        <FormModal onBackdropClick={props.hideModalHandler}>
+          <CreateCopyBankForm
+            onCancel={props.hideModalHandler}
+            dateformats={convert2DateFormat(dateFormats)}
+            loading={isEditBankPending}
+            error={editOldBankError}
+            isError={isEditBankError}
+            payload={props.editFormData.data}
+            onSave={editBankSaveHandler}
+            editing
+          />
+        </FormModal>
+      )}
+    </>
   );
 };
 

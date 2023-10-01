@@ -29,9 +29,8 @@ let bankFormData = {};
 
 const AddBank = (props) => {
   const location = useLocation();
-  const bankData = useSelector((state) => state.banks.banks);
+  // const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const modalStatus = useSelector((state) => state.formModal.showModal);
   const [bankAction, setBankAction] = useState(null);
 
   const disptach = useDispatch();
@@ -225,16 +224,16 @@ const AddBank = (props) => {
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
-      {modalStatus && bankAction === "Create" && (
+      {bankAction === "Create" && (
         <CreateBankForm hideModalHandler={hideModalHandler} />
       )}
-      {modalStatus && bankAction === "Edit" && (
+      {bankAction === "Edit" && (
         <EditBankForm
           hideModalHandler={hideModalHandler}
           editFormData={bankFormData}
         />
       )}
-      {modalStatus && bankAction === "Copy" && (
+      {bankAction === "Copy" && (
         <CopyBankForm
           hideModalHandler={hideModalHandler}
           copyFormData={bankFormData}

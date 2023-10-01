@@ -14,7 +14,7 @@ export const sendQueryRequest = async ({signal , requestConfig}) => {
     if (!response.ok) {
         const errorData = await response.json();
         const error = new Error(errorData.message || errorData.msg || response.status+": Failed to Fetch");
-        error.status = response.status;
+        error.status = response.code;
         throw error;
     }
 
@@ -33,8 +33,8 @@ export const sendMutationRequest = async ({requestConfig}) => {
 
     if (!response.ok) {
         const errorData = await response.json();
-        const error = new Error(errorData.message || errorData.msg || "Error "+response.status+": Failed to Create/Update");
-        error.status = response.status;
+        const error = new Error(errorData.message || errorData.msg || "Error "+response.code+": Failed to Create/Update");
+        error.status = response.code;
         throw error;
     }
 

@@ -6,8 +6,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./MUIThemeEngine/theme";
 import Paper from "@mui/material/Paper";
 
-import { showAndHideMessages } from "./store/message-slice";
-
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
 const Home = React.lazy(() => import("./components/Pages/Home"));
@@ -28,7 +26,7 @@ const ResetPassword = React.lazy(() =>
 );
 import AppLogout from "./components/Functional/AppLogout";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 
@@ -38,25 +36,11 @@ import UploadStatement from "./components/Pages/UploadStatement";
 
 import { queryClient } from "../src/lib/endpoint-configs";
 
-const messageRenderer = (condition, dispatch, message) => {
-  if (!condition) {
-    dispatch(
-      showAndHideMessages({
-        status: "error",
-        messageText: message,
-      })
-    );
-  }
-  return;
-};
-
 const App = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
-  const userAccounts = useSelector((state) => state.userAccounts.userAccounts);
   const globalMessage = useSelector((state) => state.globalMessages.messages);
   const showMessage = useSelector((state) => state.globalMessages.showMessage);
-  const dispatch = useDispatch();
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
@@ -70,7 +54,7 @@ const App = (props) => {
               element={
                 isUserLoggedIn ? (
                   <AppLogout>
-                    <SpendAnalysis accounts={userAccounts} />
+                    <SpendAnalysis />
                   </AppLogout>
                 ) : (
                   <Navigate to="/login" />
@@ -82,7 +66,7 @@ const App = (props) => {
               element={
                 isUserLoggedIn ? (
                   <AppLogout>
-                    <ManageAccounts accounts={userAccounts} />
+                    <ManageAccounts />
                   </AppLogout>
                 ) : (
                   <Navigate to="/login" />

@@ -12,6 +12,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const CreateBankForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const modalStatus = useSelector((state) => state.formModal.showModal);
   //   const dispatch = useDispatch();
   const {
     mutate: createNewBank,
@@ -43,17 +44,21 @@ const CreateBankForm = (props) => {
   };
 
   return (
-    <FormModal onBackdropClick={props.hideModalHandler}>
-      <CreateCopyBankForm
-        onCancel={props.hideModalHandler}
-        onSave={createNewBankHandler}
-        loading={isPending}
-        error={error}
-        isError={isError}
-        dateformats={convert2DateFormat(dateFormats)}
-        creating
-      />
-    </FormModal>
+    <>
+      {modalStatus && (
+        <FormModal onBackdropClick={props.hideModalHandler}>
+          <CreateCopyBankForm
+            onCancel={props.hideModalHandler}
+            onSave={createNewBankHandler}
+            loading={isPending}
+            error={error}
+            isError={isError}
+            dateformats={convert2DateFormat(dateFormats)}
+            creating
+          />
+        </FormModal>
+      )}
+    </>
   );
 };
 
