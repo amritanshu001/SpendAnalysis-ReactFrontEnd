@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { showAndHideMessages } from "./message-slice";
-import serverResponse, {convert2AccountFormat} from "../lib/server-communication";
+import {convert2AccountFormat} from "../lib/server-communication";
 import apiURL from "../endpoint";
+import { sendQueryRequest, queryClient } from "../lib/endpoint-configs";
 
 const initialState = {
   userAccounts: [],
@@ -33,12 +34,16 @@ export const fetchAccounts = (accessToken) => {
       },
     };
     try {
-      const accountData = await serverResponse(accountsConfig)
+      const accountData = queryClient.fetchQuery({
+        queryKey:["accounts"],
+        queryFn:({signal})=>sendQueryRequest({signal, requestConfig:accountsConfig}),
+        staleTime:300000
+      })
       dispatch(accountsAction.setUserAccounts({accounts:convert2AccountFormat(accountData)}))
     } catch(err) {
       dispatch(showAndHideMessages({
         status:"warning",
-        messageText: err.message||err.msg||"Server Error while fetching accounts data"
+        messageText: err.status + ":" + err.message
       }))
     }
   }

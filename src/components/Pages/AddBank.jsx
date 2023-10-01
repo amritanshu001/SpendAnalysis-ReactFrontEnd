@@ -17,16 +17,12 @@ import { banksAction } from "../../store/banks-slice";
 import { formModalAction } from "../../store/formmodal-slice";
 const apiURL = import.meta.env.VITE_API_URL;
 import { Tooltip } from "@mui/material";
-// import CreateCopyBankForm from "../Forms/CreateCopyBankForm";
 import { useLocation } from "react-router-dom";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import CreateBankForm from "../Forms/BankForms/CreateBankForm";
 import EditBankForm from "../Forms/BankForms/EditBankForm";
 import CopyBankForm from "../Forms/BankForms/CopyBankForm";
-
-// import { useMutation } from "@tanstack/react-query";
-// import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
 import { convert2BankFormat } from "../../lib/server-communication";
 
 let bankFormData = {};
@@ -39,23 +35,19 @@ const AddBank = (props) => {
   const [bankAction, setBankAction] = useState(null);
 
   const disptach = useDispatch();
-
-  // const { data: dateFormatData } = useFetchDates();
-
   const {
     data: bankFetchData,
     error: bankfetchError,
     isLoading: bankFetchLoading,
     isError: isBankFetchError,
+    isSuccess,
   } = useFetchBanks(authToken);
 
-  if (!bankData) {
+  if (isSuccess) {
     disptach(
       banksAction.setBanks({ banks: convert2BankFormat(bankFetchData) })
     );
   }
-
-  // const dateFormats = convert2DateFormat(dateFormatData);
 
   const hideModalHandler = () => {
     setBankAction(null);

@@ -3,6 +3,7 @@ import { banksAction } from "./banks-slice";
 import { accountsAction } from "./useraccount-slice";
 import { fetchBanks } from "./banks-slice";
 import { fetchAccounts } from "./useraccount-slice";
+import { queryClient } from "../lib/endpoint-configs";
 
 const initialState = {
   authToken: localStorage.getItem("token"),
@@ -41,6 +42,7 @@ export const authActions = authSlice.actions;
 export const logUserOutActions = () => {
   return (dispatch, getState)=>{
     
+    queryClient.removeQueries()
     dispatch(banksAction.resetBanks())
     dispatch(accountsAction.resetUserAccounts())
     dispatch(authActions.logUserOut())

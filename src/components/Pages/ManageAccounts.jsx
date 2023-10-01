@@ -15,6 +15,8 @@ import DeleteForm from "../Forms/AccountForms/DeleteForm";
 import CreateAccountForm from "../Forms/AccountForms/CreateAccountForm";
 
 import useHttp from "../../hooks/useHTTP";
+import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
+import { convert2AccountFormat } from "../../lib/server-communication";
 import React, { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -33,13 +35,23 @@ let formData;
 
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const accountData = useSelector((state) => state.userAccounts.userAccounts);
+  // const accountData = useSelector((state) => state.userAccounts.userAccounts);
   const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
   const location = useLocation();
 
+  const {
+    data: accountData,
+    isLoading: isAccountsLoading,
+    isError: isAccountsError,
+    error: accountsFetchError,
+  } = useFetchAccounts(authToken);
+
+  console.log(convert2AccountFormat(accountData));
+
   const [isCreateClicked, setCreateClicked] = useState(false);
   const [firstMount, setFirstMount] = useState(0);
+  const [accountAction, setAccountAction] = useState(null);
 
   const processAccountDetails = useCallback((rawdata) => {
     setFirstMount(1);
@@ -66,12 +78,14 @@ const ManageAccounts = (props) => {
   const backdropClick = () => {
     formData = {};
     setCreateClicked(false);
+    setAccountAction(null);
     dispatch(formModalAction.hideModal());
   };
 
   const gridRowEditHandler = (params) => {
     const clickHandler = () => {
       formData = { formAction: "Edit", data: { ...params.row } };
+      setAccountAction("Edit");
       dispatch(formModalAction.showModal());
     };
     return <RowEditIcon onClick={clickHandler} />;
@@ -80,6 +94,7 @@ const ManageAccounts = (props) => {
   const gridRowDeleteHandler = (params) => {
     const clickHandler = () => {
       formData = { formAction: "Delete", data: { ...params.row } };
+      setAccountAction("Delete");
       dispatch(formModalAction.showModal());
     };
     return <RowDeleteIcon onClick={clickHandler} />;
@@ -140,17 +155,25 @@ const ManageAccounts = (props) => {
   ];
 
   let message;
-  if (accountsLoading) {
+  if (isAccountsLoading) {
     message = <p className={styles.loading}>Loading....</p>;
   }
-  if (accountsError) {
-    message = <p className={styles.error}>{accountsError}</p>;
+  if (isAccountsError) {
+    message = (
+      <p className={styles.error}>
+        {accountsFetchError.status + ":" + accountsFetchError.message}
+      </p>
+    );
   }
 
-  if (!accountsLoading && !accountsError && accountData) {
+  if (!isAccountsLoading && !isAccountsError && accountData) {
     message = (
       <Container className={styles.container}>
-        <DisplayGrid rows={accountData} columns={txnCols} boxWidth="90%" />
+        <DisplayGrid
+          rows={convert2AccountFormat(accountData)}
+          columns={txnCols}
+          boxWidth="90%"
+        />
       </Container>
     );
   }
@@ -208,6 +231,7 @@ const ManageAccounts = (props) => {
 
   const addAccountClickHandler = () => {
     setCreateClicked(true);
+    setAccountAction("Create");
     dispatch(formModalAction.showModal());
   };
 
@@ -244,22 +268,25 @@ const ManageAccounts = (props) => {
     Object.keys(formData).length > 0 &&
     formData.formAction === "Delete";
 
-  useEffect(() => {
-    if (accountData.length === 0 && firstMount === 0) {
-      const accountsConfig = {
-        url: apiURL + "/accounts",
-        headers: {
-          Authorization: "Bearer " + authToken,
-        },
-      };
-      getUserAccounts(accountsConfig);
-    }
-  }, [authToken, getUserAccounts, accountData, firstMount]);
+  // useEffect(() => {
+  //   if (accountData.length === 0 && firstMount === 0) {
+  //     const accountsConfig = {
+  //       url: apiURL + "/accounts",
+  //       headers: {
+  //         Authorization: "Bearer " + authToken,
+  //       },
+  //     };
+  //     getUserAccounts(accountsConfig);
+  //   }
+  // }, [authToken, getUserAccounts, accountData, firstMount]);
 
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
-      {formModalStatus && (
+      {formModalStatus && accountAction === "Create" && (
+        <CreateAccountForm onCancel={backdropClick} />
+      )}
+      {/* {formModalStatus && (
         <FormModal onBackdropClick={backdropClick}>
           {showEditForm && (
             <UserAccountForm
@@ -288,7 +315,7 @@ const ManageAccounts = (props) => {
             />
           )}
         </FormModal>
-      )}
+      )} */}
       <Header>
         My Accounts
         <Tooltip title="Add New Account" placement="top-start" arrow>

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import apiURL from "../endpoint";
 import { showAndHideMessages } from "./message-slice";
-import serverResponse, {convert2BankFormat} from "../lib/server-communication";
+import {convert2BankFormat} from "../lib/server-communication";
+import { queryClient, sendQueryRequest } from "../lib/endpoint-configs";
 
 const initialState = {
   banks: [],
@@ -33,12 +34,17 @@ export const fetchBanks = (accessToken)=>{
       },
     }
     try {
-      const bankData = await serverResponse(bankConfig)
+      const bankData = queryClient.fetchQuery({
+        queryKey:["banks"], 
+        queryFn:({signal})=>sendQueryRequest({signal, requestConfig:bankConfig}),
+        staleTime:300000})
+
       dispatch(banksAction.setBanks({ banks: convert2BankFormat(bankData) }))
+
     } catch(err) {
       dispatch(showAndHideMessages({
         status:"warning",
-        messageText: err.message||err.msg||"Error while fetching bank data"
+        messageText: err.status + ":"+err.message
       }))
     }
   }

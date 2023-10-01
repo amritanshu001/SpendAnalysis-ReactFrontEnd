@@ -3,6 +3,16 @@ import styles from "./CreateAccountForm.module.css";
 
 import { useSelector } from "react-redux";
 
+import { useMutation } from "@tanstack/react-query";
+import { sendMutationRequest } from "../../../lib/endpoint-configs";
+import { queryClient } from "../../../lib/endpoint-configs";
+import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
+import { convert2BankFormat } from "../../../lib/server-communication";
+
+import FormModal from "../../UI/Modal/FormModal";
+
+const apiURL = import.meta.env.VITE_API_URL;
+
 const mapBanks = (bank) => {
   return (
     <option key={bank.id} value={bank.id}>
@@ -13,6 +23,22 @@ const mapBanks = (bank) => {
 
 const CreateAccountForm = (props) => {
   const banks = useSelector((state) => state.banks.banks);
+  const authToken = useSelector((state) => state.userAuth.authToken);
+  // const { data: fetchedBanks } = useFetchBanks(authToken);
+  // const banks = convert2BankFormat(fetchedBanks);
+
+  const {
+    mutate: createNewAccount,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      props.onCancel();
+    },
+  });
 
   const [selectedBankId, setSelectedBankId] = useState(0);
   const [accountNumber, setAccountNumber] = useState("");
@@ -46,50 +72,67 @@ const CreateAccountForm = (props) => {
     }
 
     setValidation(null);
-    props.onCreate(selectedBankId, accountNumber, accountJoint);
+
+    const newAccountConfig = {
+      url: apiURL + "/accounts",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        joint: accountJoint,
+        bank: selectedBankId,
+        account_no: accountNumber,
+      }),
+    };
+    createNewAccount({ requestConfig: newAccountConfig });
+    // props.onCreate(selectedBankId, accountNumber, accountJoint);
   };
 
   return (
-    <form className={styles.form} onSubmit={addAccountHandler}>
-      <div className={styles.readonly}>
-        <label>Account#</label>
-        <input
-          type="text"
-          onChange={changeAccountNumberHandler}
-          value={accountNumber}
-        />
-      </div>
-      <div className={styles.readonly}>
-        <label htmlFor="bank_name">Bank Name</label>
-        <select
-          id="bank_name"
-          value={selectedBankId}
-          onChange={selectChangeHandler}
-        >
-          <option value={0}>---</option>
-          {banks.map(mapBanks)}
-        </select>
-      </div>
-      <div className={styles.checkbox}>
-        <div>
+    <FormModal onBackdropClick={props.onCancel}>
+      <form className={styles.form} onSubmit={addAccountHandler}>
+        <div className={styles.readonly}>
+          <label>Account#</label>
           <input
-            type="checkbox"
-            checked={accountJoint}
-            onChange={jointChangeHandler}
-          ></input>
-          <label>Joint</label>
+            type="text"
+            onChange={changeAccountNumberHandler}
+            value={accountNumber}
+          />
         </div>
-      </div>
-      <div className={styles.actions}>
-        <button type="button" onClick={props.onCancel}>
-          Cancel
-        </button>
-        <button type="submit">
-          {props.loading ? "Creating..." : "Create Account"}
-        </button>
-      </div>
-      {props.error && <p>{props.error}</p>}
-    </form>
+        <div className={styles.readonly}>
+          <label htmlFor="bank_name">Bank Name</label>
+          <select
+            id="bank_name"
+            value={selectedBankId}
+            onChange={selectChangeHandler}
+          >
+            <option value={0}>---</option>
+            {banks.map(mapBanks)}
+          </select>
+        </div>
+        <div className={styles.checkbox}>
+          <div>
+            <input
+              type="checkbox"
+              checked={accountJoint}
+              onChange={jointChangeHandler}
+            ></input>
+            <label>Joint</label>
+          </div>
+        </div>
+        <div className={styles.actions}>
+          <button type="button" onClick={props.onCancel}>
+            Cancel
+          </button>
+          <button type="submit">
+            {isPending ? "Creating..." : "Create Account"}
+          </button>
+        </div>
+        {isError && <p>{error.status + ":" + error.message}</p>}
+      </form>
+    </FormModal>
   );
 };
 
