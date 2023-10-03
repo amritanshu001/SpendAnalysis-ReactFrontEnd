@@ -65,3 +65,27 @@ export const convert2DateFormat = (rawdata) => {
 
     return processedData
 }
+
+const convertDates = (date) => {
+  const convertDate = new Date(date);
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return convertDate.toLocaleString(undefined, options);
+};
+
+export const convert2TransactionFormat = (rawdata) => {
+  const processedData = rawdata.transactions.map((transaction) => {
+    return {
+      id: transaction.txn_id,
+      balance: +transaction.balance,
+      cheque_no: transaction.cheque_no,
+      deposit_amt:
+        +transaction.deposit_amt === 0 ? "" : +transaction.deposit_amt,
+      txn_date: convertDates(transaction.txn_date),
+      txn_remarks: transaction.txn_remarks,
+      value_date: convertDates(transaction.value_date),
+      withdrawal_amt:
+        +transaction.withdrawal_amt === 0 ? "" : +transaction.withdrawal_amt,
+    };
+  })
+  return processedData
+}

@@ -34,12 +34,12 @@ export const fetchBanks = (accessToken)=>{
       },
     }
     try {
-      const bankData = queryClient.fetchQuery({
+      queryClient.fetchQuery({
         queryKey:["banks"], 
         queryFn:({signal})=>sendQueryRequest({signal, requestConfig:bankConfig}),
         staleTime:300000})
 
-      dispatch(banksAction.setBanks({ banks: convert2BankFormat(bankData) }))
+      // dispatch(banksAction.setBanks({ banks: convert2BankFormat(bankData) }))
 
     } catch(err) {
       dispatch(showAndHideMessages({

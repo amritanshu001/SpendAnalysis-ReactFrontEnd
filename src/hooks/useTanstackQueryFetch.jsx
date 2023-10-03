@@ -2,6 +2,12 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { sendQueryRequest } from "../lib/endpoint-configs";
 const apiURL = import.meta.env.VITE_API_URL;
+import {
+  convert2TransactionFormat,
+  convert2AccountFormat,
+  convert2DateFormat,
+  convert2BankFormat,
+} from "../lib/server-communication";
 
 export const useFetchBanks = (
   authToken,
@@ -42,6 +48,7 @@ export const useFetchAccounts = (
     },
     enabled,
     staleTime,
+    select: (data) => convert2AccountFormat(data),
   });
 };
 
@@ -59,5 +66,30 @@ export const useFetchDates = (enabled = true, staleTime = 300000) => {
     },
     staleTime,
     enabled,
+  });
+};
+
+export const useFetchTransactions = (
+  authToken,
+  accountId,
+  query,
+  enabled = false,
+  staleTime = 300000
+) => {
+  return useQuery({
+    queryKey: ["account", accountId],
+    queryFn: ({ signal }) => {
+      const transactionConfig = {
+        url: apiURL + "/statement/" + accountId + query,
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      return sendQueryRequest({ signal, requestConfig: transactionConfig });
+    },
+    enabled,
+    staleTime,
+    select: (data) => convert2TransactionFormat(data),
   });
 };

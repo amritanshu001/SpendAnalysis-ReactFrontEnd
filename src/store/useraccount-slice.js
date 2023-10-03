@@ -34,12 +34,12 @@ export const fetchAccounts = (accessToken) => {
       },
     };
     try {
-      const accountData = queryClient.fetchQuery({
+       queryClient.fetchQuery({
         queryKey:["accounts"],
         queryFn:({signal})=>sendQueryRequest({signal, requestConfig:accountsConfig}),
         staleTime:300000
       })
-      dispatch(accountsAction.setUserAccounts({accounts:convert2AccountFormat(accountData)}))
+      // dispatch(accountsAction.setUserAccounts({accounts:convert2AccountFormat(accountData)}))
     } catch(err) {
       dispatch(showAndHideMessages({
         status:"warning",

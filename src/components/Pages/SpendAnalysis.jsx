@@ -14,9 +14,11 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-
-const apiURL = import.meta.env.VITE_API_URL;
-import useHttp from "../../hooks/useHTTP";
+import {
+  useFetchTransactions,
+  useFetchAccounts,
+} from "../../hooks/useTanstackQueryFetch";
+import { convert2AccountFormat } from "../../lib/server-communication";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -158,7 +160,6 @@ const txnCols = [
 ];
 
 const SpendAnalysis = (props) => {
-  const accounts = useSelector((state) => state.userAccounts.userAccounts);
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
 
@@ -166,37 +167,30 @@ const SpendAnalysis = (props) => {
   const [validation, setValidation] = useState(null);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [transactions, setTransactions] = useState([]);
 
-  const processTransactions = useCallback((rawdata) => {
-    const convertDates = (date) => {
-      const convertDate = new Date(date);
-      const options = { year: "numeric", month: "short", day: "numeric" };
-      return convertDate.toLocaleString(undefined, options);
-    };
-    const processedData = rawdata.transactions.map((transaction) => {
-      return {
-        id: transaction.txn_id,
-        balance: +transaction.balance,
-        cheque_no: transaction.cheque_no,
-        deposit_amt:
-          +transaction.deposit_amt === 0 ? "" : +transaction.deposit_amt,
-        txn_date: convertDates(transaction.txn_date),
-        txn_remarks: transaction.txn_remarks,
-        value_date: convertDates(transaction.value_date),
-        withdrawal_amt:
-          +transaction.withdrawal_amt === 0 ? "" : +transaction.withdrawal_amt,
-      };
-    });
-    setTransactions(processedData);
-  }, []);
+  const { data: accounts } = useFetchAccounts(authToken);
+
+  let query = "";
+  if (!fromDate && toDate) {
+    query = `?to_date=${toDate}`;
+  }
+
+  if (fromDate.length > 0 && toDate.length > 0) {
+    query = `?from_date=${fromDate}&to_date=${toDate}`;
+  }
+
+  if (fromDate && !toDate) {
+    query = `?from_date=${fromDate}`;
+  }
 
   const {
-    isloading: transactionsLoading,
-    error: transactionsError,
-    sendRequest: loadTransactions,
-    resetError: resetTransactionError,
-  } = useHttp(processTransactions);
+    data: transactions,
+    isError: isTransactionLoadError,
+    error: transactionLoadError,
+    isSuccess: isTransactionLoadSuccess,
+    isLoading: isTransactionsLoading,
+    refetch: getTransactions,
+  } = useFetchTransactions(authToken, accountId, query, false, "Infinity");
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
@@ -212,73 +206,54 @@ const SpendAnalysis = (props) => {
       setValidation("From date cannot be greater than To Date");
       return;
     }
-
-    let query = "";
-    if (!fromDate && toDate) {
-      query = `?to_date=${toDate}`;
-    }
-
-    if (fromDate.length > 0 && toDate.length > 0) {
-      query = `?from_date=${fromDate}&to_date=${toDate}`;
-    }
-
-    if (fromDate && !toDate) {
-      query = `?from_date=${fromDate}`;
-    }
-
     setValidation(null);
-
-    const transactionConfig = {
-      url: apiURL + "/statement/" + accountId + query,
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + authToken,
-      },
-    };
-    loadTransactions(transactionConfig);
+    getTransactions();
   };
 
   const onSelectChangeHandler = (event) => {
     setAccountId(+event.target.value);
   };
 
-  if (transactionsLoading) {
+  if (isTransactionsLoading) {
     message1 = <SpinnerCircular color="success" />;
   }
-  if (transactionsError) {
-    message1 = <p className={styles.error}>{transactionsError}</p>;
+  if (isTransactionLoadError) {
+    message1 = (
+      <p className={styles.error}>
+        {transactionLoadError.status + ":" + transactionLoadError.message}
+      </p>
+    );
   }
 
-  // console.log("Loading:", transactionsLoading, "Error:", transactionsError);
+  if (isTransactionLoadSuccess && transactions.length === 0) {
+    message1 = <div className="centered">No records Found</div>;
+  }
 
-  if (
-    !transactionsLoading &&
-    !transactionsError &&
-    transactions &&
-    transactions.length > 0
-  ) {
-    filteredTransactions = transactions.filter((transaction) => true);
-    closingBal = filteredTransactions[0].balance;
+  if (isTransactionLoadSuccess && transactions.length > 0) {
+    // transactions = transactions.filter((transaction) => true);
+
+    closingBal = transactions[0].balance;
     openingBal =
-      filteredTransactions[filteredTransactions.length - 1].deposit_amt === ""
-        ? +filteredTransactions[filteredTransactions.length - 1].balance +
-          +filteredTransactions[filteredTransactions.length - 1].withdrawal_amt
-        : +filteredTransactions[filteredTransactions.length - 1].balance -
-          +filteredTransactions[filteredTransactions.length - 1].deposit_amt;
-    statementSummary = filteredTransactions.reduce(summaryDetails, {
+      transactions[transactions.length - 1].deposit_amt === ""
+        ? +transactions[transactions.length - 1].balance +
+          +transactions[transactions.length - 1].withdrawal_amt
+        : +transactions[transactions.length - 1].balance -
+          +transactions[transactions.length - 1].deposit_amt;
+
+    statementSummary = transactions.reduce(summaryDetails, {
       outgoingSum: 0,
       outgoingTxnCount: 0,
       incomingSum: 0,
       incomingTxnCount: 0,
     });
 
-    top5Credit = filteredTransactions
+    top5Credit = transactions
       .filter((txn) => txn.withdrawal_amt === "")
-      .sort((txn1, txn2) => +txn2.deposit_amt - txn1.deposit_amt)
+      .sort((txn1, txn2) => +txn2.deposit_amt - +txn1.deposit_amt)
       .slice(0, 5);
-    top5Debit = filteredTransactions
+    top5Debit = transactions
       .filter((txn) => txn.deposit_amt === "")
-      .sort((txn1, txn2) => +txn2.withdrawal_amt - txn1.withdrawal_amt)
+      .sort((txn1, txn2) => +txn2.withdrawal_amt - +txn1.withdrawal_amt)
       .slice(0, 5);
 
     top5CreditShare = (
@@ -293,7 +268,7 @@ const SpendAnalysis = (props) => {
       100
     ).toFixed(2);
 
-    let monthYears = filteredTransactions.map((txn) => {
+    let monthYears = transactions.map((txn) => {
       const txnDate = new Date(txn.txn_date);
       return {
         month: txnDate.getMonth(),
@@ -304,7 +279,7 @@ const SpendAnalysis = (props) => {
 
     let chartData = uniqueMonthYears.map((monthYear) => {
       const chartItem = {};
-      const dateFilteredTxns = filteredTransactions
+      const dateFilteredTxns = transactions
         .filter((txn) => {
           const convertTxnDate = new Date(txn.txn_date);
           return (
@@ -379,9 +354,9 @@ const SpendAnalysis = (props) => {
           </Typography>
         </AccordionSummary>
         <DisplayGrid
-          rows={filteredTransactions.sort(sortByDate)}
+          rows={transactions.sort(sortByDate)}
           columns={txnCols}
-          loading={transactionsLoading}
+          loading={isTransactionsLoading}
           boxWidth="90%"
         />
       </Accordion>
@@ -436,7 +411,7 @@ const SpendAnalysis = (props) => {
         </form>
       </Container>
 
-      {filteredTransactions.length > 0 && (
+      {isTransactionLoadSuccess && transactions.length > 0 && (
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}

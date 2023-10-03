@@ -14,7 +14,6 @@ import AccountDeleteForm from "../Forms/AccountForms/AccountDeleteForm";
 import CreateAccountForm from "../Forms/AccountForms/CreateAccountForm";
 
 import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
-import { convert2AccountFormat } from "../../lib/server-communication";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -31,7 +30,6 @@ let formData;
 
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  // const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -46,7 +44,7 @@ const ManageAccounts = (props) => {
   if (isSuccess) {
     dispatch(
       accountsAction.setUserAccounts({
-        accounts: convert2AccountFormat(accountData),
+        accounts: accountData,
       })
     );
   }
@@ -146,11 +144,7 @@ const ManageAccounts = (props) => {
   if (!isAccountsLoading && !isAccountsError && accountData) {
     message = (
       <Container className={styles.container}>
-        <DisplayGrid
-          rows={convert2AccountFormat(accountData)}
-          columns={txnCols}
-          boxWidth="90%"
-        />
+        <DisplayGrid rows={accountData} columns={txnCols} boxWidth="90%" />
       </Container>
     );
   }
