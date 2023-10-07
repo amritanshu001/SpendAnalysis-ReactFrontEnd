@@ -3,14 +3,13 @@ import Container from "../UI/Container";
 import Button from "../UI/Button";
 
 import styles from "./UploadStatement.module.css";
-import useHttp4File from "../../hooks/useHTTP4File";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import { useSelector } from "react-redux";
 
 import { useMutation } from "@tanstack/react-query";
 import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
-import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
+import { sendMutationRequest } from "../../lib/endpoint-configs";
 
 import Header from "../UI/Header";
 const apiURL = import.meta.env.VITE_API_URL;
@@ -27,7 +26,6 @@ const mapAccounts = (account) => {
 };
 
 const UploadStatement = (props) => {
-  // const accounts = useSelector((state) => state.userAccounts.userAccounts);
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
 
@@ -44,26 +42,16 @@ const UploadStatement = (props) => {
     isPending: isFlieUploadPending,
     error: fileError,
     data: responseData,
+    isSuccess: isFileUploadSuccess,
   } = useMutation({
     mutationFn: sendMutationRequest,
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: ["account"] });
-    // },
+    onSuccess: (data) => {
+      setInsertCount({
+        failed_count: data.fail_count,
+        success_count: data.pass_count,
+      });
+    },
   });
-
-  const processFileUpload = useCallback((rawdata) => {
-    setInsertCount({
-      failed_count: rawdata.fail_count,
-      success_count: rawdata.pass_count,
-    });
-  }, []);
-
-  const {
-    isFileloading: fileUploading,
-    fileRrror: fileUploadError,
-    sendRequest4File: sendFile,
-    resetFileError: resetUploadError,
-  } = useHttp4File(processFileUpload);
 
   const onSelectChangeHandler = (event) => {
     setAccountId(+event.target.value);
@@ -72,7 +60,6 @@ const UploadStatement = (props) => {
   const uploadFileHandler = (event) => {
     event.preventDefault();
     setInsertCount({});
-    resetUploadError();
 
     if (accountId === 0) {
       setValidation("Please select an account");
@@ -83,8 +70,6 @@ const UploadStatement = (props) => {
       return;
     }
     setValidation(null);
-
-    console.log(responseData);
 
     const formData = new FormData();
     formData.append("file", fileInputRef.current.files[0]);
@@ -103,19 +88,17 @@ const UploadStatement = (props) => {
   };
 
   let serverResponse;
-  if (fileUploadError) {
+  if (isFileUplaodError) {
     serverResponse = (
-      <div className={styles["server-error"]}>{fileUploadError}</div>
+      <div className={styles["server-error"]}>
+        {fileError.status + ":" + fileError.message}
+      </div>
     );
   }
-  if (fileUploading) {
+  if (isFlieUploadPending) {
     serverResponse = <div className={styles["server-loading"]}>Loading...</div>;
   }
-  if (
-    !fileUploadError &&
-    !fileUploading &&
-    Object.keys(insertCount).length > 0
-  ) {
+  if (isFileUploadSuccess) {
     serverResponse = (
       <div className={styles["server-success"]}>
         <p>Inserted Records: {insertCount.success_count}</p>
