@@ -10,7 +10,9 @@ import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
 import useInputValidator from "../../hooks/useInputValidator";
-import useHttp from "../../hooks/useHTTP";
+// import useHttp from "../../hooks/useHTTP";
+import { useMutation } from "@tanstack/react-query";
+import { sendMutationRequest } from "../../lib/endpoint-configs";
 import { passwordValidator } from "../../lib/validators";
 
 const apiURL = import.meta.env.VITE_API_URL;
@@ -26,7 +28,7 @@ const ResetPassword = () => {
   const location = useLocation();
   const currentPathArray = location.pathname.split("/");
   const history = useNavigate();
-  const [responseMessage, setResponseMessage] = useState(null);
+  // const [responseMessage, setResponseMessage] = useState(null);
   const {
     inputValue: enteredPassword,
     inputIsValid: passwordIsValid,
@@ -45,16 +47,24 @@ const ResetPassword = () => {
     resetInput: resetRePassword,
   } = useInputValidator(passwordValidator);
 
-  const processResetResponse = useCallback((rawdata) => {
-    setResponseMessage(sucessMessage);
-  }, []);
-
   const {
-    isloading: passwordResetLoading,
+    isPending: passwordResetLoading,
+    isError: isPasswordResetError,
     error: passwordResetError,
-    sendRequest: sendPasswordReset,
-    resetError: resetPasswordError,
-  } = useHttp(processResetResponse);
+    mutate: sendPasswordReset,
+    isSuccess: isPassswordResetSuccess,
+  } = useMutation({ mutationFn: sendMutationRequest });
+
+  // const processResetResponse = useCallback((rawdata) => {
+  //   setResponseMessage(sucessMessage);
+  // }, []);
+
+  // const {
+  //   // isloading: passwordResetLoading,
+  //   // error: passwordResetError,
+  //   // sendRequest: sendPasswordReset,
+  //   resetError: resetPasswordError,
+  // } = useHttp(processResetResponse);
 
   let serverMessage = null;
   let passwordMatch = enteredPassword === enteredRePassword;
@@ -64,22 +74,24 @@ const ResetPassword = () => {
     serverMessage = <SpinnerCircular color="success" />;
   }
 
-  if (!passwordResetLoading && passwordResetError) {
+  if (isPasswordResetError) {
     serverMessage = (
       <div className={styles["server-error"]}>
-        {passwordResetError + ".Redirecting to Login Page..."}
+        {passwordResetError.status +
+          ":" +
+          passwordResetError.message +
+          ".Redirecting to Login Page..."}
       </div>
     );
   }
 
-  if (!passwordResetLoading && responseMessage) {
-    serverMessage = responseMessage;
+  if (isPassswordResetSuccess) {
+    serverMessage = sucessMessage;
   }
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    resetPasswordError();
-    setResponseMessage();
+    // resetPasswordError();
 
     const requestConfig = {
       url: apiURL + "/pwd-reset-request",
@@ -87,24 +99,24 @@ const ResetPassword = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
+      body: JSON.stringify({
         userHash: userHash,
         newPassword: enteredPassword,
-      },
+      }),
     };
 
-    sendPasswordReset(requestConfig);
+    sendPasswordReset({ requestConfig });
     resetPassword();
     resetRePassword();
   };
 
   useEffect(() => {
     setTimeout(() => {
-      if (!passwordResetLoading && (responseMessage || passwordResetError)) {
+      if (isPasswordResetError || isPassswordResetSuccess) {
         history("/login", { replace: true });
       }
     }, 2000);
-  }, [passwordResetLoading, responseMessage, passwordResetError]);
+  }, [isPasswordResetError, isPassswordResetSuccess]);
 
   return (
     <React.Fragment>
@@ -141,7 +153,7 @@ const ResetPassword = () => {
           ) : null}
           <div className={styles.actions}>
             <Button type="submit" disabled={!formIsValid}>
-              Send Reset Link
+              Reset Password
             </Button>
           </div>
         </form>

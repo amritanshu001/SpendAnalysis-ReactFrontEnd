@@ -11,8 +11,9 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 import useInputValidator from "../../hooks/useInputValidator";
-import useHttp from "../../hooks/useHTTP";
+import { useMutation } from "@tanstack/react-query";
 import { emailValidator } from "../../lib/validators";
+import { sendMutationRequest } from "../../lib/endpoint-configs";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -27,7 +28,6 @@ const sucessMessage = (
 
 const ResetPassword = () => {
   const location = useLocation();
-  const [responseMessage, setResponseMessage] = useState(null);
   const {
     inputValue: enteredEmail,
     inputIsValid: emailIsValid,
@@ -37,16 +37,13 @@ const ResetPassword = () => {
     resetInput: resetEmail,
   } = useInputValidator(emailValidator);
 
-  const processResetResponse = useCallback((rawdata) => {
-    setResponseMessage(sucessMessage);
-  }, []);
-
   const {
-    isloading: passwordResetLoading,
+    mutate: sendPasswordResetRequest,
+    isPending: passwordResetLoading,
+    isError: isPasswordResetError,
     error: passwordResetError,
-    sendRequest: sendPasswordResetRequest,
-    resetError: resetPasswordError,
-  } = useHttp(processResetResponse);
+    isSuccess: passwordResetReqSuccess,
+  } = useMutation({ mutationFn: sendMutationRequest });
 
   let serverMessage = null;
 
@@ -54,14 +51,16 @@ const ResetPassword = () => {
     serverMessage = <SpinnerCircular color="success" />;
   }
 
-  if (!passwordResetLoading && passwordResetError) {
+  if (isPasswordResetError) {
     serverMessage = (
-      <div className={styles["server-error"]}>{passwordResetError}</div>
+      <div className={styles["server-error"]}>
+        {passwordResetError.status + ":" + passwordResetError.message}
+      </div>
     );
   }
 
-  if (!passwordResetLoading && responseMessage) {
-    serverMessage = responseMessage;
+  if (passwordResetReqSuccess) {
+    serverMessage = sucessMessage;
   }
 
   const onSubmitHandler = (event) => {
@@ -73,13 +72,13 @@ const ResetPassword = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
+      body: JSON.stringify({
         email_id: enteredEmail,
         site_url: siteAddress,
-      },
+      }),
     };
 
-    sendPasswordResetRequest(requestConfig);
+    sendPasswordResetRequest({ requestConfig });
     resetEmail();
   };
 
