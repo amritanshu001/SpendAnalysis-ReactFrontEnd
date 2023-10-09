@@ -53,7 +53,7 @@ const CreateBankForm = (props) => {
             loading={isPending}
             error={error}
             isError={isError}
-            dateformats={convert2DateFormat(dateFormats)}
+            dateformats={dateFormats}
             creating
           />
         </FormModal>

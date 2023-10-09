@@ -34,7 +34,7 @@ export const fetchBanks = (accessToken)=>{
       },
     }
     try {
-      queryClient.fetchQuery({
+      await queryClient.fetchQuery({
         queryKey:["banks"], 
         queryFn:({signal})=>sendQueryRequest({signal, requestConfig:bankConfig}),
         staleTime:300000})

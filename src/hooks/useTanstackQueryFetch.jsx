@@ -27,6 +27,7 @@ export const useFetchBanks = (
     },
     enabled,
     staleTime,
+    select: (data) => convert2BankFormat(data),
   });
 };
 
@@ -66,6 +67,7 @@ export const useFetchDates = (enabled = true, staleTime = 300000) => {
     },
     staleTime,
     enabled,
+    select: (data) => convert2DateFormat(data),
   });
 };
 

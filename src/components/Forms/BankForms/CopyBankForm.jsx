@@ -50,7 +50,7 @@ const CopyBankForm = (props) => {
           <CreateCopyBankForm
             onCancel={props.hideModalHandler}
             onSave={createNewBankHandler}
-            dateformats={convert2DateFormat(dateFormats)}
+            dateformats={dateFormats}
             loading={isCreateBankPending}
             error={createBankError}
             isError={isCreateBankError}

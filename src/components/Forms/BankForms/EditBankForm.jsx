@@ -6,7 +6,6 @@ import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
 import { useFetchDates } from "../../../hooks/useTanstackQueryFetch";
 import { queryClient } from "../../../lib/endpoint-configs";
-import { convert2DateFormat } from "../../../lib/server-communication";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -49,7 +48,7 @@ const EditBankForm = (props) => {
         <FormModal onBackdropClick={props.hideModalHandler}>
           <CreateCopyBankForm
             onCancel={props.hideModalHandler}
-            dateformats={convert2DateFormat(dateFormats)}
+            dateformats={dateFormats}
             loading={isEditBankPending}
             error={editOldBankError}
             isError={isEditBankError}

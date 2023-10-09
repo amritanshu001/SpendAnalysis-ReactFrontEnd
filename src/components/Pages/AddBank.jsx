@@ -43,9 +43,7 @@ const AddBank = (props) => {
   } = useFetchBanks(authToken);
 
   if (isSuccess) {
-    disptach(
-      banksAction.setBanks({ banks: convert2BankFormat(bankFetchData) })
-    );
+    disptach(banksAction.setBanks({ banks: bankFetchData }));
   }
 
   const hideModalHandler = () => {
@@ -201,11 +199,7 @@ const AddBank = (props) => {
   if (bankFetchData) {
     message = (
       <Container className={styles.container}>
-        <DisplayGrid
-          rows={convert2BankFormat(bankFetchData)}
-          columns={txnCols}
-          boxWidth="95%"
-        />
+        <DisplayGrid rows={bankFetchData} columns={txnCols} boxWidth="95%" />
       </Container>
     );
   }

@@ -7,7 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
-import { convert2BankFormat } from "../../../lib/server-communication";
 
 import FormModal from "../../UI/Modal/FormModal";
 
@@ -24,8 +23,7 @@ const mapBanks = (bank) => {
 const CreateAccountForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const formModalStatus = useSelector((state) => state.formModal.showModal);
-  const { data: fetchedBanks } = useFetchBanks(authToken);
-  const banks = convert2BankFormat(fetchedBanks);
+  const { data: banks } = useFetchBanks(authToken);
 
   const {
     mutate: createNewAccount,
