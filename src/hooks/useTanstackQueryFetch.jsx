@@ -2,6 +2,9 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { sendQueryRequest } from "../lib/endpoint-configs";
 const apiURL = import.meta.env.VITE_API_URL;
+const datesConfig = {
+  url: apiURL + "/dateformats",
+};
 import {
   convert2TransactionFormat,
   convert2AccountFormat,
@@ -54,20 +57,15 @@ export const useFetchAccounts = (
 };
 
 export const useFetchDates = (enabled = true, staleTime = 300000) => {
+  console.log("Reached fecth date hook", enabled, staleTime, datesConfig);
   return useQuery({
-    queryKey: ["dateformats"],
-    queryFn: ({ signal }) => {
-      const datesConfig = {
-        url: apiURL + "/dateformats",
-      };
-      return sendQueryRequest({ signal, requestConfig: datesConfig });
-    },
-    refetchInterval: (data) => {
-      return data ? 300000 : 1;
-    },
-    staleTime,
+    queryKey: ["dates"],
+    queryFn: ({ signal }) =>
+      sendQueryRequest({ signal, requestConfig: datesConfig }),
     enabled,
+    staleTime,
     select: (data) => convert2DateFormat(data),
+    refetchInterval: (data) => (data ? staleTime : 1),
   });
 };
 

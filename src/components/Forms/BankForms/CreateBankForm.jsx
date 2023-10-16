@@ -27,7 +27,7 @@ const CreateBankForm = (props) => {
     },
   });
 
-  const { data: dateFormats } = useFetchDates();
+  //   const { data: dateFormats } = useFetchDates();
 
   const createNewBankHandler = (bankData) => {
     const { id: bankId, ...requestBody } = bankData;
@@ -53,7 +53,7 @@ const CreateBankForm = (props) => {
             loading={isPending}
             error={error}
             isError={isError}
-            dateformats={dateFormats}
+            // dateformats={dateFormats}
             creating
           />
         </FormModal>

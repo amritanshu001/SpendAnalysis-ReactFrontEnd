@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import styles from "./CreateCopyBankForm.module.css";
 import Input from "../UI/Input";
 import Header from "../UI/Header";
+import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 import Select from "react-select";
+import { useFetchDates } from "../../hooks/useTanstackQueryFetch";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import {
@@ -17,6 +19,23 @@ const CreateCopyBankForm = (props) => {
     "creating" in props
       ? 0
       : { value: props.payload.date_id, label: props.payload.date_format }
+  );
+
+  const {
+    data: fetchedDates,
+    isError,
+    isLoading,
+    isPending,
+    isSuccess,
+  } = useFetchDates(true);
+
+  console.log(
+    "Fetched Dates",
+    fetchedDates,
+    isError,
+    isLoading,
+    isPending,
+    isSuccess
   );
 
   const {
@@ -148,12 +167,15 @@ const CreateCopyBankForm = (props) => {
     buttonProcessed = "Copy & Create Bank";
   }
 
-  const options = props.dateformats.map((date) => {
-    return {
-      value: date.id,
-      label: date.date_format,
-    };
-  });
+  let options = [];
+  if (isSuccess) {
+    options = fetchedDates.map((date) => {
+      return {
+        value: date.id,
+        label: date.date_format,
+      };
+    });
+  }
 
   const resetHandler = () => {
     setDateformats(
@@ -233,6 +255,7 @@ const CreateCopyBankForm = (props) => {
             onChange={dateformatChangeHandler}
             options={options}
           />
+          {isLoading && <SpinnerCircular color="warning" />}
         </div>
         <div className={styles.entrycols}>
           <Input

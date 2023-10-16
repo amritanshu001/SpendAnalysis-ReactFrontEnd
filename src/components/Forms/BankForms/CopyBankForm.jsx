@@ -14,7 +14,7 @@ const CopyBankForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const modalStatus = useSelector((state) => state.formModal.showModal);
   //   const dispatch = useDispatch()
-  const { data: dateFormats } = useFetchDates();
+  //   const { data: dateFormats } = useFetchDates();
 
   const {
     mutate: createNewBank,
@@ -50,7 +50,7 @@ const CopyBankForm = (props) => {
           <CreateCopyBankForm
             onCancel={props.hideModalHandler}
             onSave={createNewBankHandler}
-            dateformats={dateFormats}
+            // dateformats={dateFormats}
             loading={isCreateBankPending}
             error={createBankError}
             isError={isCreateBankError}

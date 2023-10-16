@@ -7,6 +7,8 @@ import { showAndHideMessages } from "../../store/message-slice";
 
 import { useNavigate } from "react-router-dom";
 import apiURL from "../../endpoint";
+import { useMutation } from "@tanstack/react-query";
+import { sendMutationRequest } from "../../lib/endpoint-configs";
 import useHttp from "../../hooks/useHTTP";
 import NavElements from "./NavElements";
 
@@ -30,16 +32,36 @@ const Navbar = (props) => {
     setSideMenuState(false);
   };
 
-  const processLogout = useCallback((rawdata) => {
-    console.log("Logged Out successfully");
-  }, []);
-
   const {
-    isloading: logoutLoading,
-    error: logoutError,
-    sendRequest: logoutUser,
-    resetError: resetLogoutError,
-  } = useHttp(processLogout);
+    mutate: logoutUser,
+    isPending: logoutLoading,
+    // isError: isLogoutError,
+    // isSuccess
+  } = useMutation({
+    mutationFn: sendMutationRequest,
+    onSettled: () => {
+      dispatch(logUserOutActions());
+      dispatch(
+        showAndHideMessages({
+          status: "success",
+          messageText: "You have been successfully logged out!",
+        })
+      );
+      redirect("/login", { replace: true });
+      console.log("Logged Out successfully");
+    },
+  });
+
+  // const processLogout = useCallback((rawdata) => {
+  //   console.log("Logged Out successfully");
+  // }, []);
+
+  // const {
+  //   isloading: logoutLoading,
+  //   error: logoutError,
+  //   sendRequest: logoutUser,
+  //   resetError: resetLogoutError,
+  // } = useHttp(processLogout);
 
   const logoutHandler = () => {
     const logoutConfig = {
@@ -49,36 +71,36 @@ const Navbar = (props) => {
         Authorization: "Bearer " + userToken,
       },
     };
-    logoutUser(logoutConfig);
-    dispatch(logUserOutActions());
-    dispatch(
-      showAndHideMessages({
-        status: "success",
-        messageText: "You have been successfully logged out!",
-      })
-    );
-    redirect("/login", { replace: true });
+    logoutUser({ requestConfig: logoutConfig });
+    // dispatch(logUserOutActions());
+    // dispatch(
+    //   showAndHideMessages({
+    //     status: "success",
+    //     messageText: "You have been successfully logged out!",
+    //   })
+    // );
+    // redirect("/login", { replace: true });
   };
 
-  useEffect(() => {
-    if (logoutError) {
-      resetLogoutError();
-    }
-  }, [logoutError]);
+  // useEffect(() => {
+  //   if (logoutError) {
+  //     resetLogoutError();
+  //   }
+  // }, [logoutError]);
 
-  let buttonText = "Logout";
-  if (logoutLoading) {
-    buttonText = "Logging Out";
-  }
-  if (!logoutLoading && !logoutError) {
-    buttonText = "Logout";
-  }
+  // let buttonText = "Logout";
+  // if (logoutLoading) {
+  //   buttonText = "Logging Out...";
+  // }
+  // if (!logoutLoading && !isLogoutError) {
+  //   buttonText = "Logout";
+  // }
 
   return (
     <React.Fragment>
       <header className={styles.header}>
         <div className={styles.hamburger}>
-          <IconButton aria-label="menu" color="success" onClick={showSideMenu}>
+          <IconButton aria-label="menu" color="inherit" onClick={showSideMenu}>
             <MenuIcon />
           </IconButton>
         </div>
@@ -88,7 +110,7 @@ const Navbar = (props) => {
           isUserLoggedIn={isUserLoggedIn}
           isUserAdmin={isUserAdmin}
           logoutHandler={logoutHandler}
-          buttonText={buttonText}
+          buttonText={logoutLoading ? "Logging Out..." : "Logout"}
         />
       </header>
       {sideMenuState && (
@@ -98,7 +120,7 @@ const Navbar = (props) => {
             isUserLoggedIn={isUserLoggedIn}
             isUserAdmin={isUserAdmin}
             logoutHandler={logoutHandler}
-            buttonText={buttonText}
+            buttonText={logoutLoading ? "Logging Out..." : "Logout"}
             hideSideBar={hideSideMenu}
           />
         </Sidebar>
