@@ -78,7 +78,12 @@ const NavElements = (props) => {
         )}
       </ul>
       {props.isUserLoggedIn && (
-        <Button className={styles.logout} onClick={logout}>
+        <Button
+          className={styles.logout}
+          onClick={logout}
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 500 }}
+        >
           {props.buttonText}
         </Button>
       )}

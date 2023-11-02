@@ -1,9 +1,11 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styles from "./Button.module.css";
+import { motion } from "framer-motion";
 
-const Button = (props) => {
+const Button = forwardRef((props, ref) => {
   return (
     <button
+      ref={ref}
       className={`${styles.button} ${props.className}`}
       type={props.type}
       onClick={props.onClick}
@@ -12,6 +14,6 @@ const Button = (props) => {
       {props.children}
     </button>
   );
-};
+});
 
-export default Button;
+export default motion(Button);

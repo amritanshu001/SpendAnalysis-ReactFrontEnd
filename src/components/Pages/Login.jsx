@@ -204,7 +204,15 @@ const Login = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>{loginOption ? "Login" : "Register"}</Header>
-      <Container>
+      <Container
+        variants={{
+          hidden: { opacity: 0, y: -10 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+      >
         <form onSubmit={onSubmitHandler} className={styles["login-form"]}>
           {!loginOption && (
             <Input
@@ -264,7 +272,12 @@ const Login = (props) => {
             </React.Fragment>
           )}
           <div className={styles.actions}>
-            <Button type="submit" disabled={!formIsValid}>
+            <Button
+              type="submit"
+              disabled={!formIsValid}
+              whileHover={{ scale: formIsValid ? 1.1 : 1 }}
+              transition={{ type: "spring", stiffness: 500 }}
+            >
               {buttonName}
             </Button>
             <button

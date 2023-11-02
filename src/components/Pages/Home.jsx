@@ -26,7 +26,11 @@ const Home = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Introduction</Header>
-      <Container className={styles.container}>
+      <Container
+        className={styles.container}
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+      >
         <div className={styles.intro}>
           This application is developed to create spend analysis of the bank
           statements uploaded by the users :

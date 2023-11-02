@@ -5,6 +5,7 @@ import React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./MUIThemeEngine/theme";
 import Paper from "@mui/material/Paper";
+import { AnimatePresence } from "framer-motion";
 
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
@@ -112,7 +113,9 @@ const App = (props) => {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Paper>
-        {showMessage && <Footer message={globalMessage} />}
+        <AnimatePresence>
+          {showMessage && <Footer message={globalMessage} />}
+        </AnimatePresence>
       </ThemeProvider>
     </QueryClientProvider>
   );

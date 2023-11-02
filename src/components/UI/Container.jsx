@@ -1,12 +1,13 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styles from "./Container.module.css";
+import { motion } from "framer-motion";
 
-const Container = (props) => {
+const Container = forwardRef((props, ref) => {
   return (
-    <div className={`${styles.container} ${props.className}`}>
+    <div ref={ref} className={`${styles.container} ${props.className}`}>
       {props.children}
     </div>
   );
-};
+});
 
-export default Container;
+export default motion(Container);
