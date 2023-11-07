@@ -1,14 +1,10 @@
 import Backdrop from "../Backdrop";
 import React from "react";
 import styles from "./FormModal.module.css";
-import { formModalAction } from "../../../store/formmodal-slice";
 import ReactDOM from "react-dom";
-
-import { useDispatch } from "react-redux";
+import { motion } from "framer-motion";
 
 const FormModal = (props) => {
-  const dispatch = useDispatch();
-
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
@@ -16,9 +12,15 @@ const FormModal = (props) => {
         document.getElementById("backdrop")
       )}
       {ReactDOM.createPortal(
-        <div className={`${props.className} ${styles.modal}`}>
+        <motion.div
+          initial={{ opacity: 0, y: -300 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -300 }}
+          key="modal-div"
+          className={`${props.className} ${styles.modal}`}
+        >
           {props.children}
-        </div>,
+        </motion.div>,
         document.getElementById("modal")
       )}
     </React.Fragment>

@@ -6,6 +6,7 @@ import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
 // import { useFetchDates } from "../../../hooks/useTanstackQueryFetch";
 import { queryClient } from "../../../lib/endpoint-configs";
+import { AnimatePresence } from "framer-motion";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -43,7 +44,7 @@ const EditBankForm = (props) => {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {modalStatus && (
         <FormModal onBackdropClick={props.hideModalHandler}>
           <CreateCopyBankForm
@@ -58,7 +59,7 @@ const EditBankForm = (props) => {
           />
         </FormModal>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

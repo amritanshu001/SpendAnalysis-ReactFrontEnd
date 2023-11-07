@@ -7,6 +7,7 @@ import {
 } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { AnimatePresence } from "framer-motion";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AccountDeleteForm = (props) => {
@@ -40,7 +41,7 @@ const AccountDeleteForm = (props) => {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {formModalStatus && (
         <FormModal onBackdropClick={props.onCancel}>
           <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
@@ -60,7 +61,7 @@ const AccountDeleteForm = (props) => {
           </form>
         </FormModal>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

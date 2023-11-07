@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 const apiURL = import.meta.env.VITE_API_URL;
 import { Alert } from "@mui/material";
+import { AnimatePresence } from "framer-motion";
 
 const UserAccountForm = ({ data, onCancel }) => {
   const [accountJoint, setAccountJoint] = useState(data.joint);
@@ -55,7 +56,7 @@ const UserAccountForm = ({ data, onCancel }) => {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {formModalStatus && (
         <FormModal onBackdropClick={onCancel}>
           <form className={styles.form} onSubmit={accountEditHandler}>
@@ -106,7 +107,7 @@ const UserAccountForm = ({ data, onCancel }) => {
           </form>
         </FormModal>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

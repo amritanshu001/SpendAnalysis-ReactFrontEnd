@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
+import { AnimatePresence } from "framer-motion";
 
 import FormModal from "../../UI/Modal/FormModal";
 
@@ -88,7 +89,7 @@ const CreateAccountForm = (props) => {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {formModalStatus && (
         <FormModal onBackdropClick={props.onCancel}>
           <form className={styles.form} onSubmit={addAccountHandler}>
@@ -134,7 +135,7 @@ const CreateAccountForm = (props) => {
           </form>
         </FormModal>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

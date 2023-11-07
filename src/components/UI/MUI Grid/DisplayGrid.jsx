@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -6,40 +6,48 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip } from "@mui/material";
+import { motion } from "framer-motion";
 
-export const RowEditIcon = (props) => {
-  return (
-    <Tooltip title="Edit" placement="bottom-start" arrow>
-      <IconButton onClick={props.onClick} color="default">
-        <EditIcon />
-      </IconButton>
-    </Tooltip>
-  );
-};
+export const RowEditIcon = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title="Edit" placement="bottom-start" arrow>
+        <IconButton ref={ref} onClick={props.onClick} color="default">
+          <EditIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
 
-export const RowDeleteIcon = (props) => {
-  return (
-    <Tooltip title="Delete" placement="bottom-start" arrow>
-      <IconButton onClick={props.onClick} color="error">
-        <DeleteForeverIcon />
-      </IconButton>
-    </Tooltip>
-  );
-};
+export const RowDeleteIcon = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title="Delete" placement="bottom-start" arrow>
+        <IconButton ref={ref} onClick={props.onClick} color="error">
+          <DeleteForeverIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
 
-export const RowCopyIcon = (props) => {
-  return (
-    <Tooltip title="Copy" placement="bottom-start" arrow>
-      <IconButton color="primary" onClick={props.onClick}>
-        <ContentCopyOutlinedIcon />
-      </IconButton>
-    </Tooltip>
-  );
-};
+export const RowCopyIcon = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title="Copy" placement="bottom-start" arrow>
+        <IconButton color="primary" onClick={props.onClick} ref={ref}>
+          <ContentCopyOutlinedIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
 
-const DisplayGrid = (props) => {
+const DisplayGrid = forwardRef((props, ref) => {
   return (
     <Box
+      ref={ref}
       sx={{
         // height: props.height ? props.height : null,
         width: props.boxWidth,
@@ -73,6 +81,6 @@ const DisplayGrid = (props) => {
       />
     </Box>
   );
-};
+});
 
-export default DisplayGrid;
+export default motion(DisplayGrid);

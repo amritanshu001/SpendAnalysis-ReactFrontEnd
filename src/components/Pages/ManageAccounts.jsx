@@ -20,11 +20,14 @@ import { useLocation } from "react-router-dom";
 
 import { accountsAction } from "../../store/useraccount-slice";
 import { formModalAction } from "../../store/formmodal-slice";
+import { motion } from "framer-motion";
 
 import DisplayGrid, {
   RowEditIcon,
   RowDeleteIcon,
 } from "../UI/MUI Grid/DisplayGrid";
+
+const AnimatedIconButton = motion(IconButton);
 
 let formData;
 
@@ -63,7 +66,13 @@ const ManageAccounts = (props) => {
       setAccountAction("Edit");
       dispatch(formModalAction.showModal());
     };
-    return <RowEditIcon onClick={clickHandler} />;
+    return (
+      <RowEditIcon
+        onClick={clickHandler}
+        whileHover={{ scale: 1.2 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      />
+    );
   };
 
   const gridRowDeleteHandler = (params) => {
@@ -143,9 +152,14 @@ const ManageAccounts = (props) => {
 
   if (!isAccountsLoading && !isAccountsError && accountData) {
     message = (
-      <Container className={styles.container}>
-        <DisplayGrid rows={accountData} columns={txnCols} boxWidth="90%" />
-      </Container>
+      <DisplayGrid
+        rows={accountData}
+        columns={txnCols}
+        boxWidth="60%"
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0.25, y: 100 }}
+        transition={{ duration: 0.5 }}
+      />
     );
   }
 
@@ -169,13 +183,15 @@ const ManageAccounts = (props) => {
       <Header>
         My Accounts
         <Tooltip title="Add New Account" placement="top-start" arrow>
-          <IconButton
+          <AnimatedIconButton
             color="primary"
             aria-label="add"
             onClick={addAccountClickHandler}
+            whileHover={{ rotate: 90 }}
+            transition={{ duration: 0.3 }}
           >
             <AddIcon />
-          </IconButton>
+          </AnimatedIconButton>
         </Tooltip>
       </Header>
       {/* <Container className={styles.container}>{message}</Container> */}

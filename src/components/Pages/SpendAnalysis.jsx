@@ -11,6 +11,7 @@ import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
+import { AnimatePresence } from "framer-motion";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -168,7 +169,8 @@ const SpendAnalysis = (props) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const { data: accounts } = useFetchAccounts(authToken);
+  const { data: accounts, refetch: refetchAccounts } =
+    useFetchAccounts(authToken);
 
   let query = "";
   if (!fromDate && toDate) {
@@ -343,23 +345,26 @@ const SpendAnalysis = (props) => {
       );
     }
     message1 = (
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
-            Transaction Details
-          </Typography>
-        </AccordionSummary>
-        <DisplayGrid
-          rows={transactions.sort(sortByDate)}
-          columns={txnCols}
-          loading={isTransactionsLoading}
-          boxWidth="90%"
-        />
-      </Accordion>
+      <AnimatePresence>
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
+              Transaction Details
+            </Typography>
+          </AccordionSummary>
+
+          <DisplayGrid
+            rows={transactions.sort(sortByDate)}
+            columns={txnCols}
+            loading={isTransactionsLoading}
+            boxWidth="90%"
+          />
+        </Accordion>
+      </AnimatePresence>
     );
   }
 
@@ -375,13 +380,18 @@ const SpendAnalysis = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Spend Analysis</Header>
-      <Container className={styles.container}>
+      <Container
+        className={styles.container}
+        initial={{ opacity: 0, x: -300 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -300 }}
+      >
         <form className={styles.form} onSubmit={formSubmitHandler}>
           <div className={styles.select}>
             <label>Select Account</label>
             <select onChange={onSelectChangeHandler}>
               <option value={0}>---</option>
-              {accounts.map(mapAccounts)}
+              {accounts.length > 0 && accounts.map(mapAccounts)}
             </select>
           </div>
           <div className={styles.dates}>
@@ -405,7 +415,12 @@ const SpendAnalysis = (props) => {
             </Input>
           </div>
           <div className={styles.actions}>
-            <Button>Fetch Transactions</Button>
+            <Button
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              Fetch Transactions
+            </Button>
           </div>
           {validation && <p className={styles.error}>{validation}</p>}
         </form>
