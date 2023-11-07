@@ -21,6 +21,9 @@ import { sendMutationRequest } from "../../lib/endpoint-configs";
 import React, { useState, useEffect } from "react";
 // import useHttp from "../../hooks/useHTTP";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
+import { motion } from "framer-motion";
+
+const AnimatedLink = motion(Link);
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -280,14 +283,21 @@ const Login = (props) => {
             >
               {buttonName}
             </Button>
-            <button
+            <motion.button
               type="button"
               onClick={optionToggleHandler}
               className={styles.toggler}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 200 }}
             >
               {loginOption ? "New User?" : "Login"}
-            </button>
-            <Link to="/request-resetpassword">Reset Password</Link>
+            </motion.button>
+            <AnimatedLink
+              to="/request-resetpassword"
+              whileHover={{ scale: 1.1, color: "#FF3161" }}
+            >
+              Reset Password
+            </AnimatedLink>
           </div>
         </form>
       </Container>

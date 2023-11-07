@@ -4,9 +4,14 @@ import { motion } from "framer-motion";
 
 const Container = forwardRef((props, ref) => {
   return (
-    <div ref={ref} className={`${styles.container} ${props.className}`}>
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      ref={ref}
+      className={`${styles.container} ${props.className}`}
+    >
       {props.children}
-    </div>
+    </motion.div>
   );
 });
 

@@ -14,6 +14,7 @@ import useInputValidator from "../../hooks/useInputValidator";
 import { useMutation } from "@tanstack/react-query";
 import { emailValidator } from "../../lib/validators";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
+import { type } from "@testing-library/user-event/dist/type";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -101,7 +102,12 @@ const ResetPassword = () => {
             Email Id
           </Input>
           <div className={styles.actions}>
-            <Button type="submit" disabled={!emailIsValid}>
+            <Button
+              type="submit"
+              disabled={!emailIsValid}
+              whileHover={{ scale: emailIsValid ? 1.1 : 1 }}
+              transition={{ type: "spring", stiffness: 500 }}
+            >
               Send Reset Link
             </Button>
           </div>
