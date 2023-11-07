@@ -14,7 +14,6 @@ import useInputValidator from "../../hooks/useInputValidator";
 import { useMutation } from "@tanstack/react-query";
 import { emailValidator } from "../../lib/validators";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
-import { type } from "@testing-library/user-event/dist/type";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
