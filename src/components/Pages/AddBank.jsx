@@ -23,7 +23,9 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import CreateBankForm from "../Forms/BankForms/CreateBankForm";
 import EditBankForm from "../Forms/BankForms/EditBankForm";
 import CopyBankForm from "../Forms/BankForms/CopyBankForm";
-import { convert2BankFormat } from "../../lib/server-communication";
+import { motion } from "framer-motion";
+
+const AnimatedIconButton = motion(IconButton);
 
 let bankFormData = {};
 
@@ -63,7 +65,13 @@ const AddBank = (props) => {
       setBankAction("Edit");
       disptach(formModalAction.showModal());
     };
-    return <RowEditIcon onClick={clickHandler} />;
+    return (
+      <RowEditIcon
+        onClick={clickHandler}
+        whileHover={{ scale: 1.2 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      />
+    );
   };
 
   const copyBankClickHandler = (params) => {
@@ -73,7 +81,13 @@ const AddBank = (props) => {
       setBankAction("Copy");
       disptach(formModalAction.showModal());
     };
-    return <RowCopyIcon onClick={clickHandler} />;
+    return (
+      <RowCopyIcon
+        onClick={clickHandler}
+        whileHover={{ scale: 1.2 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      />
+    );
   };
 
   const txnCols = [
@@ -198,9 +212,14 @@ const AddBank = (props) => {
   let message;
   if (bankFetchData) {
     message = (
-      <Container className={styles.container}>
-        <DisplayGrid rows={bankFetchData} columns={txnCols} boxWidth="95%" />
-      </Container>
+      <DisplayGrid
+        rows={bankFetchData}
+        columns={txnCols}
+        boxWidth="95%"
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0.25, y: 100 }}
+        transition={{ duration: 0.5 }}
+      />
     );
   }
   if (bankFetchLoading) {
@@ -236,13 +255,15 @@ const AddBank = (props) => {
       <Header>
         Bank Details
         <Tooltip title="Add New Bank" placement="top-start" arrow>
-          <IconButton
+          <AnimatedIconButton
             color="primary"
             aria-label="add"
             onClick={addBankClickHandler}
+            whileHover={{ rotate: 90 }}
+            transition={{ duration: 0.3 }}
           >
             <AddIcon />
-          </IconButton>
+          </AnimatedIconButton>
         </Tooltip>
       </Header>
       {message}

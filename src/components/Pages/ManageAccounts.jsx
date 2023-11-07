@@ -81,7 +81,13 @@ const ManageAccounts = (props) => {
       setAccountAction("Delete");
       dispatch(formModalAction.showModal());
     };
-    return <RowDeleteIcon onClick={clickHandler} />;
+    return (
+      <RowDeleteIcon
+        onClick={clickHandler}
+        whileHover={{ scale: 1.2 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      />
+    );
   };
 
   const txnCols = [

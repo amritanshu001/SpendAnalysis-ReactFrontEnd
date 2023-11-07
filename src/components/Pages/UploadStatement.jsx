@@ -111,7 +111,11 @@ const UploadStatement = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Upload Statement</Header>
-      <Container>
+      <Container
+        initial={{ opacity: 0.25, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <form
           encType="multipart/form-data"
           className={styles.form}
@@ -133,7 +137,12 @@ const UploadStatement = (props) => {
             ></input>
           </div>
           <div className={styles.actions}>
-            <Button>Upload Data</Button>
+            <Button
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              Upload Data
+            </Button>
           </div>
           {validation && <p className={styles.error}>{validation}</p>}
         </form>
