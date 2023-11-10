@@ -15,9 +15,9 @@ const Footer = forwardRef((props, ref) => {
   return (
     <motion.div
       className={styles.footer}
-      initial={{ x: -100 }}
-      animate={{ x: 0 }}
-      exit={{ x: -100 }}
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
       ref={ref}
     >
       <Alert severity={props.message.status} onClose={alertClose}>

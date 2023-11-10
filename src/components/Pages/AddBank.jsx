@@ -23,7 +23,7 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import CreateBankForm from "../Forms/BankForms/CreateBankForm";
 import EditBankForm from "../Forms/BankForms/EditBankForm";
 import CopyBankForm from "../Forms/BankForms/CopyBankForm";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AnimatedIconButton = motion(IconButton);
 
@@ -33,6 +33,7 @@ const AddBank = (props) => {
   const location = useLocation();
   // const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const modalStatus = useSelector((state) => state.formModal.showModal);
   const [bankAction, setBankAction] = useState(null);
 
   const disptach = useDispatch();
@@ -77,7 +78,6 @@ const AddBank = (props) => {
   const copyBankClickHandler = (params) => {
     const clickHandler = () => {
       bankFormData = { action: "Copy", data: { ...params.row } };
-      console.log(bankFormData.data);
       setBankAction("Copy");
       disptach(formModalAction.showModal());
     };
@@ -237,21 +237,25 @@ const AddBank = (props) => {
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
-      {bankAction === "Create" && (
-        <CreateBankForm hideModalHandler={hideModalHandler} />
-      )}
-      {bankAction === "Edit" && (
-        <EditBankForm
-          hideModalHandler={hideModalHandler}
-          editFormData={bankFormData}
-        />
-      )}
-      {bankAction === "Copy" && (
-        <CopyBankForm
-          hideModalHandler={hideModalHandler}
-          copyFormData={bankFormData}
-        />
-      )}
+      <AnimatePresence>
+        {bankAction === "Create" && modalStatus && (
+          <CreateBankForm key="create" hideModalHandler={hideModalHandler} />
+        )}
+        {bankAction === "Edit" && modalStatus && (
+          <EditBankForm
+            key="edit"
+            hideModalHandler={hideModalHandler}
+            editFormData={bankFormData}
+          />
+        )}
+        {bankAction === "Copy" && modalStatus && (
+          <CopyBankForm
+            key="copy"
+            hideModalHandler={hideModalHandler}
+            copyFormData={bankFormData}
+          />
+        )}
+      </AnimatePresence>
       <Header>
         Bank Details
         <Tooltip title="Add New Bank" placement="top-start" arrow>

@@ -4,17 +4,13 @@ import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useSelector } from "react-redux";
 import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
-import { useFetchDates } from "../../../hooks/useTanstackQueryFetch";
 import { queryClient } from "../../../lib/endpoint-configs";
-import { convert2DateFormat } from "../../../lib/server-communication";
-import { AnimatePresence } from "framer-motion";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
 const CreateBankForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const modalStatus = useSelector((state) => state.formModal.showModal);
-  //   const dispatch = useDispatch();
+
   const {
     mutate: createNewBank,
     isPending,
@@ -27,8 +23,6 @@ const CreateBankForm = (props) => {
       queryClient.invalidateQueries({ queryKey: ["banks"] });
     },
   });
-
-  //   const { data: dateFormats } = useFetchDates();
 
   const createNewBankHandler = (bankData) => {
     const { id: bankId, ...requestBody } = bankData;
@@ -45,21 +39,16 @@ const CreateBankForm = (props) => {
   };
 
   return (
-    <AnimatePresence>
-      {modalStatus && (
-        <FormModal onBackdropClick={props.hideModalHandler}>
-          <CreateCopyBankForm
-            onCancel={props.hideModalHandler}
-            onSave={createNewBankHandler}
-            loading={isPending}
-            error={error}
-            isError={isError}
-            // dateformats={dateFormats}
-            creating
-          />
-        </FormModal>
-      )}
-    </AnimatePresence>
+    <FormModal onBackdropClick={props.hideModalHandler}>
+      <CreateCopyBankForm
+        onCancel={props.hideModalHandler}
+        onSave={createNewBankHandler}
+        loading={isPending}
+        error={error}
+        isError={isError}
+        creating
+      />
+    </FormModal>
   );
 };
 

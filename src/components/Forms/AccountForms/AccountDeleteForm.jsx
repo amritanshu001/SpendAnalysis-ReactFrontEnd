@@ -41,27 +41,23 @@ const AccountDeleteForm = (props) => {
   };
 
   return (
-    <AnimatePresence>
-      {formModalStatus && (
-        <FormModal onBackdropClick={props.onCancel}>
-          <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
-            <div>
-              <p>Account# {props.account.account_no} will be deleted!</p>
-              <p className={styles.message}> Do you want to proceed?</p>
-            </div>
-            <div className={styles.actions}>
-              <button type="button" onClick={props.onCancel}>
-                Cancel
-              </button>
-              <button type="submit" className={styles["imp-button"]}>
-                {isPending ? "Deleting..." : "Confirm Delete"}
-              </button>
-            </div>
-            {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
-          </form>
-        </FormModal>
-      )}
-    </AnimatePresence>
+    <FormModal onBackdropClick={props.onCancel}>
+      <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
+        <div>
+          <p>Account# {props.account.account_no} will be deleted!</p>
+          <p className={styles.message}> Do you want to proceed?</p>
+        </div>
+        <div className={styles.actions}>
+          <button type="button" onClick={props.onCancel}>
+            Cancel
+          </button>
+          <button type="submit" className={styles["imp-button"]}>
+            {isPending ? "Deleting..." : "Confirm Delete"}
+          </button>
+        </div>
+        {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
+      </form>
+    </FormModal>
   );
 };
 

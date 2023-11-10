@@ -4,17 +4,12 @@ import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useSelector } from "react-redux";
 import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
-// import { useFetchDates } from "../../../hooks/useTanstackQueryFetch";
 import { queryClient } from "../../../lib/endpoint-configs";
-import { AnimatePresence } from "framer-motion";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
 const EditBankForm = (props) => {
-  //   const dispatch = useDispatch()
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const modalStatus = useSelector((state) => state.formModal.showModal);
-  //   const { data: dateFormats } = useFetchDates();
 
   const {
     mutate: editOldBank,
@@ -44,22 +39,17 @@ const EditBankForm = (props) => {
   };
 
   return (
-    <AnimatePresence>
-      {modalStatus && (
-        <FormModal onBackdropClick={props.hideModalHandler}>
-          <CreateCopyBankForm
-            onCancel={props.hideModalHandler}
-            // dateformats={dateFormats}
-            loading={isEditBankPending}
-            error={editOldBankError}
-            isError={isEditBankError}
-            payload={props.editFormData.data}
-            onSave={editBankSaveHandler}
-            editing
-          />
-        </FormModal>
-      )}
-    </AnimatePresence>
+    <FormModal onBackdropClick={props.hideModalHandler}>
+      <CreateCopyBankForm
+        onCancel={props.hideModalHandler}
+        loading={isEditBankPending}
+        error={editOldBankError}
+        isError={isEditBankError}
+        payload={props.editFormData.data}
+        onSave={editBankSaveHandler}
+        editing
+      />
+    </FormModal>
   );
 };
 

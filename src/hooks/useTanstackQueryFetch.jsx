@@ -57,7 +57,6 @@ export const useFetchAccounts = (
 };
 
 export const useFetchDates = (enabled = true, staleTime = 300000) => {
-  console.log("Reached fecth date hook", enabled, staleTime, datesConfig);
   return useQuery({
     queryKey: ["dates"],
     queryFn: ({ signal }) =>

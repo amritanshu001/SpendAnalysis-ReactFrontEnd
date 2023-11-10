@@ -7,7 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
-import { AnimatePresence } from "framer-motion";
 
 import FormModal from "../../UI/Modal/FormModal";
 
@@ -23,7 +22,6 @@ const mapBanks = (bank) => {
 
 const CreateAccountForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const formModalStatus = useSelector((state) => state.formModal.showModal);
   const { data: banks } = useFetchBanks(authToken);
 
   const {
@@ -89,53 +87,49 @@ const CreateAccountForm = (props) => {
   };
 
   return (
-    <AnimatePresence>
-      {formModalStatus && (
-        <FormModal onBackdropClick={props.onCancel}>
-          <form className={styles.form} onSubmit={addAccountHandler}>
-            <div className={styles.readonly}>
-              <label>Account#</label>
-              <input
-                type="text"
-                onChange={changeAccountNumberHandler}
-                value={accountNumber}
-              />
-            </div>
-            <div className={styles.readonly}>
-              <label htmlFor="bank_name">Bank Name</label>
-              <select
-                id="bank_name"
-                value={selectedBankId}
-                onChange={selectChangeHandler}
-              >
-                <option value={0}>---</option>
-                {banks.map(mapBanks)}
-              </select>
-            </div>
-            <div className={styles.checkbox}>
-              <div>
-                <input
-                  type="checkbox"
-                  checked={accountJoint}
-                  onChange={jointChangeHandler}
-                ></input>
-                <label>Joint</label>
-              </div>
-            </div>
-            <div className={styles.actions}>
-              <button type="button" onClick={props.onCancel}>
-                Cancel
-              </button>
-              <button type="submit">
-                {isPending ? "Creating..." : "Create Account"}
-              </button>
-            </div>
-            {validation && <p>{validation}</p>}
-            {isError && <p>{error.status + ":" + error.message}</p>}
-          </form>
-        </FormModal>
-      )}
-    </AnimatePresence>
+    <FormModal onBackdropClick={props.onCancel}>
+      <form className={styles.form} onSubmit={addAccountHandler}>
+        <div className={styles.readonly}>
+          <label>Account#</label>
+          <input
+            type="text"
+            onChange={changeAccountNumberHandler}
+            value={accountNumber}
+          />
+        </div>
+        <div className={styles.readonly}>
+          <label htmlFor="bank_name">Bank Name</label>
+          <select
+            id="bank_name"
+            value={selectedBankId}
+            onChange={selectChangeHandler}
+          >
+            <option value={0}>---</option>
+            {banks && banks.length > 0 && banks.map(mapBanks)}
+          </select>
+        </div>
+        <div className={styles.checkbox}>
+          <div>
+            <input
+              type="checkbox"
+              checked={accountJoint}
+              onChange={jointChangeHandler}
+            ></input>
+            <label>Joint</label>
+          </div>
+        </div>
+        <div className={styles.actions}>
+          <button type="button" onClick={props.onCancel}>
+            Cancel
+          </button>
+          <button type="submit">
+            {isPending ? "Creating..." : "Create Account"}
+          </button>
+        </div>
+        {validation && <p>{validation}</p>}
+        {isError && <p>{error.status + ":" + error.message}</p>}
+      </form>
+    </FormModal>
   );
 };
 

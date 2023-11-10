@@ -29,15 +29,6 @@ const CreateCopyBankForm = (props) => {
     isSuccess,
   } = useFetchDates(true);
 
-  console.log(
-    "Fetched Dates",
-    fetchedDates,
-    isError,
-    isLoading,
-    isPending,
-    isSuccess
-  );
-
   const {
     inputValue: bankName,
     inputIsValid: bankNameValid,

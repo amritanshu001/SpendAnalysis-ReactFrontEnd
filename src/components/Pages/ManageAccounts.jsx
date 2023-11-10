@@ -1,7 +1,7 @@
 import styles from "./ManageAccounts.module.css";
 
 import Header from "../UI/Header";
-import Container from "../UI/Container";
+import { AnimatePresence } from "framer-motion";
 
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 
@@ -33,6 +33,7 @@ let formData;
 
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -177,15 +178,26 @@ const ManageAccounts = (props) => {
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
-      {accountAction === "Create" && (
-        <CreateAccountForm onCancel={backdropClick} />
-      )}
-      {accountAction === "Edit" && (
-        <UserAccountForm data={formData.data} onCancel={backdropClick} />
-      )}
-      {accountAction === "Delete" && (
-        <AccountDeleteForm onCancel={backdropClick} account={formData.data} />
-      )}
+      <AnimatePresence>
+        {accountAction === "Create" && formModalStatus && (
+          <CreateAccountForm key="create" onCancel={backdropClick} />
+        )}
+
+        {accountAction === "Edit" && formModalStatus && (
+          <UserAccountForm
+            key="edit"
+            data={formData.data}
+            onCancel={backdropClick}
+          />
+        )}
+        {accountAction === "Delete" && formModalStatus && (
+          <AccountDeleteForm
+            key="delete"
+            onCancel={backdropClick}
+            account={formData.data}
+          />
+        )}
+      </AnimatePresence>
       <Header>
         My Accounts
         <Tooltip title="Add New Account" placement="top-start" arrow>
