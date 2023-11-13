@@ -125,7 +125,7 @@ const UploadStatement = (props) => {
             <label>Select Account</label>
             <select onChange={onSelectChangeHandler} value={accountId}>
               <option value={0}>---</option>
-              {accounts.map(mapAccounts)}
+              {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
             </select>
           </div>
           <div className={styles["file-input"]}>
