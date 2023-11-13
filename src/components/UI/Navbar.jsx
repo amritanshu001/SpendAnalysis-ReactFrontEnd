@@ -34,7 +34,7 @@ const Navbar = (props) => {
 
   const { mutate: logoutUser, isPending: logoutLoading } = useMutation({
     mutationFn: sendMutationRequest,
-    onSettled: () => {
+    onMutate: () => {
       dispatch(logUserOutActions());
       dispatch(
         showAndHideMessages({
