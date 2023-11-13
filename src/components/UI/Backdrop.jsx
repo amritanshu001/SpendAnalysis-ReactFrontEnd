@@ -8,8 +8,6 @@ const Backdrop = (props) => {
       animate={{ opacity: 1 }}
       exit={{
         opacity: 0,
-        // scale: [0.8, 0.5, 0.3, 0.1, 0],
-        // rotate: [10, 50, 90, 130, 180],
         scaleY: 0,
       }}
       className={styles.backdrop}
