@@ -391,7 +391,7 @@ const SpendAnalysis = (props) => {
             <label>Select Account</label>
             <select onChange={onSelectChangeHandler}>
               <option value={0}>---</option>
-              {accounts.length > 0 && accounts.map(mapAccounts)}
+              {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
             </select>
           </div>
           <div className={styles.dates}>
