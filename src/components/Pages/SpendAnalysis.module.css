@@ -46,6 +46,13 @@
   border-radius: 6px;
 }
 
+.refetch {
+  width:100%;
+  height:2rem;
+  display:flex;
+  gap: 1rem;
+}
+
 .form {
   display: flex;
   flex-direction: column;

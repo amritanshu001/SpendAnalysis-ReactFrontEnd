@@ -37,6 +37,14 @@
   outline: none;
   border: 1px solid #395322;
   border-radius: 6px;
+  width:100%
+}
+
+.refetch {
+  width:100%;
+  height:2rem;
+  display:flex;
+  gap: 1rem;
 }
 
 .form {

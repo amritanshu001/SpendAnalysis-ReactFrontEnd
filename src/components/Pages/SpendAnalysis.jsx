@@ -12,6 +12,7 @@ import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { AnimatePresence } from "framer-motion";
+import RefetchIcon from "../UI/Refetch/RefetchIcon";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -389,10 +390,21 @@ const SpendAnalysis = (props) => {
         <form className={styles.form} onSubmit={formSubmitHandler}>
           <div className={styles.select}>
             <label>Select Account</label>
-            <select onChange={onSelectChangeHandler}>
-              <option value={0}>---</option>
-              {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
-            </select>
+            <div className={styles.refetch}>
+              <select onChange={onSelectChangeHandler}>
+                <option value={0}>---</option>
+                {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
+              </select>
+              <RefetchIcon
+                onClick={refetchAccounts}
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              />
+            </div>
           </div>
           <div className={styles.dates}>
             <Input

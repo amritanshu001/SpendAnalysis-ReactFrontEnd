@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./NavElements.module.css";
 import { NavLink } from "react-router-dom";
 import Button from "./Button";
+import { AnimatePresence } from "framer-motion";
 
 const activeLink = ({ isActive }) =>
   isActive ? styles["link-active"] : undefined;
@@ -77,16 +78,19 @@ const NavElements = (props) => {
           </li>
         )}
       </ul>
-      {props.isUserLoggedIn && (
-        <Button
-          className={styles.logout}
-          onClick={logout}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 500 }}
-        >
-          {props.buttonText}
-        </Button>
-      )}
+      <AnimatePresence>
+        {props.isUserLoggedIn && (
+          <Button
+            className={styles.logout}
+            onClick={logout}
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 500 }}
+            exit={{ opacity: 0, x: 100, transition: { duration: 0.3 } }}
+          >
+            {props.buttonText}
+          </Button>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

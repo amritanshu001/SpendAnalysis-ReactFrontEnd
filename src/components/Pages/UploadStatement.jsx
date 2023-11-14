@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
+import RefetchIcon from "../UI/Refetch/RefetchIcon";
 
 import Header from "../UI/Header";
 const apiURL = import.meta.env.VITE_API_URL;
@@ -29,7 +30,8 @@ const UploadStatement = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
 
-  const { data: accounts } = useFetchAccounts(authToken);
+  const { data: accounts, refetch: refetchAccounts } =
+    useFetchAccounts(authToken);
 
   const fileInputRef = useRef();
   const [accountId, setAccountId] = useState(0);
@@ -123,10 +125,21 @@ const UploadStatement = (props) => {
         >
           <div className={styles.select}>
             <label>Select Account</label>
-            <select onChange={onSelectChangeHandler} value={accountId}>
-              <option value={0}>---</option>
-              {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
-            </select>
+            <div className={styles.refetch}>
+              <select onChange={onSelectChangeHandler} value={accountId}>
+                <option value={0}>---</option>
+                {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
+              </select>
+              <RefetchIcon
+                onClick={refetchAccounts}
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              />
+            </div>
           </div>
           <div className={styles["file-input"]}>
             <input

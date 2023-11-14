@@ -7,6 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
+import RefetchIcon from "../../UI/Refetch/RefetchIcon";
+import { motion } from "framer-motion";
 
 import FormModal from "../../UI/Modal/FormModal";
 
@@ -22,7 +24,7 @@ const mapBanks = (bank) => {
 
 const CreateAccountForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const { data: banks } = useFetchBanks(authToken);
+  const { data: banks, refetch: refetchBanks } = useFetchBanks(authToken);
 
   const {
     mutate: createNewAccount,
@@ -99,14 +101,25 @@ const CreateAccountForm = (props) => {
         </div>
         <div className={styles.readonly}>
           <label htmlFor="bank_name">Bank Name</label>
-          <select
-            id="bank_name"
-            value={selectedBankId}
-            onChange={selectChangeHandler}
-          >
-            <option value={0}>---</option>
-            {banks && banks.length > 0 && banks.map(mapBanks)}
-          </select>
+          <div className={styles.refetch}>
+            <select
+              id="bank_name"
+              value={selectedBankId}
+              onChange={selectChangeHandler}
+            >
+              <option value={0}>---</option>
+              {banks && banks.length > 0 && banks.map(mapBanks)}
+            </select>
+            <RefetchIcon
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+              onClick={refetchBanks}
+              sx={{
+                fontWeight: "bold",
+                color: "#405d27",
+              }}
+            />
+          </div>
         </div>
         <div className={styles.checkbox}>
           <div>
@@ -119,12 +132,27 @@ const CreateAccountForm = (props) => {
           </div>
         </div>
         <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
+          <motion.button
+            whileHover={{
+              backgroundColor: "#ab003c",
+              scale: 1.1,
+              border: "1px solid #ab003c",
+            }}
+            transition={{ type: "spring", stiffness: 500 }}
+            type="button"
+            onClick={props.onCancel}
+          >
             Cancel
-          </button>
-          <button type="submit">
+          </motion.button>
+          <motion.button
+            type="submit"
+            transition={{ type: "spring", stiffness: 500 }}
+            whileHover={{
+              scale: 1.1,
+            }}
+          >
             {isPending ? "Creating..." : "Create Account"}
-          </button>
+          </motion.button>
         </div>
         {validation && <p>{validation}</p>}
         {isError && <p>{error.status + ":" + error.message}</p>}

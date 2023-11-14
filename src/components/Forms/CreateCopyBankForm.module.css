@@ -74,7 +74,16 @@
   font-weight: bold;
 }
 
-.dateformat .reactselect {
+
+
+.dateformat .refetch {
+  width:100%;
+  height:2rem;
+  display:flex;
+  gap: 1rem;
+}
+
+.dateformat .refetch .reactselect {
   width: 50%;
   outline: #2e431b;
 }

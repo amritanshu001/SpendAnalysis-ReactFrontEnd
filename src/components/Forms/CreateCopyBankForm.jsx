@@ -6,6 +6,7 @@ import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 import Select from "react-select";
 import { useFetchDates } from "../../hooks/useTanstackQueryFetch";
+import RefetchIcon from "../UI/Refetch/RefetchIcon";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import {
@@ -27,6 +28,7 @@ const CreateCopyBankForm = (props) => {
     isLoading,
     isPending,
     isSuccess,
+    refetch: refetchDates,
   } = useFetchDates(true);
 
   const {
@@ -238,15 +240,22 @@ const CreateCopyBankForm = (props) => {
         </div>
         <div className={styles.dateformat}>
           <label htmlFor="dateformats">Date Format</label>
-          <Select
-            className={styles.reactselect}
-            value={dateformats}
-            isClearable={true}
-            isSearchable={true}
-            onChange={dateformatChangeHandler}
-            options={options}
-          />
-          {isLoading && <SpinnerCircular color="warning" />}
+          <div className={styles.refetch}>
+            <Select
+              className={styles.reactselect}
+              value={dateformats}
+              isClearable={true}
+              isSearchable={true}
+              onChange={dateformatChangeHandler}
+              options={options}
+            />
+            {isLoading && <SpinnerCircular color="warning" />}
+            <RefetchIcon
+              onClick={refetchDates}
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
         </div>
         <div className={styles.entrycols}>
           <Input
