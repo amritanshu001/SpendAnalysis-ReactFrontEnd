@@ -30,6 +30,8 @@ let top5Credit = [];
 let top5Debit = [];
 let chartData = [];
 let errorWarning;
+let top5CreditShare;
+let top5DebitShare;
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};

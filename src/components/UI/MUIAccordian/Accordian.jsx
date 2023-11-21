@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
