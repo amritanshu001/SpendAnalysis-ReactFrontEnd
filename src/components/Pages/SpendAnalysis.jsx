@@ -229,6 +229,10 @@ const SpendAnalysis = (props) => {
   }
 
   if (isTransactionLoadSuccess && transactions.length > 0) {
+    errorWarning = null;
+  }
+
+  if (isTransactionLoadSuccess && transactions.length > 0) {
     // transactions = transactions.filter((transaction) => true);
 
     closingBal = transactions[0].balance;
