@@ -11,14 +11,24 @@ const AnimatedAccordinan = motion(Accordion);
 const MUIAccordion = (props) => {
   return (
     <AnimatedAccordinan
-      initial={{ opacity: 0, y: -30 }}
+      initial={{ opacity: 0, y: -300 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -30 }}
-      key={props.key}
+      exit={{ opacity: 0, y: -300 }}
       defaultExpanded={props.expanded}
+      sx={{
+        width: "80%",
+        margin: "auto",
+        marginTop: "0.5rem",
+        fontWeight: "bold",
+        backgroundColor: "#405d27",
+        color: "white",
+        ".MuiAccordion-region": {
+          backgroundColor: "white",
+        },
+      }}
     >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >

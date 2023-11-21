@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import styles from "./SpendAnalysis.module.css";
 
 import Container from "../UI/Container";
@@ -11,7 +11,7 @@ import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import MUIAccordion from "../UI/MUIAccordian/Accordian";
 
@@ -21,27 +21,15 @@ import {
   useFetchTransactions,
   useFetchAccounts,
 } from "../../hooks/useTanstackQueryFetch";
-import { convert2AccountFormat } from "../../lib/server-communication";
-
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Typography from "@mui/material/Typography";
 
 //placeholder for more complex filteration
-let filteredTransactions = [];
 let statementSummary = {};
 let closingBal;
 let openingBal;
 let top5Credit = [];
 let top5Debit = [];
-let top5CreditShare = 0.0;
-let top5DebitShare = 0.0;
-let spendChart;
-let message1;
-
-const AnimatedAccordinan = motion(Accordion);
+let chartData = [];
+let errorWarning;
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -173,8 +161,11 @@ const SpendAnalysis = (props) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const { data: accounts, refetch: refetchAccounts } =
-    useFetchAccounts(authToken);
+  const {
+    data: accounts,
+    refetch: refetchAccounts,
+    isFetching: accountFecthing,
+  } = useFetchAccounts(authToken);
 
   let query = "";
   if (!fromDate && toDate) {
@@ -221,10 +212,10 @@ const SpendAnalysis = (props) => {
   };
 
   if (isTransactionsLoading) {
-    message1 = <SpinnerCircular color="success" />;
+    errorWarning = <SpinnerCircular color="success" />;
   }
   if (isTransactionLoadError) {
-    message1 = (
+    errorWarning = (
       <p className={styles.error}>
         {transactionLoadError.status + ":" + transactionLoadError.message}
       </p>
@@ -232,7 +223,7 @@ const SpendAnalysis = (props) => {
   }
 
   if (isTransactionLoadSuccess && transactions.length === 0) {
-    message1 = <div className="centered">No records Found</div>;
+    errorWarning = <div className="centered">No records Found</div>;
   }
 
   if (isTransactionLoadSuccess && transactions.length > 0) {
@@ -283,7 +274,7 @@ const SpendAnalysis = (props) => {
     });
     let uniqueMonthYears = uniqBy(monthYears, JSON.stringify);
 
-    let chartData = uniqueMonthYears.map((monthYear) => {
+    chartData = uniqueMonthYears.map((monthYear) => {
       const chartItem = {};
       const dateFilteredTxns = transactions
         .filter((txn) => {
@@ -322,35 +313,6 @@ const SpendAnalysis = (props) => {
 
       return chartItem;
     });
-    // if (chartData.length > 0) {
-    //   spendChart = (
-    //     <MUIAccordion key="trend" title="Spend Chart">
-    //       <SpendChart
-    //         chartData={chartData.sort((date1, date2) => {
-    //           return (
-    //             date1.date.year * 100 +
-    //             date1.date.month -
-    //             (date2.date.year * 100 + date2.date.month)
-    //           );
-    //         })}
-    //       />
-    //     </MUIAccordion>
-    //   );
-    // }
-    // message1 = (
-    //   <MUIAccordion
-    //     expanded={true}
-    //     key="transactions"
-    //     title="Transaction Details"
-    //   >
-    //     <DisplayGrid
-    //       rows={transactions.sort(sortByDate)}
-    //       columns={txnCols}
-    //       loading={isTransactionsLoading}
-    //       boxWidth="90%"
-    //     />
-    //   </MUIAccordion>
-    // );
   }
 
   const fromDateChangeHandler = (event) => {
@@ -451,13 +413,13 @@ const SpendAnalysis = (props) => {
                 rows={transactions.sort(sortByDate)}
                 columns={txnCols}
                 loading={isTransactionsLoading}
-                boxWidth="90%"
+                boxWidth="100%"
               />
             </MUIAccordion>
           </>
         )}
       </AnimatePresence>
-      {message1}
+      {errorWarning}
     </React.Fragment>
   );
 };
