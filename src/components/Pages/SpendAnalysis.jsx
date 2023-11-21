@@ -11,8 +11,9 @@ import TransactionGrid from "../UI/Grid/TransactionGrid";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
+import MUIAccordion from "../UI/MUIAccordian/Accordian";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -39,6 +40,8 @@ let top5CreditShare = 0.0;
 let top5DebitShare = 0.0;
 let spendChart;
 let message1;
+
+const AnimatedAccordinan = motion(Accordion);
 
 const summaryDetails = (current, transaction) => {
   let transactionSummary = {};
@@ -319,54 +322,35 @@ const SpendAnalysis = (props) => {
 
       return chartItem;
     });
-    if (chartData.length > 0) {
-      spendChart = (
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
-              Spend Trend
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <SpendChart
-              chartData={chartData.sort((date1, date2) => {
-                return (
-                  date1.date.year * 100 +
-                  date1.date.month -
-                  (date2.date.year * 100 + date2.date.month)
-                );
-              })}
-            />
-          </AccordionDetails>
-        </Accordion>
-      );
-    }
-    message1 = (
-      <AnimatePresence>
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography fontWeight="bold" fontSize={20} fontFamily="inherit">
-              Transaction Details
-            </Typography>
-          </AccordionSummary>
-
-          <DisplayGrid
-            rows={transactions.sort(sortByDate)}
-            columns={txnCols}
-            loading={isTransactionsLoading}
-            boxWidth="90%"
-          />
-        </Accordion>
-      </AnimatePresence>
-    );
+    // if (chartData.length > 0) {
+    //   spendChart = (
+    //     <MUIAccordion key="trend" title="Spend Chart">
+    //       <SpendChart
+    //         chartData={chartData.sort((date1, date2) => {
+    //           return (
+    //             date1.date.year * 100 +
+    //             date1.date.month -
+    //             (date2.date.year * 100 + date2.date.month)
+    //           );
+    //         })}
+    //       />
+    //     </MUIAccordion>
+    //   );
+    // }
+    // message1 = (
+    //   <MUIAccordion
+    //     expanded={true}
+    //     key="transactions"
+    //     title="Transaction Details"
+    //   >
+    //     <DisplayGrid
+    //       rows={transactions.sort(sortByDate)}
+    //       columns={txnCols}
+    //       loading={isTransactionsLoading}
+    //       boxWidth="90%"
+    //     />
+    //   </MUIAccordion>
+    // );
   }
 
   const fromDateChangeHandler = (event) => {
@@ -438,26 +422,41 @@ const SpendAnalysis = (props) => {
         </form>
       </Container>
 
-      {isTransactionLoadSuccess && transactions.length > 0 && (
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography fontWeight={"bold"} fontSize={20} fontFamily="inherit">
-              Summary
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={styles.summary}>
-              <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
-              <TransactionGrid summary={statementSummary} />
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      )}
-      {spendChart}
+      <AnimatePresence>
+        {isTransactionLoadSuccess && transactions.length > 0 && (
+          <>
+            <MUIAccordion key="balance" title="Summary">
+              <div className={styles.summary}>
+                <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
+                <TransactionGrid summary={statementSummary} />
+              </div>
+            </MUIAccordion>
+            <MUIAccordion key="trend" title="Spend Chart">
+              <SpendChart
+                chartData={chartData.sort((date1, date2) => {
+                  return (
+                    date1.date.year * 100 +
+                    date1.date.month -
+                    (date2.date.year * 100 + date2.date.month)
+                  );
+                })}
+              />
+            </MUIAccordion>
+            <MUIAccordion
+              expanded={true}
+              key="transactions"
+              title="Transaction Details"
+            >
+              <DisplayGrid
+                rows={transactions.sort(sortByDate)}
+                columns={txnCols}
+                loading={isTransactionsLoading}
+                boxWidth="90%"
+              />
+            </MUIAccordion>
+          </>
+        )}
+      </AnimatePresence>
       {message1}
     </React.Fragment>
   );

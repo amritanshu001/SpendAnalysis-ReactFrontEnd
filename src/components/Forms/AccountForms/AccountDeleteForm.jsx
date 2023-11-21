@@ -7,12 +7,10 @@ import {
 } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { AnimatePresence } from "framer-motion";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AccountDeleteForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const formModalStatus = useSelector((state) => state.formModal.showModal);
   const {
     mutate: deleteAccount,
     isPending,
