@@ -1,8 +1,10 @@
 import styles from "./Input.module.css";
+import { motion } from "framer-motion";
+import { forwardRef } from "react";
 
-const Input = (props) => {
+const Input = forwardRef((props, ref) => {
   return (
-    <div className={`${styles.input}`}>
+    <div ref={ref} className={`${styles.input}`}>
       <label htmlFor={props.id}>{props.children}</label>
       <input
         id={props.id}
@@ -16,6 +18,6 @@ const Input = (props) => {
       ></input>
     </div>
   );
-};
+});
 
-export default Input;
+export default motion(Input);

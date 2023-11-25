@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./SpendAnalysis.module.css";
 
 import Container from "../UI/Container";
@@ -15,7 +15,9 @@ import { AnimatePresence } from "framer-motion";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import MUIAccordion from "../UI/MUIAccordian/Accordian";
 
-import { useSelector } from "react-redux";
+import { showAndHideMessages } from "../../store/message-slice";
+
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
   useFetchTransactions,
@@ -157,6 +159,7 @@ const txnCols = [
 const SpendAnalysis = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [accountId, setAccountId] = useState(0);
   const [validation, setValidation] = useState(null);
@@ -167,6 +170,8 @@ const SpendAnalysis = (props) => {
     data: accounts,
     refetch: refetchAccounts,
     isFetching: accountFecthing,
+    isError: accountFetchError,
+    error: fetchErrorMessage,
   } = useFetchAccounts(authToken);
 
   let query = "";
@@ -328,6 +333,17 @@ const SpendAnalysis = (props) => {
   const toDateChangeHandler = (event) => {
     setToDate(event.target.value);
   };
+
+  useEffect(() => {
+    if (accountFetchError) {
+      dispatch(
+        showAndHideMessages({
+          status: "warning",
+          messageText: `Accounts Fetch failed with ${fetchErrorMessage.toString()}, please use Refetch button `,
+        })
+      );
+    }
+  }, [accountFetchError, fetchErrorMessage]);
 
   return (
     <React.Fragment>

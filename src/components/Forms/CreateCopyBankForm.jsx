@@ -249,7 +249,7 @@ const CreateCopyBankForm = (props) => {
               onChange={dateformatChangeHandler}
               options={options}
             />
-            {isLoading && <SpinnerCircular color="warning" />}
+            {isLoading && <SpinnerCircular color="warning" size="2rem" />}
             <RefetchIcon
               onClick={refetchDates}
               whileHover={{ rotate: 360 }}

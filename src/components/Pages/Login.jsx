@@ -3,6 +3,8 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
 import Container from "../UI/Container";
+import ThreeDotsWave, { BouncingBall } from "../UI/Feedback/BouncingBalls";
+import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -21,7 +23,7 @@ import { sendMutationRequest } from "../../lib/endpoint-configs";
 import React, { useState, useEffect } from "react";
 // import useHttp from "../../hooks/useHTTP";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AnimatedLink = motion(Link);
 
@@ -203,6 +205,10 @@ const Login = (props) => {
     }
   }, [loginOption]);
 
+  let enableHyperLink = !(loginOption
+    ? loginOption && isLoginPending
+    : !loginOption && registrationPending);
+
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
@@ -215,65 +221,83 @@ const Login = (props) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
+        layout
       >
-        <form onSubmit={onSubmitHandler} className={styles["login-form"]}>
-          {!loginOption && (
-            <Input
-              id="username"
-              type="text"
-              name="username"
-              value={enteredUserName}
-              onBlur={userNameBlurHandler}
-              onChange={userNameChangeHandler}
-              disabled={isLoginPending}
-              className={userNameError ? styles.invalid : ""}
-            >
-              User Name
-            </Input>
-          )}
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            value={enteredEmail}
-            onBlur={emailBlurHandler}
-            onChange={emailChangeHandler}
-            disabled={isLoginPending}
-            className={emailIsError ? styles.invalid : ""}
-          >
-            Email Id
-          </Input>
-          <Input
-            id="password"
-            type="password"
-            name="password"
-            value={enteredPassword}
-            onBlur={passwordBlurHandler}
-            onChange={passwordChangeHandler}
-            disabled={isLoginPending}
-            className={passwordError ? styles.invalid : ""}
-          >
-            Password
-          </Input>
-          {!loginOption && (
-            <React.Fragment>
+        <motion.form
+          onSubmit={onSubmitHandler}
+          className={styles["login-form"]}
+          layout
+        >
+          <AnimatePresence>
+            {!loginOption && (
               <Input
-                id="confpassword"
-                type="password"
-                name="confpassword"
-                value={enteredConfPassword}
-                onBlur={confPasswordBlurHandler}
-                onChange={confPasswordChangeHandler}
+                key="username"
+                id="username"
+                type="text"
+                name="username"
+                value={enteredUserName}
+                onBlur={userNameBlurHandler}
+                onChange={userNameChangeHandler}
                 disabled={isLoginPending}
-                className={confPasswordError ? styles.invalid : ""}
+                className={userNameError ? styles.invalid : ""}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
               >
-                Confirm Password
+                User Name
               </Input>
-              {confirmError && (
-                <p className={styles.error}>Passwords Dont Match</p>
-              )}
-            </React.Fragment>
-          )}
+            )}
+
+            <Input
+              key="email"
+              id="email"
+              type="email"
+              name="email"
+              value={enteredEmail}
+              onBlur={emailBlurHandler}
+              onChange={emailChangeHandler}
+              disabled={isLoginPending}
+              className={emailIsError ? styles.invalid : ""}
+            >
+              Email Id
+            </Input>
+            <Input
+              key={"password"}
+              id="password"
+              type="password"
+              name="password"
+              value={enteredPassword}
+              onBlur={passwordBlurHandler}
+              onChange={passwordChangeHandler}
+              disabled={isLoginPending}
+              className={passwordError ? styles.invalid : ""}
+            >
+              Password
+            </Input>
+            {!loginOption && (
+              <React.Fragment>
+                <Input
+                  key={"conf"}
+                  id="confpassword"
+                  type="password"
+                  name="confpassword"
+                  value={enteredConfPassword}
+                  onBlur={confPasswordBlurHandler}
+                  onChange={confPasswordChangeHandler}
+                  disabled={isLoginPending}
+                  className={confPasswordError ? styles.invalid : ""}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  Confirm Password
+                </Input>
+                {confirmError && (
+                  <p className={styles.error}>Passwords Dont Match</p>
+                )}
+              </React.Fragment>
+            )}
+          </AnimatePresence>
           <div className={styles.actions}>
             <Button
               type="submit"
@@ -283,27 +307,44 @@ const Login = (props) => {
             >
               {buttonName}
             </Button>
-            <motion.button
-              type="button"
-              onClick={optionToggleHandler}
-              className={styles.toggler}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              {loginOption ? "New User?" : "Login"}
-            </motion.button>
-            <AnimatedLink
-              to="/request-resetpassword"
-              whileHover={{ scale: 1.1, color: "#FF3161" }}
-            >
-              Reset Password
-            </AnimatedLink>
+            <AnimatePresence>
+              {enableHyperLink && (
+                <>
+                  <motion.button
+                    type="button"
+                    onClick={optionToggleHandler}
+                    className={styles.toggler}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                    exit={{ x: 60, opacity: 0 }}
+                    key="button"
+                  >
+                    {loginOption ? "New User?" : "Login"}
+                  </motion.button>
+                  <AnimatedLink
+                    to="/request-resetpassword"
+                    whileHover={{ scale: 1.1, color: "#FF3161" }}
+                    exit={{ x: 60, opacity: 0 }}
+                    key="link"
+                  >
+                    Reset Password
+                  </AnimatedLink>
+                </>
+              )}
+            </AnimatePresence>
           </div>
-        </form>
+        </motion.form>
       </Container>
       {registrationPending && (
         <div className={styles["server-loading"]}>
-          Setting up your account...
+          <p>Setting up your account...</p>
+          <SpinnerCircular color="success" />
+        </div>
+      )}
+      {isLoginPending && (
+        <div className={styles["server-loading"]}>
+          <p>Logging you in....</p>
+          <SpinnerCircular color="success" />
         </div>
       )}
     </React.Fragment>

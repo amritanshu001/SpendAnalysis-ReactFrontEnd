@@ -1,0 +1,16 @@
+.parent {
+    display:flex;
+    width:2rem;
+    height:2rem;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.balls {
+    display: block;
+    background-color: black;
+    border-radius: 0.25rem;
+    width:0.5rem;
+    height:0.5rem
+
+}
