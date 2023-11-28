@@ -194,7 +194,7 @@ const SpendAnalysis = (props) => {
     isSuccess: isTransactionLoadSuccess,
     isLoading: isTransactionsLoading,
     refetch: getTransactions,
-  } = useFetchTransactions(authToken, accountId, query, false, "Infinity");
+  } = useFetchTransactions(authToken, accountId, query, false, 1);
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
