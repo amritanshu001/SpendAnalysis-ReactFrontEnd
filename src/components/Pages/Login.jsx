@@ -16,7 +16,7 @@ import { showAndHideMessages } from "../../store/message-slice";
 const apiURL = import.meta.env.VITE_API_URL;
 
 import useInputValidator from "../../hooks/useInputValidator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
@@ -31,6 +31,11 @@ const Login = (props) => {
   const dispatch = useDispatch();
   const redirect = useNavigate();
   const location = useLocation();
+  const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
+
+  if (isUserLoggedIn) {
+    redirect("/", { replace: true });
+  }
 
   const { isPending: isLoginPending, mutate: sendLoginRequest } = useMutation({
     mutationFn: sendMutationRequest,
