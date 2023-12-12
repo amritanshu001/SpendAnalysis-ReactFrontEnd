@@ -4,6 +4,13 @@ import createTrend from "trendline";
 import Select from "react-select";
 
 import {
+  getMonthName,
+  getMonthFromString,
+  compareDates,
+  filterDates,
+} from "../../../lib/common-scripts";
+
+import {
   Chart as ChartJS,
   LinearScale,
   CategoryScale,
@@ -29,43 +36,74 @@ ChartJS.register(
   BarController
 );
 
-const getMonthName = (monthNumber) => {
-  const date = new Date();
-  date.setMonth(monthNumber);
-  return date.toLocaleString("default", { month: "long" });
-};
+// const getMonthName = (monthNumber) => {
+//   const date = new Date();
+//   date.setMonth(monthNumber);
+//   return date.toLocaleString("default", { month: "long" });
+// };
 
-const getMonthFromString = (mon) => {
-  return new Date(Date.parse(mon + " 1, 2023")).getMonth();
-};
+// const getMonthFromString = (mon) => {
+//   return new Date(Date.parse(mon + " 1, 2023")).getMonth();
+// };
+
+// const compareDates = (chartData, filterData, greater = true) => {
+//   const monthNumber = getMonthFromString(filterData.label.split(",")[0]);
+//   const year = filterData.label.split(",")[1];
+//   if (greater) {
+//     if (chartData.date.year > +year) {
+//       return true;
+//     }
+//     if (chartData.date.month >= monthNumber) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } else {
+//     if (chartData.date.year < +year) {
+//       return true;
+//     }
+//     if (chartData.date.month <= monthNumber) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
+// };
+
+// const filterDates = (chartItem, fromDate, toDate) => {
+//   if (!toDate && !fromDate) {
+//     return true;
+//   }
+//   if (!toDate && fromDate) {
+//     return compareDates(chartItem, fromDate);
+//   }
+//   if (toDate && !fromDate) {
+//     return compareDates(chartItem, toDate, false);
+//   }
+//   if (toDate && fromDate) {
+//     return (
+//       compareDates(chartItem, fromDate) &&
+//       compareDates(chartItem, toDate, false)
+//     );
+//   }
+// };
 
 const SpendChart = (props) => {
-  const monthYears = props.chartData.map(
-    (chartItem) =>
-      getMonthName(chartItem.date.month) + "," + chartItem.date.year
-  );
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
-  const [fromDate, setFromDate] = useState(0);
-  console.log(fromDate);
-  const [toDate, setToDate] = useState(0);
+  const monthYears = props.chartData
+    .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
+    .map(
+      (chartItem) =>
+        getMonthName(chartItem.date.month) + "," + chartItem.date.year
+    );
+
   const toDateOptions =
-    fromDate === 0
+    fromDate === null
       ? monthYears
       : props.chartData
-          .filter((chartItem) => {
-            const monthNumber = getMonthFromString(
-              fromDate.label.split(",")[0]
-            );
-            const year = fromDate.label.split(",")[1];
-            if (chartItem.date.year > +year) {
-              return true;
-            }
-            if (chartItem.date.month >= monthNumber) {
-              return true;
-            } else {
-              return false;
-            }
-          })
+          .filter((chartItem) => compareDates(chartItem, fromDate))
           .map(
             (chartItem) =>
               getMonthName(chartItem.date.month) + "," + chartItem.date.year
@@ -80,6 +118,7 @@ const SpendChart = (props) => {
   };
 
   const trendData = props.chartData
+    .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
     .map((chartItem) => chartItem.closingBal)
     .map((balance, index) => {
       return { closingBal: balance, x: index + 1 };
@@ -95,7 +134,9 @@ const SpendChart = (props) => {
         borderColor: "#FF9E9E",
         borderWidth: 2,
         fill: false,
-        data: props.chartData.map((chartItem) => chartItem.openingBal),
+        data: props.chartData
+          .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
+          .map((chartItem) => chartItem.openingBal),
       },
       {
         type: "line",
@@ -103,7 +144,9 @@ const SpendChart = (props) => {
         borderColor: "#395322",
         borderWidth: 2,
         fill: false,
-        data: props.chartData.map((chartItem) => chartItem.closingBal),
+        data: props.chartData
+          .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
+          .map((chartItem) => chartItem.closingBal),
       },
       {
         type: "bar",
@@ -111,7 +154,9 @@ const SpendChart = (props) => {
         backgroundColor: "#FF597B",
         borderColor: "white",
         borderWidth: 2,
-        data: props.chartData.map((chartItem) => chartItem.outgoing),
+        data: props.chartData
+          .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
+          .map((chartItem) => chartItem.outgoing),
       },
       {
         type: "bar",
@@ -119,7 +164,9 @@ const SpendChart = (props) => {
         backgroundColor: "#62B6B7",
         borderColor: "white",
         borderWidth: 2,
-        data: props.chartData.map((chartItem) => chartItem.incoming),
+        data: props.chartData
+          .filter((chartItem) => filterDates(chartItem, fromDate, toDate))
+          .map((chartItem) => chartItem.incoming),
       },
       {
         type: "line",
@@ -140,7 +187,7 @@ const SpendChart = (props) => {
       <Chart type="bar" data={data} />
       <div className={styles.dates}>
         <div className={styles["date-select"]}>
-          <label>From Date</label>
+          <label>From</label>
           <Select
             className={styles.reactselect}
             value={fromDate}
@@ -153,7 +200,7 @@ const SpendChart = (props) => {
           />
         </div>
         <div className={styles["date-select"]}>
-          <label>To Date</label>
+          <label>To</label>
           <Select
             className={styles.reactselect}
             value={toDate}
