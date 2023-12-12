@@ -25,6 +25,9 @@ const RequestResetPassword = React.lazy(() =>
 const ResetPassword = React.lazy(() =>
   import("./components/Pages/ResetPassword")
 );
+
+import AdminProtect from "./components/Functional/AdminProtect";
+import LoginProtect from "./components/Functional/LoginProtect";
 import AppLogout from "./components/Functional/AppLogout";
 
 import { useSelector } from "react-redux";
@@ -49,62 +52,19 @@ const App = (props) => {
         <Paper elevation={0} sx={{ marginTop: 5 }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            {!isUserLoggedIn && <Route path="/login" element={<Login />} />}
-            <Route
-              path="/spendanalysis"
-              element={
-                isUserLoggedIn ? (
-                  <AppLogout>
-                    <SpendAnalysis />
-                  </AppLogout>
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/manageaccount"
-              element={
-                isUserLoggedIn ? (
-                  <AppLogout>
-                    <ManageAccounts />
-                  </AppLogout>
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-
-            <Route
-              path="/uploadstatement"
-              element={
-                isUserLoggedIn ? (
-                  <AppLogout>
-                    <UploadStatement />
-                  </AppLogout>
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-
-            <Route
-              path="/addbank"
-              element={
-                isUserLoggedIn && isUserAdmin ? (
-                  <AppLogout>
-                    <AddBank />
-                  </AppLogout>
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
+            <Route path="/login" element={<Login />} />
+            <Route element={<LoginProtect />}>
+              <Route path="/spendanalysis" element={<SpendAnalysis />} />
+              <Route path="/manageaccount" element={<ManageAccounts />} />
+              <Route path="/uploadstatement" element={<UploadStatement />} />
+            </Route>
+            <Route element={<AdminProtect />}>
+              <Route path="/addbank" element={<AddBank />} />
+            </Route>
             <Route
               path="/request-resetpassword/:hash"
               element={<ResetPassword />}
             />
-
             <Route
               path="/request-resetpassword"
               element={<RequestResetPassword />}
