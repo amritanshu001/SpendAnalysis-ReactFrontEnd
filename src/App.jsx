@@ -29,6 +29,7 @@ const ResetPassword = React.lazy(() =>
 import AdminProtect from "./components/Functional/AdminProtect";
 import LoginProtect from "./components/Functional/LoginProtect";
 import AppLogout from "./components/Functional/AppLogout";
+import LoginRouteProtect from "./components/Functional/LoginRouteProtect";
 
 import { useSelector } from "react-redux";
 
@@ -41,8 +42,6 @@ import UploadStatement from "./components/Pages/UploadStatement";
 import { queryClient } from "../src/lib/endpoint-configs";
 
 const App = (props) => {
-  const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
-  const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
   const globalMessage = useSelector((state) => state.globalMessages.messages);
   const showMessage = useSelector((state) => state.globalMessages.showMessage);
   return (
@@ -52,14 +51,44 @@ const App = (props) => {
         <Paper elevation={0} sx={{ marginTop: 5 }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route element={<LoginRouteProtect />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
             <Route element={<LoginProtect />}>
-              <Route path="/spendanalysis" element={<SpendAnalysis />} />
-              <Route path="/manageaccount" element={<ManageAccounts />} />
-              <Route path="/uploadstatement" element={<UploadStatement />} />
+              <Route
+                path="/spendanalysis"
+                element={
+                  <AppLogout>
+                    <SpendAnalysis />
+                  </AppLogout>
+                }
+              />
+              <Route
+                path="/manageaccount"
+                element={
+                  <AppLogout>
+                    <ManageAccounts />
+                  </AppLogout>
+                }
+              />
+              <Route
+                path="/uploadstatement"
+                element={
+                  <AppLogout>
+                    <UploadStatement />
+                  </AppLogout>
+                }
+              />
             </Route>
             <Route element={<AdminProtect />}>
-              <Route path="/addbank" element={<AddBank />} />
+              <Route
+                path="/addbank"
+                element={
+                  <AppLogout>
+                    <AddBank />
+                  </AppLogout>
+                }
+              />
             </Route>
             <Route
               path="/request-resetpassword/:hash"
