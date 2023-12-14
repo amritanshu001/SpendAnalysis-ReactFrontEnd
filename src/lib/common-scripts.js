@@ -4,16 +4,19 @@ export const getMonthName = (monthNumber) => {
     return date.toLocaleString("default", { month: "long" });
   };
   
-  export const getMonthFromString = (mon) => {
+export const getMonthFromString = (mon) => {
     return new Date(Date.parse(mon + " 1, 2023")).getMonth();
   };
   
-  export const compareDates = (chartData, filterData, greater = true) => {
+export const compareDates = (chartData, filterData, greater = true) => {
     const monthNumber = getMonthFromString(filterData.label.split(",")[0]);
     const year = filterData.label.split(",")[1];
     if (greater) {
       if (chartData.date.year > +year) {
         return true;
+      }
+      if (chartData.date.year < +year) {
+        return false
       }
       if (chartData.date.month >= monthNumber) {
         return true;
@@ -24,6 +27,9 @@ export const getMonthName = (monthNumber) => {
       if (chartData.date.year < +year) {
         return true;
       }
+      if (chartData.date.year > +year) {
+        return false;
+      }
       if (chartData.date.month <= monthNumber) {
         return true;
       } else {
@@ -32,7 +38,7 @@ export const getMonthName = (monthNumber) => {
     }
   };
   
-  export const filterDates = (chartItem, fromDate, toDate) => {
+export const filterDates = (chartItem, fromDate, toDate) => {
     if (!toDate && !fromDate) {
       return true;
     }
