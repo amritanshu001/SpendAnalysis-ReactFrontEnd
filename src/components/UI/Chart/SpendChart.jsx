@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./SpendChart.module.css";
 import createTrend from "trendline";
 import Select from "react-select";
+import Container from "@mui/material/Container";
 
 import {
   getMonthName,
@@ -129,7 +130,7 @@ const SpendChart = (props) => {
     ],
   };
   return (
-    <div className={styles.chart}>
+    <Container>
       <div>Spend Graph</div>
       <Chart type="bar" data={data} />
       <div className={styles.dates}>
@@ -160,7 +161,7 @@ const SpendChart = (props) => {
           />
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
