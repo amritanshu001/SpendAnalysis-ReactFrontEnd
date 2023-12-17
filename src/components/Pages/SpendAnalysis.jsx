@@ -156,6 +156,12 @@ const txnCols = [
   },
 ];
 
+const initialAccordianState = {
+  summary: false,
+  chart: false,
+  transactions: true,
+};
+
 const SpendAnalysis = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
@@ -165,6 +171,7 @@ const SpendAnalysis = (props) => {
   const [validation, setValidation] = useState(null);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [accordiansState, setAccordianState] = useState(initialAccordianState);
 
   const {
     data: accounts,
@@ -217,7 +224,7 @@ const SpendAnalysis = (props) => {
   const onSelectChangeHandler = (event) => {
     setAccountId(+event.target.value);
   };
-
+  console.log(isTransactionsLoading);
   if (isTransactionsLoading) {
     errorWarning = <SpinnerCircular color="success" />;
   }
@@ -334,6 +341,39 @@ const SpendAnalysis = (props) => {
     setToDate(event.target.value);
   };
 
+  const summaryChangeHandler = (event, expanded) => {
+    setAccordianState((currentState) => {
+      return {
+        ...currentState,
+        summary: expanded,
+        chart: expanded ? false : currentState.chart,
+        transactions: expanded ? false : currentState.transactions,
+      };
+    });
+  };
+
+  const chartChangeHandler = (event, expanded) => {
+    setAccordianState((currentState) => {
+      return {
+        ...currentState,
+        chart: expanded,
+        summary: expanded ? false : currentState.summary,
+        transactions: expanded ? false : currentState.transactions,
+      };
+    });
+  };
+
+  const transactionChangeHandler = (event, expanded) => {
+    setAccordianState((currentState) => {
+      return {
+        ...currentState,
+        transactions: expanded,
+        summary: expanded ? false : currentState.summary,
+        chart: expanded ? false : currentState.chart,
+      };
+    });
+  };
+
   useEffect(() => {
     if (accountFetchError) {
       dispatch(
@@ -409,13 +449,23 @@ const SpendAnalysis = (props) => {
       <AnimatePresence>
         {isTransactionLoadSuccess && transactions.length > 0 && (
           <>
-            <MUIAccordion key="balance" title="Summary">
+            <MUIAccordion
+              key="balance"
+              title="Summary"
+              expanded={accordiansState.summary}
+              onChange={summaryChangeHandler}
+            >
               <div className={styles.summary}>
                 <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
                 <TransactionGrid summary={statementSummary} />
               </div>
             </MUIAccordion>
-            <MUIAccordion key="trend" title="Spend Chart">
+            <MUIAccordion
+              key="trend"
+              title="Spend Chart"
+              expanded={accordiansState.chart}
+              onChange={chartChangeHandler}
+            >
               <SpendChart
                 chartData={chartData.sort((date1, date2) => {
                   return (
@@ -427,9 +477,10 @@ const SpendAnalysis = (props) => {
               />
             </MUIAccordion>
             <MUIAccordion
-              expanded={true}
               key="transactions"
               title="Transaction Details"
+              expanded={accordiansState.transactions}
+              onChange={transactionChangeHandler}
             >
               <DisplayGrid
                 rows={transactions.sort(sortByDate)}
