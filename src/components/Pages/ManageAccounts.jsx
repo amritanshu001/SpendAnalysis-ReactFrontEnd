@@ -162,7 +162,7 @@ const ManageAccounts = (props) => {
       <DisplayGrid
         rows={accountData}
         columns={txnCols}
-        boxWidth="60%"
+        boxWidth="80%"
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0.25, y: 100 }}
         transition={{ duration: 0.5 }}

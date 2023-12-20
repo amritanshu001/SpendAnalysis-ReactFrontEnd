@@ -252,7 +252,7 @@ const CreateCopyBankForm = (props) => {
             {isLoading && <SpinnerCircular color="warning" size="2rem" />}
             <RefetchIcon
               onClick={refetchDates}
-              whileHover={{ rotate: 360 }}
+              whileHover={{ rotate: 360, scale: 1.3 }}
               transition={{ duration: 0.5 }}
             />
           </div>

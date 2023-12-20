@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import apiURL from "../endpoint";
 import { showAndHideMessages } from "./message-slice";
-import {convert2BankFormat} from "../lib/server-communication";
 import { queryClient, sendQueryRequest } from "../lib/endpoint-configs";
 
 const initialState = {
@@ -34,7 +33,7 @@ export const fetchBanks = (accessToken)=>{
       },
     }
     try {
-      await queryClient.fetchQuery({
+      await queryClient.prefetchQuery({
         queryKey:["banks"], 
         queryFn:({signal})=>sendQueryRequest({signal, requestConfig:bankConfig}),
         staleTime:300000})

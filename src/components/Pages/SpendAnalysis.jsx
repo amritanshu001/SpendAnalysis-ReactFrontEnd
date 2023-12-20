@@ -14,6 +14,7 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { AnimatePresence } from "framer-motion";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import MUIAccordion from "../UI/MUIAccordian/Accordian";
+import { Box } from "@mui/material";
 
 import { showAndHideMessages } from "../../store/message-slice";
 
@@ -176,7 +177,7 @@ const SpendAnalysis = (props) => {
   const {
     data: accounts,
     refetch: refetchAccounts,
-    isFetching: accountFecthing,
+    isFetching: accountFetching,
     isError: accountFetchError,
     error: fetchErrorMessage,
   } = useFetchAccounts(authToken);
@@ -224,7 +225,6 @@ const SpendAnalysis = (props) => {
   const onSelectChangeHandler = (event) => {
     setAccountId(+event.target.value);
   };
-  console.log(isTransactionsLoading);
   if (isTransactionsLoading) {
     errorWarning = <SpinnerCircular color="success" />;
   }
@@ -389,62 +389,68 @@ const SpendAnalysis = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Spend Analysis</Header>
-      <Container
-        className={styles.container}
-        initial={{ opacity: 0, x: -300 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -300 }}
+      <MUIAccordion
+        title="Inputs"
+        defaultExpanded={true}
+        sx={{ backgroundColor: "#ada346" }}
       >
-        <form className={styles.form} onSubmit={formSubmitHandler}>
-          <div className={styles.select}>
-            <label>Select Account</label>
-            <div className={styles.refetch}>
-              <select onChange={onSelectChangeHandler}>
-                <option value={0}>---</option>
-                {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
-              </select>
-              <RefetchIcon
-                onClick={refetchAccounts}
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                sx={{
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-              />
+        <Container
+          className={styles.container}
+          initial={{ opacity: 0, x: -300 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -300 }}
+        >
+          <form className={styles.form} onSubmit={formSubmitHandler}>
+            <div className={styles.select}>
+              <label>Select Account</label>
+              <div className={styles.refetch}>
+                <select onChange={onSelectChangeHandler}>
+                  <option value={0}>---</option>
+                  {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
+                </select>
+                <RefetchIcon
+                  onClick={refetchAccounts}
+                  whileHover={{ rotate: 360, scale: 1.3 }}
+                  transition={{ duration: 0.5 }}
+                  sx={{
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles.dates}>
-            <Input
-              id="frm_date"
-              type="date"
-              name="frm_date"
-              value={fromDate}
-              onChange={fromDateChangeHandler}
-            >
-              From Date
-            </Input>
-            <Input
-              id="to_date"
-              type="date"
-              name="to_date"
-              value={toDate}
-              onChange={toDateChangeHandler}
-            >
-              To Date
-            </Input>
-          </div>
-          <div className={styles.actions}>
-            <Button
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              Fetch Transactions
-            </Button>
-          </div>
-          {validation && <p className={styles.error}>{validation}</p>}
-        </form>
-      </Container>
+            <div className={styles.dates}>
+              <Input
+                id="frm_date"
+                type="date"
+                name="frm_date"
+                value={fromDate}
+                onChange={fromDateChangeHandler}
+              >
+                From Date
+              </Input>
+              <Input
+                id="to_date"
+                type="date"
+                name="to_date"
+                value={toDate}
+                onChange={toDateChangeHandler}
+              >
+                To Date
+              </Input>
+            </div>
+            <div className={styles.actions}>
+              <Button
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                Fetch Transactions
+              </Button>
+            </div>
+            {validation && <p className={styles.error}>{validation}</p>}
+          </form>
+        </Container>
+      </MUIAccordion>
 
       <AnimatePresence>
         {isTransactionLoadSuccess && transactions.length > 0 && (
@@ -455,10 +461,10 @@ const SpendAnalysis = (props) => {
               expanded={accordiansState.summary}
               onChange={summaryChangeHandler}
             >
-              <div className={styles.summary}>
+              <Box className={styles.summary}>
                 <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
                 <TransactionGrid summary={statementSummary} />
-              </div>
+              </Box>
             </MUIAccordion>
             <MUIAccordion
               key="trend"

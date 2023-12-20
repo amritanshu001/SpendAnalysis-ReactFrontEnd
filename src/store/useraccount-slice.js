@@ -34,7 +34,7 @@ export const fetchAccounts = (accessToken) => {
       },
     };
     try {
-       queryClient.fetchQuery({
+       queryClient.prefetchQuery({
         queryKey:["accounts"],
         queryFn:({signal})=>sendQueryRequest({signal, requestConfig:accountsConfig}),
         staleTime:300000

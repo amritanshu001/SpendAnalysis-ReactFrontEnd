@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 import { useMutation } from "@tanstack/react-query";
 import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
-import { sendMutationRequest } from "../../lib/endpoint-configs";
+import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 
 import Header from "../UI/Header";
@@ -47,11 +47,21 @@ const UploadStatement = (props) => {
     isSuccess: isFileUploadSuccess,
   } = useMutation({
     mutationFn: sendMutationRequest,
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       setInsertCount({
         failed_count: data.fail_count,
         success_count: data.pass_count,
       });
+      const curAccountId = +variables.requestConfig.url
+        .toString()
+        .split("/")
+        .pop();
+      console.log(curAccountId);
+      queryClient.invalidateQueries({
+        queryKey: ["account", curAccountId],
+      });
+      const queryCache = queryClient.getQueryCache();
+      console.log(queryCache.findAll());
     },
   });
 

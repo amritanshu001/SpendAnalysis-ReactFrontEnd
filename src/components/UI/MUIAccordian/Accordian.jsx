@@ -16,7 +16,10 @@ const MUIAccordion = (props) => {
       exit={{ opacity: 0, y: -300 }}
       expanded={props.expanded}
       disableGutters={true}
+      defaultExpanded={props.defaultExpanded}
       onChange={props.onChange}
+      disabled={props.disabled}
+      sx={props.sx}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
