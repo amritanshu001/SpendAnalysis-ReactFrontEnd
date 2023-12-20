@@ -76,7 +76,7 @@ export const useFetchTransactions = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["account", accountId],
+    queryKey: ["account", accountId, query],
     queryFn: ({ signal }) => {
       const transactionConfig = {
         url: apiURL + "/statement/" + accountId + query,
