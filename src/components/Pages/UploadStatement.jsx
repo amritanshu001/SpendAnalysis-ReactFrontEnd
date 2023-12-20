@@ -56,12 +56,9 @@ const UploadStatement = (props) => {
         .toString()
         .split("/")
         .pop();
-      console.log(curAccountId);
       queryClient.invalidateQueries({
         queryKey: ["account", curAccountId],
       });
-      const queryCache = queryClient.getQueryCache();
-      console.log(queryCache.findAll());
     },
   });
 
