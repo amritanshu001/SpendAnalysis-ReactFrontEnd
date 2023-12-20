@@ -6,16 +6,13 @@ const Hyperlink = (props) => {
 
   const onLinkClickHandler = (event) => {
     event.preventDefault();
-    console.log(styles.active);
     updateClasses(styles.active);
   };
 
   const onBlurHandler = (event) => {
-    console.log(styles.active);
     updateClasses("");
   };
 
-  console.log(classes);
 
   return (
     <li key={props.id} onClick={onLinkClickHandler} onBlur={onBlurHandler}>

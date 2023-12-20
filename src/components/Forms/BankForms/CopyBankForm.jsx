@@ -11,7 +11,6 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const CopyBankForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  console.log(props.copyFormData);
 
   const {
     mutate: createNewBank,
