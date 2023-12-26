@@ -394,12 +394,7 @@ const SpendAnalysis = (props) => {
         defaultExpanded={true}
         sx={{ backgroundColor: "#ada346" }}
       >
-        <Container
-          className={styles.container}
-          initial={{ opacity: 0, x: -300 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -300 }}
-        >
+        <Container className={styles.container}>
           <form className={styles.form} onSubmit={formSubmitHandler}>
             <div className={styles.select}>
               <label>Select Account</label>
