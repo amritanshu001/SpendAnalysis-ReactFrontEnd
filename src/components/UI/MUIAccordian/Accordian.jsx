@@ -11,9 +11,9 @@ const AnimatedAccordinan = motion(Accordion);
 const MUIAccordion = (props) => {
   return (
     <AnimatedAccordinan
-      initial={{ opacity: 0, y: -300 }}
+      initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -300 }}
+      exit={{ opacity: 0, y: -30 }}
       expanded={props.expanded}
       disableGutters={true}
       defaultExpanded={props.defaultExpanded}

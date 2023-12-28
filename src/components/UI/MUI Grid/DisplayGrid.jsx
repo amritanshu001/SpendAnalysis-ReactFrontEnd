@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -66,6 +66,8 @@ const DisplayGrid = forwardRef((props, ref) => {
         columns={props.columns}
         density="compact"
         pageSizeOptions={[10, 25, 50, 100]}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{ toolbar: { showQuickFilter: true } }}
         sx={{
           textAlign: "center",
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
