@@ -7,7 +7,7 @@ import { RowCopyIcon, RowEditIcon } from "../UI/MUI Grid/DisplayGrid";
 import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
 
 import { useFetchBanks } from "../../hooks/useTanstackQueryFetch";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -45,9 +45,11 @@ const AddBank = (props) => {
     isSuccess,
   } = useFetchBanks(authToken);
 
-  if (isSuccess) {
-    disptach(banksAction.setBanks({ banks: bankFetchData }));
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      disptach(banksAction.setBanks({ banks: bankFetchData }));
+    }
+  }, [isSuccess, bankFetchData, banksAction.setBanks]);
 
   const hideModalHandler = () => {
     setBankAction(null);
