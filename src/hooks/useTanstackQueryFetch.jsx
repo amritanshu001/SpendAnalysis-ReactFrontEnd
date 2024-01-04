@@ -10,6 +10,7 @@ import {
   convert2AccountFormat,
   convert2DateFormat,
   convert2BankFormat,
+  convert2InactiveAccountFormat,
 } from "../lib/server-communication";
 
 export const useFetchBanks = (
@@ -90,5 +91,30 @@ export const useFetchTransactions = (
     enabled,
     staleTime,
     select: (data) => convert2TransactionFormat(data),
+  });
+};
+
+export const useFetchInactiveAccounts = (
+  authToken,
+  enabled = true,
+  staleTime = 300000
+) => {
+  return useQuery({
+    queryKey: ["inactive-accounts", authToken],
+    queryFn: ({ signal }) => {
+      const inactiveAccountsConfig = {
+        url: apiURL + "/admin/accounts",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      return sendQueryRequest({
+        signal,
+        requestConfig: inactiveAccountsConfig,
+      });
+    },
+    enabled,
+    staleTime,
+    select: (data) => convert2InactiveAccountFormat(data),
   });
 };

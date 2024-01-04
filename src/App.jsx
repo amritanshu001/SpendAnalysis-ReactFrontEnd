@@ -26,6 +26,8 @@ const ResetPassword = React.lazy(() =>
   import("./components/Pages/ResetPassword")
 );
 
+import AdminAccounts from "./components/Pages/Admin/AdminAccounts";
+
 import AdminProtect from "./components/Functional/AdminProtect";
 import LoginProtect from "./components/Functional/LoginProtect";
 import AppLogout from "./components/Functional/AppLogout";
@@ -82,10 +84,18 @@ const App = (props) => {
             </Route>
             <Route element={<AdminProtect />}>
               <Route
-                path="/addbank"
+                path="/admin/addbank"
                 element={
                   <AppLogout>
                     <AddBank />
+                  </AppLogout>
+                }
+              />
+              <Route
+                path="/admin/accounts"
+                element={
+                  <AppLogout>
+                    <AdminAccounts />
                   </AppLogout>
                 }
               />

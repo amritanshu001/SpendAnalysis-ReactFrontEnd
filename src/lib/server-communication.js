@@ -52,6 +52,20 @@ export const convert2AccountFormat = (accountData) => {
     return processedAccountData
 }
 
+export const convert2InactiveAccountFormat = (inactiveAccounts) => {
+  return inactiveAccounts.map((account)=>{
+    return {
+      id:account.account_id,
+      account_no:account.account_no,
+      bank_name : account["bank_dets"].bank_name,
+      emails : account.user_emails,
+      joint:account.joint,
+      created_on: convertDates(account.created_on),
+      updated_on: convertDates(account.updated_on)
+    }
+  })
+}
+
 export const convert2DateFormat = (rawdata) => {
 
     let processedData = [];

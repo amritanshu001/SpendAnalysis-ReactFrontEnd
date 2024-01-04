@@ -1,6 +1,7 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import AdminPage from "../Pages/AdminPage";
 
 const AdminProtect = () => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
@@ -13,7 +14,7 @@ const AdminProtect = () => {
     returnObject = <Navigate to="/" />;
   }
   if (isUserLoggedIn && isUserAdmin) {
-    returnObject = <Outlet />;
+    returnObject = <AdminPage />;
   }
   return returnObject;
 };
