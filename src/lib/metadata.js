@@ -61,10 +61,16 @@ const homeContent = [
         "Users can generate spend analysis on the uploaded statement for a specific account and a date period.",
     },
     {
-      path: "/addbank",
+      path: "/admin/addbank",
       title: "Add Bank Details",
       description:
         "Admin users can maintain the Bank names and the format of excel statement to assist the system in uploading the data into the system.",
+    },
+    {
+      path: "/admin/accounts",
+      title: "Manage Inactive Accounts",
+      description:
+        "Admin users can reactivate or permanently delete inactive accounts.",
     },
     {
         path: "/request-resetpassword",
