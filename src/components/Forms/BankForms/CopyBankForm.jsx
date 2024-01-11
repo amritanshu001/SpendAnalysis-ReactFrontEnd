@@ -21,7 +21,7 @@ const CopyBankForm = (props) => {
     mutationFn: sendMutationRequest,
     onSuccess: () => {
       props.hideModalHandler();
-      queryClient.invalidateQueries({ queryKey: ["banks"] });
+      queryClient.invalidateQueries({ queryKey: ["banks", authToken] });
     },
   });
 

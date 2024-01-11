@@ -19,7 +19,12 @@ const AccountDeleteForm = (props) => {
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[1] === authToken &&
+          (query.queryKey[0] === "accounts" ||
+            query.queryKey[0] === "inactive-accounts"),
+      });
       props.onCancel();
     },
   });

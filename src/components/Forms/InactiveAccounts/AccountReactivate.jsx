@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./AccountDeleteForm.module.css";
+import styles from "./AccountReactivate.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import {
   sendMutationRequest,
@@ -9,10 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 const apiURL = import.meta.env.VITE_API_URL;
 
-const AccountDeleteForm = (props) => {
+const AccountReactivate = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const {
-    mutate: deleteAccountForever,
+    mutate: reactivateAccount,
     isPending,
     isError,
     error,
@@ -20,34 +20,34 @@ const AccountDeleteForm = (props) => {
     mutationFn: sendMutationRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["inactive-accounts", authToken],
+        predicate: (query) =>
+          query.queryKey[1] === authToken &&
+          (query.queryKey[0] === "accounts" ||
+            query.queryKey[0] === "inactive-accounts"),
       });
       props.onCancel();
     },
   });
 
-  const deleteFormSubmitHandler = (event) => {
+  const reactivateFormSubmitHandler = (event) => {
     event.preventDefault();
-    const deleteAccountConfig = {
+    const activateAccountConfig = {
       url: apiURL + "/admin/accounts/" + props.account.id,
-      method: "DELETE",
+      method: "PUT",
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
     };
-    deleteAccountForever({ requestConfig: deleteAccountConfig });
+    reactivateAccount({ requestConfig: activateAccountConfig });
     // props.onDelete(props.account.id);
   };
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
+      <form onSubmit={reactivateFormSubmitHandler} className={styles.form}>
         <div>
-          <p>
-            Account# {props.account.account_no} will be permanently deleted!
-            This action cannot be reverted!
-          </p>
+          <p>Account# {props.account.account_no} will be reactivated.</p>
           <p className={styles.message}> Do you want to proceed?</p>
         </div>
         <div className={styles.actions}>
@@ -55,7 +55,7 @@ const AccountDeleteForm = (props) => {
             Cancel
           </button>
           <button type="submit" className={styles["imp-button"]}>
-            {isPending ? "Deleting..." : "Confirm Delete"}
+            {isPending ? "Deleting..." : "Confirm Reactivation"}
           </button>
         </div>
         {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
@@ -64,4 +64,4 @@ const AccountDeleteForm = (props) => {
   );
 };
 
-export default AccountDeleteForm;
+export default AccountReactivate;

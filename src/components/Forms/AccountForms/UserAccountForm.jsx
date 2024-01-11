@@ -22,7 +22,7 @@ const UserAccountForm = ({ data, onCancel }) => {
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts", authToken] });
       onCancel();
     },
   });

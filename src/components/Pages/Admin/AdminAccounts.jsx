@@ -12,6 +12,7 @@ import Header from "../../UI/Header";
 import SpinnerCircular from "../../UI/Feedback/SpinnerCircular";
 
 import AccountDeleteForm from "../../Forms/InactiveAccounts/AccountDeleteForm";
+import AccountReactivate from "../../Forms/InactiveAccounts/AccountReactivate";
 
 import { useFetchInactiveAccounts } from "../../../hooks/useTanstackQueryFetch";
 import { useSelector, useDispatch } from "react-redux";
@@ -59,7 +60,7 @@ const AdminAccounts = (props) => {
 
   const gridRowActivateHandler = (params) => {
     const clickHandler = () => {
-      setAccountAction("Activate");
+      setAccountAction({ action: "Activate", data: { ...params.row } });
       dispatch(formModalAction.showModal());
     };
     return (
@@ -167,12 +168,22 @@ const AdminAccounts = (props) => {
     <>
       <HeadMetaData pathname={location.pathname} />
       <Header>Manage Inactive Accounts</Header>
-      {formModalStatus && accountAction.action === "Delete" && (
-        <AccountDeleteForm
-          account={accountAction.data}
-          onCancel={hideModalHandler}
-        />
-      )}
+      {formModalStatus &&
+        accountAction &&
+        accountAction.action === "Delete" && (
+          <AccountDeleteForm
+            account={accountAction.data}
+            onCancel={hideModalHandler}
+          />
+        )}
+      {formModalAction &&
+        accountAction &&
+        accountAction.action === "Activate" && (
+          <AccountReactivate
+            account={accountAction.data}
+            onCancel={hideModalHandler}
+          />
+        )}
       {isAccountsLoadError && (
         <p className={styles.error}>
           {accountsLoadError.status + ":" + accountsLoadError.message}

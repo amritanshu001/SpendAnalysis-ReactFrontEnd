@@ -19,7 +19,7 @@ export const useFetchBanks = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["banks"],
+    queryKey: ["banks", authToken],
     queryFn: ({ signal }) => {
       const bankConfig = {
         url: apiURL + "/banks",
@@ -41,7 +41,7 @@ export const useFetchAccounts = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["accounts"],
+    queryKey: ["accounts", authToken],
     queryFn: ({ signal }) => {
       const accountsConfig = {
         url: apiURL + "/accounts",
@@ -77,7 +77,7 @@ export const useFetchTransactions = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["account", accountId, query],
+    queryKey: ["account", accountId, query, authToken],
     queryFn: ({ signal }) => {
       const transactionConfig = {
         url: apiURL + "/statement/" + accountId + query,
