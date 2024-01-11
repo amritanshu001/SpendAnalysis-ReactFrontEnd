@@ -1,11 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Drawer from "../UI/MUIDrawer/Drawer";
+import NavTabs from "../UI/MUITabs/NavTabs";
 
 const AdminPage = () => {
   return (
     <>
-      <Drawer />
+      <NavTabs />
       <Outlet />
     </>
   );
