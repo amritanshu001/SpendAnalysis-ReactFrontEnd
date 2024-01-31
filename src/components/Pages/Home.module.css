@@ -28,3 +28,19 @@
   margin-top: 0.5rem;
   color: #f0e9e9;
 }
+
+.subtasks {
+  display: flex;
+  flex-direction: column;
+  gap:0.5rem
+}
+
+.subtasks li {
+  list-style:square;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtasks li .bold-span {
+  color: #c5d482;
+}

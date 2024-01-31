@@ -24,9 +24,31 @@ const homeContent = [
     },
     {
       id: "05",
-      title: "Add Bank Details (Admin Only)",
+      title: "Admin Page (Restricted Access)",
       description:
-        "Admin users can maintain the Bank names and the format of excel statement to assist the system in uploading the data into the system.",
+        "Users with admin access can perform various admin tasks like: ",
+      subtasks: [
+        {
+          id:"05.01",
+          title: "Maintain Bank Details",
+          description:"Maintain (add/edit/delete) the Bank names and the format of excel statement to assist the system in uploading the data into the system."
+        },
+        {
+          id:"05.02",
+          title: "Maintain Inactive Accounts",
+          description:"Reactivate or permanently delete inactive accounts."
+        },
+        {
+          id:"05.03",
+          title: "Maintain Date Formats",
+          description:"Maintain date formats for application to parse the uploaded statements correctly."
+        },
+        {
+          id:"05.04",
+          title: "Maintain Users",
+          description:"Delete user's registration permanently based on user request."
+        }
+      ]
     },
   ];
 
@@ -71,6 +93,16 @@ const homeContent = [
       title: "Manage Inactive Accounts",
       description:
         "Admin users can reactivate or permanently delete inactive accounts.",
+    },
+    {
+      path: "/admin/dateformats",
+      title: "Maintain Date Formats",
+      description:"Maintain date formats for application to parse the uploaded statements correctly.",
+    },
+    {
+      path: "/admin/users",
+      title: "Maintain Users",
+      description:"Delete user's registration permanently based on user request."
     },
     {
         path: "/request-resetpassword",

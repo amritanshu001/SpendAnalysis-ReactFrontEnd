@@ -11,6 +11,7 @@ import {
   convert2DateFormat,
   convert2BankFormat,
   convert2InactiveAccountFormat,
+  convert2UsersFormat,
 } from "../lib/server-communication";
 
 export const useFetchBanks = (
@@ -116,5 +117,30 @@ export const useFetchInactiveAccounts = (
     enabled,
     staleTime,
     select: (data) => convert2InactiveAccountFormat(data),
+  });
+};
+
+export const useFetchUsers = (
+  authToken,
+  enabled = true,
+  staleTime = 300000
+) => {
+  return useQuery({
+    queryKey: ["users", authToken],
+    queryFn: ({ signal }) => {
+      const usersConfig = {
+        url: apiURL + "/admin/users",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      return sendQueryRequest({
+        signal,
+        requestConfig: usersConfig,
+      });
+    },
+    enabled,
+    staleTime,
+    select: (data) => convert2UsersFormat(data),
   });
 };

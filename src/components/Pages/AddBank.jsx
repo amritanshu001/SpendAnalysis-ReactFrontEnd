@@ -12,11 +12,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
+import { Tooltip } from "@mui/material";
 
 import { banksAction } from "../../store/banks-slice";
 import { formModalAction } from "../../store/formmodal-slice";
 const apiURL = import.meta.env.VITE_API_URL;
-import { Tooltip } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 

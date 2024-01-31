@@ -163,7 +163,6 @@ const AdminAccounts = (props) => {
     error: accountsLoadError,
   } = useFetchInactiveAccounts(authToken);
 
-  console.log("From API, Inactive Accounts", inactiveAccounts);
   return (
     <>
       <HeadMetaData pathname={location.pathname} />

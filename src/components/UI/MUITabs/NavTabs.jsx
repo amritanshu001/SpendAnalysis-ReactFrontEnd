@@ -9,8 +9,11 @@ import { motion } from "framer-motion";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Divider from "@mui/material/Divider";
 
 const AnimatedBox = motion(Box);
+const AnimatedTabs = motion(Tabs);
+const AnimatedTab = motion(Tab);
 
 const adminRoutes = [
   {
@@ -25,7 +28,7 @@ const adminRoutes = [
   },
   {
     name: "Maintain Dates",
-    route: "/admin/dateformat",
+    route: "/admin/dateformats",
     icon: <CalendarMonthIcon />,
   },
   {
@@ -46,30 +49,36 @@ export default function NavTabs() {
     <AnimatedBox
       sx={{ width: "100%" }}
       initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, x: 0 }}
     >
-      <Tabs
+      <AnimatedTabs
         value={navState}
         onChange={handleChange}
-        textColor="secondary"
-        indicatorColor="secondary"
+        textColor="primary"
+        indicatorColor="primary"
         variant="scrollable"
         scrollButtons
         allowScrollButtonsMobile
+        animate={{ transition: { staggerChildren: 0.5 } }}
       >
         {adminRoutes.map((route) => {
           return (
-            <Tab
+            <AnimatedTab
               key={route.route}
               value={route.route}
               to={route.route}
               label={route.name}
               icon={route.icon}
               component={NavLink}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring" }}
             />
           );
         })}
-      </Tabs>
+      </AnimatedTabs>
+      <Divider variant="fullWidth" />
     </AnimatedBox>
   );
 }

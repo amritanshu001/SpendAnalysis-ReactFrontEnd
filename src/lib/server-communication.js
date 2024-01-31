@@ -74,6 +74,7 @@ export const convert2DateFormat = (rawdata) => {
       date.id = rawdata[key].date_id;
       date.date_format = rawdata[key].date_format;
       date.desc = rawdata[key].desc;
+      date.py_date = rawdata[key].py_date
       processedData.push(date);
     }
 
@@ -102,4 +103,21 @@ export const convert2TransactionFormat = (rawdata) => {
     };
   })
   return processedData
+}
+
+export const convert2UsersFormat = (users) => {
+  return users.map((user)=>{
+    return {
+      id:user.user_id,
+      userName:user.user_name,
+      admin : user.admin,
+      email : user.email_id,
+      active:user.u_active,
+      created_on: convertDates(user.created_on),
+      updated_on: convertDates(user.updated_on),
+      reset_expiry: convertDates(user.reset_expiry),
+      reset_hash: user.reset_hash
+
+    }
+  })
 }

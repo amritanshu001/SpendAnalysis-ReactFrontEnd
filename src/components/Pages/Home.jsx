@@ -11,11 +11,25 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 const Home = (props) => {
   const location = useLocation();
 
+  const mapSubTasks = (subtask) => {
+    return (
+      <li key={subtask.id}>
+        <span className={styles["bold-span"]}>{subtask.title}</span>
+        <span className={styles["normal-span"]}>{subtask.description}</span>
+      </li>
+    );
+  };
+
   const mapHomeContent = (content) => {
     return (
       <div className={styles.row} key={content.id}>
         <span className={styles["bold-span"]}>{content.title}</span>
         <span className={styles["normal-span"]}>{content.description}</span>
+        {"subtasks" in content && (
+          <ul className={styles.subtasks}>
+            {content.subtasks.map(mapSubTasks)}
+          </ul>
+        )}
       </div>
     );
   };
