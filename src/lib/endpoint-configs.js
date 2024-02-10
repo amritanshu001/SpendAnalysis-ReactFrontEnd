@@ -33,8 +33,9 @@ export const sendMutationRequest = async ({requestConfig}) => {
 
     if (!response.ok) {
         const errorData = await response.json();
-        const error = Error(errorData.message || errorData.msg || "Error "+response.code+": Failed to Create/Update");
-        error.status = response.code;
+        console.log(errorData)
+        const error = Error(errorData.message || errorData.msg || "Error "+errorData.code+": Failed to Create/Update");
+        error.status = errorData.code;
         throw error;
     }
 

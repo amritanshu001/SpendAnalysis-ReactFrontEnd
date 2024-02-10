@@ -82,6 +82,9 @@ export const convert2DateFormat = (rawdata) => {
 }
 
 const convertDates = (date) => {
+  if (!date) {
+    return null
+  }
   const convertDate = new Date(date);
   const options = { year: "numeric", month: "short", day: "numeric" };
   return convertDate.toLocaleString(undefined, options);
@@ -116,8 +119,8 @@ export const convert2UsersFormat = (users) => {
       created_on: convertDates(user.created_on),
       updated_on: convertDates(user.updated_on),
       reset_expiry: convertDates(user.reset_expiry),
-      reset_hash: user.reset_hash
-
+      reset_hash: user.reset_hash,
+      last_logged_in: convertDates(user.last_logged_in)
     }
   })
 }

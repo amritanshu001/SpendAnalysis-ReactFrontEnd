@@ -57,6 +57,18 @@ export const RowCopyIcon = motion(
   })
 );
 
+export const AnimatedTippedIconButton = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title={props.title} placement="bottom-start" arrow>
+        <IconButton color={props.color} onClick={props.onClick} ref={ref}>
+          {props.icon}
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
+
 const DisplayGrid = forwardRef((props, ref) => {
   return (
     <Box
