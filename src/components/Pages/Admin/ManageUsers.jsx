@@ -16,10 +16,19 @@ import VerticalAlignBottomIcon from "@mui/icons-material/VerticalAlignBottom";
 import Stack from "@mui/material/Stack";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { CircularProgress } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Typography from "@mui/material/Typography";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 
 import { formModalAction } from "../../../store/formmodal-slice";
 
 import UserRoleChange from "../../Forms/UserForms/UserRoleChange";
+import UserDelete from "../../Forms/UserForms/UserDelete";
+import ReactivateUser from "../../Forms/UserForms/ReactivateUser";
 
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -75,6 +84,13 @@ const ManageUsers = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [userAction, setUserAction] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({ event: null, target: null });
+  const menuOpen = Boolean(anchorEl.event);
+
+  const menuCloseHandler = () => {
+    setAnchorEl({ event: null, target: null });
+  };
+
   const {
     mutate: resetUserExpiryDate,
     isError,
@@ -90,8 +106,31 @@ const ManageUsers = () => {
   });
 
   const hideModalHandler = () => {
-    setUserAction(null);
     dispatch(formModalAction.hideModal());
+    setUserAction(null);
+    menuCloseHandler();
+  };
+
+  const deleteUserForeverHandler = () => {
+    setAnchorEl((old) => {
+      return {
+        ...old,
+        event: null,
+      };
+    });
+    setUserAction({ action: "delete", data: null });
+    dispatch(formModalAction.showModal());
+  };
+
+  const reactivateUserHandler = () => {
+    setAnchorEl((old) => {
+      return {
+        ...old,
+        event: null,
+      };
+    });
+    setUserAction({ action: "re-activate", data: null });
+    dispatch(formModalAction.showModal());
   };
 
   const gridUserUpgradeHandler = (params) => {
@@ -124,6 +163,25 @@ const ManageUsers = () => {
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 300 }}
         icon={<VerticalAlignBottomIcon />}
+      />
+    );
+  };
+
+  const gridUserKebabHandler = (params) => {
+    if (params.row.active) {
+      return null;
+    }
+    const clickHandler = (event) => {
+      setAnchorEl({ event: event.currentTarget, target: { ...params.row } });
+    };
+    return (
+      <AnimatedTippedIconButton
+        title="Other Actions"
+        color="error"
+        onClick={clickHandler}
+        whileHover={{ scale: 1.2 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        icon={<MoreVertIcon />}
       />
     );
   };
@@ -313,10 +371,38 @@ const ManageUsers = () => {
           : gridUserUpgradeHandler(params);
       },
     },
+    {
+      headerName: "Other Actions",
+      field: "actions",
+      minWidth: 90,
+      flex: 1,
+      headerClassName: "table__header",
+      headerAlign: "center",
+      align: "center",
+      renderCell: gridUserKebabHandler,
+    },
   ];
   return (
     <>
       <HeadMetaData pathname={location.pathname} />
+      <Menu
+        anchorEl={anchorEl.event}
+        open={menuOpen}
+        onClose={menuCloseHandler}
+      >
+        <MenuItem key="restore" onClick={reactivateUserHandler}>
+          <ListItemIcon>
+            <SettingsBackupRestoreIcon fontSize="small" color="primary" />
+          </ListItemIcon>
+          <Typography variant="inherit">Re-Activate</Typography>
+        </MenuItem>
+        <MenuItem key="delete" onClick={deleteUserForeverHandler}>
+          <ListItemIcon>
+            <PersonRemoveIcon fontSize="small" color="warning" />
+          </ListItemIcon>
+          <Typography variant="inherit">Delete Forever</Typography>
+        </MenuItem>
+      </Menu>
       {formModalStatus && userAction.action === "upgrade" && (
         <UserRoleChange
           onCancel={hideModalHandler}
@@ -330,6 +416,12 @@ const ManageUsers = () => {
           user={userAction.data}
           admin={false}
         />
+      )}
+      {formModalStatus && userAction.action === "delete" && (
+        <UserDelete onCancel={hideModalHandler} user={anchorEl.target} />
+      )}
+      {formModalStatus && userAction.action === "re-activate" && (
+        <ReactivateUser onCancel={hideModalHandler} user={anchorEl.target} />
       )}
       <Header>Manage Users</Header>
       <AnimatePresence>
