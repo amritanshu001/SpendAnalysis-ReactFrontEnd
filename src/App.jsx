@@ -26,6 +26,16 @@ const ResetPassword = React.lazy(() =>
   import("./components/Pages/ResetPassword")
 );
 
+const AdminAccounts = React.lazy(() =>
+  import("./components/Pages/Admin/AdminAccounts")
+);
+const ManageDates = React.lazy(() =>
+  import("./components/Pages/Admin/ManageDates")
+);
+const ManageUsers = React.lazy(() =>
+  import("./components/Pages/Admin/ManageUsers")
+);
+
 import AdminProtect from "./components/Functional/AdminProtect";
 import LoginProtect from "./components/Functional/LoginProtect";
 import AppLogout from "./components/Functional/AppLogout";
@@ -80,16 +90,43 @@ const App = (props) => {
                 }
               />
             </Route>
-            <Route element={<AdminProtect />}>
+            <Route path="admin" element={<AdminProtect />}>
               <Route
-                path="/addbank"
+                index
+                path="addbank"
                 element={
                   <AppLogout>
                     <AddBank />
                   </AppLogout>
                 }
               />
+              <Route
+                path="accounts"
+                element={
+                  <AppLogout>
+                    <AdminAccounts />
+                  </AppLogout>
+                }
+              />
+              <Route
+                path="dateformats"
+                element={
+                  <AppLogout>
+                    <ManageDates />
+                  </AppLogout>
+                }
+              />
+              <Route
+                path="users"
+                element={
+                  <AppLogout>
+                    <ManageUsers />
+                  </AppLogout>
+                }
+              />
+              <Route path="*" element={<Navigate to="/admin" />} />
             </Route>
+
             <Route
               path="/request-resetpassword/:hash"
               element={<ResetPassword />}

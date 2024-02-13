@@ -69,11 +69,11 @@ const NavElements = (props) => {
         {props.isUserLoggedIn && props.isUserAdmin && (
           <li>
             <NavLink
-              to="/addbank"
+              to="/admin/addbank"
               onClick={props.hideSideBar}
               className={activeLink}
             >
-              Add Bank Details
+              Admin Page
             </NavLink>
           </li>
         )}

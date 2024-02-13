@@ -12,7 +12,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 const AccountDeleteForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const {
-    mutate: deleteAccount,
+    mutate: deleteAccountForever,
     isPending,
     isError,
     error,
@@ -20,10 +20,7 @@ const AccountDeleteForm = (props) => {
     mutationFn: sendMutationRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[1] === authToken &&
-          (query.queryKey[0] === "accounts" ||
-            query.queryKey[0] === "inactive-accounts"),
+        queryKey: ["inactive-accounts", authToken],
       });
       props.onCancel();
     },
@@ -32,14 +29,14 @@ const AccountDeleteForm = (props) => {
   const deleteFormSubmitHandler = (event) => {
     event.preventDefault();
     const deleteAccountConfig = {
-      url: apiURL + "/accounts/" + props.account.id,
+      url: apiURL + "/admin/accounts/" + props.account.id,
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
     };
-    deleteAccount({ requestConfig: deleteAccountConfig });
+    deleteAccountForever({ requestConfig: deleteAccountConfig });
     // props.onDelete(props.account.id);
   };
 
@@ -47,7 +44,10 @@ const AccountDeleteForm = (props) => {
     <FormModal onBackdropClick={props.onCancel}>
       <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
         <div>
-          <p>Account# {props.account.account_no} will be deleted!</p>
+          <p>
+            Account# {props.account.account_no} will be permanently deleted!
+            This action cannot be reverted!
+          </p>
           <p className={styles.message}> Do you want to proceed?</p>
         </div>
         <div className={styles.actions}>

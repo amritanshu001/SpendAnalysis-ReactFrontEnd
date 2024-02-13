@@ -45,3 +45,17 @@ body {
   color:red;
   font-weight: bold;
 }
+
+.error {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #c65252;
+}
+
+.warning {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #e97f28;
+}

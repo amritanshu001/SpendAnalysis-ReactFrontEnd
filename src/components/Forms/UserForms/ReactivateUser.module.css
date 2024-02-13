@@ -1,0 +1,42 @@
+.form {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.form .message {
+  font-weight: bold;
+  font-size: larger;
+  color: #fc4274;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.actions button {
+  padding: 0.5rem;
+  border-radius: 6px;
+  outline: none;
+  background-color: #405d27;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #405d27;
+}
+
+.actions button:hover {
+  color: #ccc;
+  background-color: #2e431b;
+}
+
+.imp-button {
+  background-color: #ff5c88;
+}
+
+.imp-button:hover {
+  background-color: #fc4274;
+}

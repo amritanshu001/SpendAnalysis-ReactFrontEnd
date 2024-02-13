@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./AccountDeleteForm.module.css";
+import styles from "./UserRoleChange.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import {
   sendMutationRequest,
@@ -9,10 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 const apiURL = import.meta.env.VITE_API_URL;
 
-const AccountDeleteForm = (props) => {
+const UserRoleChange = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const {
-    mutate: deleteAccount,
+    mutate: changeUserRole,
     isPending,
     isError,
     error,
@@ -20,34 +20,37 @@ const AccountDeleteForm = (props) => {
     mutationFn: sendMutationRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[1] === authToken &&
-          (query.queryKey[0] === "accounts" ||
-            query.queryKey[0] === "inactive-accounts"),
+        queryKey: ["users"],
       });
       props.onCancel();
     },
   });
 
-  const deleteFormSubmitHandler = (event) => {
+  const changeUserRoleHandler = (event) => {
     event.preventDefault();
-    const deleteAccountConfig = {
-      url: apiURL + "/accounts/" + props.account.id,
-      method: "DELETE",
+    const changeUserRoleConfig = {
+      url: apiURL + "/admin/user/" + props.user.id,
+      method: "PUT",
       headers: {
         Authorization: "Bearer " + authToken,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ admin: props.admin }),
     };
-    deleteAccount({ requestConfig: deleteAccountConfig });
+    changeUserRole({ requestConfig: changeUserRoleConfig });
     // props.onDelete(props.account.id);
   };
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
+      <form onSubmit={changeUserRoleHandler} className={styles.form}>
         <div>
-          <p>Account# {props.account.account_no} will be deleted!</p>
+          <p>
+            User {props.user.userName} will be{" "}
+            {props.admin ? "upgraded" : "donwgraded"} to{" "}
+            {props.admin ? "Admin" : "User"}
+            {props.admin ? " and will have advanced privilages!" : "."}
+          </p>
           <p className={styles.message}> Do you want to proceed?</p>
         </div>
         <div className={styles.actions}>
@@ -55,13 +58,15 @@ const AccountDeleteForm = (props) => {
             Cancel
           </button>
           <button type="submit" className={styles["imp-button"]}>
-            {isPending ? "Deleting..." : "Confirm Delete"}
+            {isPending ? "Changing Role..." : "Confirm"}
           </button>
         </div>
-        {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
+        {isError && (
+          <p className="error">{error.status + ":" + error.message}</p>
+        )}
       </form>
     </FormModal>
   );
 };
 
-export default AccountDeleteForm;
+export default UserRoleChange;

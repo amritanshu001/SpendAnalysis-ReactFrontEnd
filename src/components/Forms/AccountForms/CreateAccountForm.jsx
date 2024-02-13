@@ -34,7 +34,7 @@ const CreateAccountForm = (props) => {
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts", authToken] });
       props.onCancel();
     },
   });

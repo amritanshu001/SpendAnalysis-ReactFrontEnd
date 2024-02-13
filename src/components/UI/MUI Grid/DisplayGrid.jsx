@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import RestoreIcon from "@mui/icons-material/Restore";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip } from "@mui/material";
 import { motion } from "framer-motion";
@@ -32,12 +33,36 @@ export const RowDeleteIcon = motion(
   })
 );
 
+export const RowReactivateIcon = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title="Re-Activate" placement="bottom-start" arrow>
+        <IconButton ref={ref} onClick={props.onClick} color="default">
+          <RestoreIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
+
 export const RowCopyIcon = motion(
   forwardRef((props, ref) => {
     return (
       <Tooltip title="Copy" placement="bottom-start" arrow>
         <IconButton color="primary" onClick={props.onClick} ref={ref}>
           <ContentCopyOutlinedIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  })
+);
+
+export const AnimatedTippedIconButton = motion(
+  forwardRef((props, ref) => {
+    return (
+      <Tooltip title={props.title} placement="bottom-start" arrow>
+        <IconButton color={props.color} onClick={props.onClick} ref={ref}>
+          {props.icon}
         </IconButton>
       </Tooltip>
     );

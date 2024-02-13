@@ -10,6 +10,8 @@ import {
   convert2AccountFormat,
   convert2DateFormat,
   convert2BankFormat,
+  convert2InactiveAccountFormat,
+  convert2UsersFormat,
 } from "../lib/server-communication";
 
 export const useFetchBanks = (
@@ -18,7 +20,7 @@ export const useFetchBanks = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["banks"],
+    queryKey: ["banks", authToken],
     queryFn: ({ signal }) => {
       const bankConfig = {
         url: apiURL + "/banks",
@@ -40,7 +42,7 @@ export const useFetchAccounts = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["accounts"],
+    queryKey: ["accounts", authToken],
     queryFn: ({ signal }) => {
       const accountsConfig = {
         url: apiURL + "/accounts",
@@ -76,7 +78,7 @@ export const useFetchTransactions = (
   staleTime = 300000
 ) => {
   return useQuery({
-    queryKey: ["account", accountId, query],
+    queryKey: ["account", accountId, query, authToken],
     queryFn: ({ signal }) => {
       const transactionConfig = {
         url: apiURL + "/statement/" + accountId + query,
@@ -90,5 +92,55 @@ export const useFetchTransactions = (
     enabled,
     staleTime,
     select: (data) => convert2TransactionFormat(data),
+  });
+};
+
+export const useFetchInactiveAccounts = (
+  authToken,
+  enabled = true,
+  staleTime = 300000
+) => {
+  return useQuery({
+    queryKey: ["inactive-accounts", authToken],
+    queryFn: ({ signal }) => {
+      const inactiveAccountsConfig = {
+        url: apiURL + "/admin/accounts",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      return sendQueryRequest({
+        signal,
+        requestConfig: inactiveAccountsConfig,
+      });
+    },
+    enabled,
+    staleTime,
+    select: (data) => convert2InactiveAccountFormat(data),
+  });
+};
+
+export const useFetchUsers = (
+  authToken,
+  enabled = true,
+  staleTime = 300000
+) => {
+  return useQuery({
+    queryKey: ["users", authToken],
+    queryFn: ({ signal }) => {
+      const usersConfig = {
+        url: apiURL + "/admin/users",
+        headers: {
+          Authorization: "Bearer " + authToken,
+        },
+      };
+      return sendQueryRequest({
+        signal,
+        requestConfig: usersConfig,
+      });
+    },
+    enabled,
+    staleTime,
+    select: (data) => convert2UsersFormat(data),
   });
 };
