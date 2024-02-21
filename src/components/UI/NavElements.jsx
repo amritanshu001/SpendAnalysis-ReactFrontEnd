@@ -1,19 +1,18 @@
 import React from "react";
 import styles from "./NavElements.module.css";
 import { NavLink } from "react-router-dom";
-import Button from "./Button";
 import { AnimatePresence } from "framer-motion";
+import MenuOptions from "./UserMenu/MenuOptions";
+
+import { useSelector } from "react-redux";
 
 const activeLink = ({ isActive }) =>
   isActive ? styles["link-active"] : undefined;
 
 const NavElements = (props) => {
-  const logout = () => {
-    props.logoutHandler();
-    if ("hideSideBar" in props) {
-      props.hideSideBar();
-    }
-  };
+  const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
+  const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
+
   return (
     <nav className={props.className}>
       <ul>
@@ -22,7 +21,7 @@ const NavElements = (props) => {
             Home
           </NavLink>
         </li>
-        {!props.isUserLoggedIn && (
+        {!isUserLoggedIn && (
           <li>
             <NavLink
               to="/login"
@@ -33,7 +32,7 @@ const NavElements = (props) => {
             </NavLink>
           </li>
         )}
-        {props.isUserLoggedIn && (
+        {isUserLoggedIn && (
           <li>
             <NavLink
               to="/spendanalysis"
@@ -44,7 +43,7 @@ const NavElements = (props) => {
             </NavLink>
           </li>
         )}
-        {props.isUserLoggedIn && (
+        {isUserLoggedIn && (
           <li>
             <NavLink
               to="/manageaccount"
@@ -55,7 +54,7 @@ const NavElements = (props) => {
             </NavLink>
           </li>
         )}
-        {props.isUserLoggedIn && (
+        {isUserLoggedIn && (
           <li>
             <NavLink
               to="/uploadstatement"
@@ -66,7 +65,7 @@ const NavElements = (props) => {
             </NavLink>
           </li>
         )}
-        {props.isUserLoggedIn && props.isUserAdmin && (
+        {isUserLoggedIn && isUserAdmin && (
           <li>
             <NavLink
               to="/admin/addbank"
@@ -79,16 +78,8 @@ const NavElements = (props) => {
         )}
       </ul>
       <AnimatePresence>
-        {props.isUserLoggedIn && (
-          <Button
-            className={styles.logout}
-            onClick={logout}
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 500 }}
-            exit={{ opacity: 0, x: 100, transition: { duration: 0.3 } }}
-          >
-            {props.buttonText}
-          </Button>
+        {isUserLoggedIn && (
+          <MenuOptions key="menu" hideSideBar={props.hideSideBar} />
         )}
       </AnimatePresence>
     </nav>

@@ -20,9 +20,15 @@ const apiURL = import.meta.env.VITE_API_URL;
 const siteAddress = document.location.origin + document.location.pathname;
 const sucessMessage = (
   <div className={styles["server-success"]}>
-    Password Reset link has been sent successfully to the email provided. If the
-    email is registered in our systems, you will receive a password reset link
-    on your mail. Please click on the link to reset your password.
+    <p>
+      <strong>
+        Password Reset link has been sent successfully to the email provided.
+      </strong>
+    </p>
+    <p>
+      If the email is registered in our systems, you will receive a password
+      reset link on your mail. Please click on the link to reset your password.
+    </p>
   </div>
 );
 

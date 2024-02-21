@@ -35,11 +35,13 @@ const Login = (props) => {
   const { isPending: isLoginPending, mutate: sendLoginRequest } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: (data) => {
+      console.log("Login Success", data);
       dispatch(
         authActions.logUserIn({
           authToken: data.access_token,
           isAdmin: data.admin,
           expiresIn: data.expires_in,
+          email: data.email_id,
         })
       );
       dispatch(logUserInActions(data.access_token));
