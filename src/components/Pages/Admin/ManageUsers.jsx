@@ -83,7 +83,7 @@ const ManageUsers = () => {
   const formModalStatus = useSelector((state) => state.formModal.showModal);
   const location = useLocation();
   const dispatch = useDispatch();
-  const [userAction, setUserAction] = useState(null);
+  const [userAction, setUserAction] = useState({ action: null, data: null });
   const [anchorEl, setAnchorEl] = useState({ event: null, target: null });
   const menuOpen = Boolean(anchorEl.event);
 
@@ -219,7 +219,6 @@ const ManageUsers = () => {
     isError: isUserFetchError,
     error: userFetchError,
   } = useFetchUsers(authToken);
-  console.log(users);
   const txnCols = [
     {
       headerName: "User Name",

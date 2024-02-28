@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Stack from "@mui/material/Stack";
 import { motion } from "framer-motion";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -24,6 +25,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 
 import UnRegister from "../../Forms/UserForms/UnRegister";
+import ChangePassword from "../../Forms/UserForms/ChangePassword";
 import { formModalAction } from "../../../store/formmodal-slice";
 
 const AnimatedMenuItem = motion(MenuItem);
@@ -31,6 +33,7 @@ const AnimatedMenuItem = motion(MenuItem);
 const MenuOptions = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const userActionRef = useRef(null);
 
   const dispatch = useDispatch();
   const redirect = useNavigate();
@@ -76,30 +79,60 @@ const MenuOptions = (props) => {
   };
 
   const deRegisterHandler = () => {
+    userActionRef.current = "unregister";
+    handleClose();
+    dispatch(formModalAction.showModal());
+  };
+
+  const changePasswordHandler = () => {
+    userActionRef.current = "change-password";
     handleClose();
     dispatch(formModalAction.showModal());
   };
 
   const hideModalHandler = () => {
+    userActionRef.current = null;
     dispatch(formModalAction.hideModal());
   };
   return (
     <>
-      {modalStatus && <UnRegister onCancel={hideModalHandler} />}
+      {modalStatus && userActionRef.current == "unregister" && (
+        <UnRegister onCancel={hideModalHandler} />
+      )}
+      {modalStatus && userActionRef.current == "change-password" && (
+        <ChangePassword onCancel={hideModalHandler} />
+      )}
+
       <Tooltip title="User settings">
-        <IconButton
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={0.5}
           onClick={handleClick}
-          size="small"
-          sx={{ ml: 2 }}
-          aria-controls={open ? "account-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
         >
-          <Avatar sx={{ width: 32, height: 32 }}>
-            {userEmail ? userEmail[0].toUpperCase() : ""}
-          </Avatar>
-        </IconButton>
+          <IconButton
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32 }}>
+              {userEmail ? userEmail[0].toUpperCase() : ""}
+            </Avatar>
+          </IconButton>
+          {props.hideSideBar && (
+            <Typography
+              variant="subtitle2"
+              sx={{ color: "white", fontWeight: "bold" }}
+            >
+              {userEmail}
+            </Typography>
+          )}
+        </Stack>
       </Tooltip>
+
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -111,7 +144,7 @@ const MenuOptions = (props) => {
           <Typography> {userEmail}</Typography>
         </AnimatedMenuItem>
         <Divider />
-        <AnimatedMenuItem onClick={handleClose}>
+        <AnimatedMenuItem onClick={changePasswordHandler}>
           <ListItemIcon>
             <LockResetIcon fontSize="small" />
           </ListItemIcon>

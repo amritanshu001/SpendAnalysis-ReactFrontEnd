@@ -1,10 +1,7 @@
 import React from "react";
 import styles from "./UserDelete.module.css";
 import FormModal from "../../UI/Modal/FormModal";
-import {
-  sendMutationRequest,
-  queryClient,
-} from "../../../lib/endpoint-configs";
+import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +23,6 @@ const UnRegister = (props) => {
   } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["users"],
-      });
       props.onCancel();
       dispatch(logUserOutActions());
       dispatch(

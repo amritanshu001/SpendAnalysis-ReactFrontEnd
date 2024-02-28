@@ -13,7 +13,7 @@ export const rePasswordValidator = (prevPassword, password) => {
 };
 
 export const isFieldBlank = (input) => {
-  return input.trim().length > 0;
+  return String(input).trim().length > 0;
 };
 
 export const isIntegerNumber = (input) => {
