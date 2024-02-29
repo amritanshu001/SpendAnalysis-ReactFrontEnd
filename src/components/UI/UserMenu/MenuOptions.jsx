@@ -140,10 +140,14 @@ const MenuOptions = (props) => {
         onClose={handleClose}
         onClick={handleClose}
       >
-        <AnimatedMenuItem disabled>
-          <Typography> {userEmail}</Typography>
-        </AnimatedMenuItem>
-        <Divider />
+        {!props.hideSideBar && (
+          <>
+            <AnimatedMenuItem disabled>
+              <Typography> {userEmail}</Typography>
+            </AnimatedMenuItem>
+            <Divider />
+          </>
+        )}
         <AnimatedMenuItem onClick={changePasswordHandler}>
           <ListItemIcon>
             <LockResetIcon fontSize="small" />
