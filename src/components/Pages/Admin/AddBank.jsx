@@ -1,28 +1,29 @@
 import styles from "./AddBank.module.css";
 
-import Container from "../UI/Container";
-import Header from "../UI/Header";
+import Container from "../../UI/Container";
+import Header from "../../UI/Header";
 // import FormModal from "../UI/Modal/FormModal";
-import { RowCopyIcon, RowEditIcon } from "../UI/MUI Grid/DisplayGrid";
-import DisplayGrid from "../UI/MUI Grid/DisplayGrid";
+import { RowCopyIcon, RowEditIcon } from "../../UI/MUI Grid/DisplayGrid";
+import DisplayGrid from "../../UI/MUI Grid/DisplayGrid";
 
-import { useFetchBanks } from "../../hooks/useTanstackQueryFetch";
+import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip } from "@mui/material";
+import SpinnerCircular from "../../UI/Feedback/SpinnerCircular";
 
-import { banksAction } from "../../store/banks-slice";
-import { formModalAction } from "../../store/formmodal-slice";
+import { banksAction } from "../../../store/banks-slice";
+import { formModalAction } from "../../../store/formmodal-slice";
 const apiURL = import.meta.env.VITE_API_URL;
 import { useLocation } from "react-router-dom";
-import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
+import HeadMetaData from "../../UI/HeadMetadata/HeadMetaData";
 
-import CreateBankForm from "../Forms/BankForms/CreateBankForm";
-import EditBankForm from "../Forms/BankForms/EditBankForm";
-import CopyBankForm from "../Forms/BankForms/CopyBankForm";
+import CreateBankForm from "../../Forms/BankForms/CreateBankForm";
+import EditBankForm from "../../Forms/BankForms/EditBankForm";
+import CopyBankForm from "../../Forms/BankForms/CopyBankForm";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AnimatedIconButton = motion(IconButton);
@@ -211,31 +212,6 @@ const AddBank = (props) => {
     },
   ];
 
-  let message;
-  if (bankFetchData) {
-    message = (
-      <DisplayGrid
-        rows={bankFetchData}
-        columns={txnCols}
-        boxWidth="95%"
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0.25, y: 100 }}
-        transition={{ duration: 0.5 }}
-      />
-    );
-  }
-  if (bankFetchLoading) {
-    message = <p className={styles.loading}>Loading....</p>;
-  }
-
-  if (isBankFetchError) {
-    message = (
-      <p className={styles.error}>
-        {bankfetchError.status + ":" + bankfetchError.message}
-      </p>
-    );
-  }
-
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
@@ -272,7 +248,24 @@ const AddBank = (props) => {
           </AnimatedIconButton>
         </Tooltip>
       </Header>
-      {message}
+      <AnimatePresence>
+        {bankFetchLoading && <SpinnerCircular />}
+        {isBankFetchError && (
+          <p className={styles.error}>
+            {bankfetchError.status + ":" + bankfetchError.message}
+          </p>
+        )}
+        {isSuccess && (
+          <DisplayGrid
+            rows={bankFetchData}
+            columns={txnCols}
+            boxWidth="95%"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0.25, y: 100 }}
+            transition={{ duration: 0.5 }}
+          />
+        )}
+      </AnimatePresence>
     </React.Fragment>
   );
 };

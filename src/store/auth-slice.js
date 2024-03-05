@@ -18,7 +18,6 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     logUserIn: (state, action) => {
-      console.log("Logging In Payload", action.payload)
       state.userLoggedIn = true;
       state.authToken = action.payload.authToken;
       state.userIsAdmin = action.payload.isAdmin;

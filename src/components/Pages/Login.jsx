@@ -35,7 +35,6 @@ const Login = (props) => {
   const { isPending: isLoginPending, mutate: sendLoginRequest } = useMutation({
     mutationFn: sendMutationRequest,
     onSuccess: (data) => {
-      console.log("Login Success", data);
       dispatch(
         authActions.logUserIn({
           authToken: data.access_token,

@@ -10,7 +10,7 @@ import { AnimatePresence } from "framer-motion";
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
 const Home = React.lazy(() => import("./components/Pages/Home"));
-const AddBank = React.lazy(() => import("./components/Pages/AddBank"));
+const AddBank = React.lazy(() => import("./components/Pages/Admin/AddBank"));
 const Footer = React.lazy(() => import("./components/UI/Footer"));
 const ManageAccounts = React.lazy(() =>
   import("./components/Pages/ManageAccounts")

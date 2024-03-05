@@ -8,6 +8,7 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
 import UserAccountForm from "../Forms/AccountForms/UserAccountForm";
 import AccountDeleteForm from "../Forms/AccountForms/AccountDeleteForm";
@@ -145,31 +146,6 @@ const ManageAccounts = (props) => {
     },
   ];
 
-  let message;
-  if (isAccountsLoading) {
-    message = <p className={styles.loading}>Loading....</p>;
-  }
-  if (isAccountsError) {
-    message = (
-      <p className={styles.error}>
-        {accountsFetchError.status + ":" + accountsFetchError.message}
-      </p>
-    );
-  }
-
-  if (!isAccountsLoading && !isAccountsError && accountData) {
-    message = (
-      <DisplayGrid
-        rows={accountData}
-        columns={txnCols}
-        boxWidth="80%"
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0.25, y: 100 }}
-        transition={{ duration: 0.5 }}
-      />
-    );
-  }
-
   const addAccountClickHandler = () => {
     setAccountAction("Create");
     dispatch(formModalAction.showModal());
@@ -212,8 +188,25 @@ const ManageAccounts = (props) => {
           </AnimatedIconButton>
         </Tooltip>
       </Header>
-      {/* <Container className={styles.container}>{message}</Container> */}
-      {message}
+      <AnimatePresence>
+        {isAccountsLoading && <SpinnerCircular />}
+        {isAccountsError && (
+          <p className={styles.error} key="error">
+            {accountsFetchError.status + ":" + accountsFetchError.message}
+          </p>
+        )}
+        {isSuccess && (
+          <DisplayGrid
+            key="grid"
+            rows={accountData}
+            columns={txnCols}
+            boxWidth="80%"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0.25, y: 100 }}
+            transition={{ duration: 0.5 }}
+          />
+        )}
+      </AnimatePresence>
     </React.Fragment>
   );
 };
