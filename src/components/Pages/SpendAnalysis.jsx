@@ -341,6 +341,30 @@ const SpendAnalysis = (props) => {
     setToDate(event.target.value);
   };
 
+  const factoryAccordianHandler = (accordian) => (event, expanded) => {
+    if (accordian === "summary") {
+      setAccordianState({
+        summary: expanded,
+        chart: expanded ? false : currentState.chart,
+        transactions: expanded ? false : currentState.transactions,
+      });
+    }
+    if (accordian === "chart") {
+      setAccordianState({
+        chart: expanded,
+        summary: expanded ? false : currentState.summary,
+        transactions: expanded ? false : currentState.transactions,
+      });
+    }
+    if (accordian === "transactions") {
+      setAccordianState({
+        transactions: expanded,
+        summary: expanded ? false : currentState.summary,
+        chart: expanded ? false : currentState.chart,
+      });
+    }
+  };
+
   const summaryChangeHandler = (event, expanded) => {
     setAccordianState((currentState) => {
       return {
