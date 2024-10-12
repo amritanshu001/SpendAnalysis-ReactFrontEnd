@@ -2,8 +2,7 @@ import styles from "./App.module.css";
 
 import React from "react";
 
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "./MUIThemeEngine/theme";
+import MuiThemeProvider from "./MUIThemeEngine/theme";
 import Paper from "@mui/material/Paper";
 import { AnimatePresence } from "framer-motion";
 
@@ -56,7 +55,7 @@ const App = (props) => {
   const showMessage = useSelector((state) => state.globalMessages.showMessage);
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
+      <MuiThemeProvider>
         <Navbar></Navbar>
         <Paper elevation={0} sx={{ marginTop: 5 }}>
           <Routes>
@@ -142,7 +141,7 @@ const App = (props) => {
         <AnimatePresence>
           {showMessage && <Footer message={globalMessage} />}
         </AnimatePresence>
-      </ThemeProvider>
+      </MuiThemeProvider>
     </QueryClientProvider>
   );
 };

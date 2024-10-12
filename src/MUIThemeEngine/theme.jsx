@@ -3,7 +3,8 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 const MuiThemeProvider = (props) => {
-  const mode = "light";
+  const mode = useSelector((state) => state.themeMode.mode);
+  console.log("Current Mode:", mode);
   const theme = useMemo(() => {
     createTheme({
       //   palette: {
