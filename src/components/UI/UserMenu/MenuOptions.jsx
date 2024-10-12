@@ -12,6 +12,7 @@ import Logout from "@mui/icons-material/Logout";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Stack from "@mui/material/Stack";
+import { Box } from "@mui/material";
 import { motion } from "framer-motion";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -140,14 +141,12 @@ const MenuOptions = (props) => {
         onClose={handleClose}
         onClick={handleClose}
       >
-        {!props.hideSideBar && (
-          <>
-            <AnimatedMenuItem disabled>
-              <Typography> {userEmail}</Typography>
-            </AnimatedMenuItem>
-            <Divider />
-          </>
-        )}
+        {!props.hideSideBar && [
+          <AnimatedMenuItem disabled key="email">
+            <Typography> {userEmail}</Typography>
+          </AnimatedMenuItem>,
+          <Divider key="divider" />,
+        ]}
         <AnimatedMenuItem onClick={changePasswordHandler}>
           <ListItemIcon>
             <LockResetIcon fontSize="small" />
