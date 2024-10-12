@@ -1,13 +1,14 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 const MuiThemeProvider = (props) => {
-  mode = "light";
-  useMemo(() => {
-    const theme = createTheme({
-      palette: {
-        mode: "light",
-      },
+  const mode = "light";
+  const theme = useMemo(() => {
+    createTheme({
+      //   palette: {
+      //     mode: "light",
+      //   },
       components: {
         MuiAccordion: {
           styleOverrides: {
@@ -27,6 +28,7 @@ const MuiThemeProvider = (props) => {
       },
     });
   }, [mode]);
+  return <ThemeProvider theme={theme}>{props.children}</ThemeProvider>;
 };
 
-export default theme;
+export default MuiThemeProvider;

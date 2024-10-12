@@ -4,6 +4,7 @@ import userAccountReducer from "./useraccount-slice";
 import formModalReducer from "./formmodal-slice";
 import banksSliceReducer from "./banks-slice";
 import messageSliceReducer from "./message-slice";
+import themeModeReducer from "./theme-slice";
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     userAccounts: userAccountReducer,
     formModal: formModalReducer,
     banks: banksSliceReducer,
-    globalMessages:messageSliceReducer
+    globalMessages: messageSliceReducer,
+    themeMode: themeModeReducer,
   },
 });
 
