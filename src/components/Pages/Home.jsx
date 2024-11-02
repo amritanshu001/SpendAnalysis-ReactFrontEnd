@@ -49,7 +49,9 @@ const Home = (props) => {
           This application is developed to create spend analysis of the bank
           statements uploaded by the users :
         </div>
-        {homeContent.map(mapHomeContent)}
+        {homeContent
+          .filter((content) => content.path !== "/")
+          .map(mapHomeContent)}
       </Container>
     </React.Fragment>
   );

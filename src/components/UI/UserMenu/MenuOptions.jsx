@@ -119,7 +119,17 @@ const MenuOptions = (props) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>
+            <Avatar
+              sx={{
+                width: 32,
+                height: 32,
+                color: "white",
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "light"
+                    ? theme.palette.secondary.light
+                    : theme.palette.secondary.dark,
+              }}
+            >
               {userEmail ? userEmail[0].toUpperCase() : ""}
             </Avatar>
           </IconButton>
@@ -140,6 +150,7 @@ const MenuOptions = (props) => {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        color="secondary"
       >
         {!props.hideSideBar && [
           <AnimatedMenuItem disabled key="email">

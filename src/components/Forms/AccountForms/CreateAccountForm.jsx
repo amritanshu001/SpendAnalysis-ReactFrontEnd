@@ -8,6 +8,7 @@ import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
 import RefetchIcon from "../../UI/Refetch/RefetchIcon";
+import Header from "../../UI/Header";
 import { motion } from "framer-motion";
 
 import FormModal from "../../UI/Modal/FormModal";
@@ -89,75 +90,78 @@ const CreateAccountForm = (props) => {
   };
 
   return (
-    <FormModal onBackdropClick={props.onCancel}>
-      <form className={styles.form} onSubmit={addAccountHandler}>
-        <div className={styles.readonly}>
-          <label>Account#</label>
-          <input
-            type="text"
-            onChange={changeAccountNumberHandler}
-            value={accountNumber}
-          />
-        </div>
-        <div className={styles.readonly}>
-          <label htmlFor="bank_name">Bank Name</label>
-          <div className={styles.refetch}>
-            <select
-              id="bank_name"
-              value={selectedBankId}
-              onChange={selectChangeHandler}
-            >
-              <option value={0}>---</option>
-              {banks && banks.length > 0 && banks.map(mapBanks)}
-            </select>
-            <RefetchIcon
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              onClick={refetchBanks}
-              sx={{
-                fontWeight: "bold",
-                color: "#405d27",
-              }}
+    <>
+      <FormModal onBackdropClick={props.onCancel}>
+        <Header>Add New Account</Header>
+        <form className={styles.form} onSubmit={addAccountHandler}>
+          <div className={styles.readonly}>
+            <label>Account#</label>
+            <input
+              type="text"
+              onChange={changeAccountNumberHandler}
+              value={accountNumber}
             />
           </div>
-        </div>
-        <div className={styles.checkbox}>
-          <div>
-            <input
-              type="checkbox"
-              checked={accountJoint}
-              onChange={jointChangeHandler}
-            ></input>
-            <label>Joint</label>
+          <div className={styles.readonly}>
+            <label htmlFor="bank_name">Bank Name</label>
+            <div className={styles.refetch}>
+              <select
+                id="bank_name"
+                value={selectedBankId}
+                onChange={selectChangeHandler}
+              >
+                <option value={0}>---</option>
+                {banks && banks.length > 0 && banks.map(mapBanks)}
+              </select>
+              <RefetchIcon
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                onClick={refetchBanks}
+                sx={{
+                  fontWeight: "bold",
+                  color: "#405d27",
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <div className={styles.actions}>
-          <motion.button
-            whileHover={{
-              backgroundColor: "#ab003c",
-              scale: 1.1,
-              border: "1px solid #ab003c",
-            }}
-            transition={{ type: "spring", stiffness: 500 }}
-            type="button"
-            onClick={props.onCancel}
-          >
-            Cancel
-          </motion.button>
-          <motion.button
-            type="submit"
-            transition={{ type: "spring", stiffness: 500 }}
-            whileHover={{
-              scale: 1.1,
-            }}
-          >
-            {isPending ? "Creating..." : "Create Account"}
-          </motion.button>
-        </div>
-        {validation && <p>{validation}</p>}
-        {isError && <p>{error.status + ":" + error.message}</p>}
-      </form>
-    </FormModal>
+          <div className={styles.checkbox}>
+            <div>
+              <input
+                type="checkbox"
+                checked={accountJoint}
+                onChange={jointChangeHandler}
+              ></input>
+              <label>Joint</label>
+            </div>
+          </div>
+          <div className={styles.actions}>
+            <motion.button
+              whileHover={{
+                backgroundColor: "#ab003c",
+                scale: 1.1,
+                border: "1px solid #ab003c",
+              }}
+              transition={{ type: "spring", stiffness: 500 }}
+              type="button"
+              onClick={props.onCancel}
+            >
+              Cancel
+            </motion.button>
+            <motion.button
+              type="submit"
+              transition={{ type: "spring", stiffness: 500 }}
+              whileHover={{
+                scale: 1.1,
+              }}
+            >
+              {isPending ? "Creating..." : "Create Account"}
+            </motion.button>
+          </div>
+          {validation && <p>{validation}</p>}
+          {isError && <p>{error.status + ":" + error.message}</p>}
+        </form>
+      </FormModal>
+    </>
   );
 };
 

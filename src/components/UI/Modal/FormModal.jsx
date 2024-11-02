@@ -3,6 +3,10 @@ import React from "react";
 import styles from "./FormModal.module.css";
 import ReactDOM from "react-dom";
 import { motion } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
+import Dialog from "@mui/material/Dialog";
+
+const AnimatedDilog = motion(Dialog);
 
 const FormModal = (props) => {
   return ReactDOM.createPortal(
@@ -19,6 +23,22 @@ const FormModal = (props) => {
       </motion.div>
     </>,
     document.getElementById("modal")
+  );
+};
+
+const NewModal = ({ onBackdropClick, children, ...props }) => {
+  const modalStatus = useSelector((state) => state.formModal.showModal);
+  return (
+    <AnimatedDilog
+      onClose={onBackdropClick}
+      open={modalStatus}
+      initial={{ opacity: 0, y: -300 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -300, transition: { duration: 0.3 } }}
+      key="modal-div"
+    >
+      {children}
+    </AnimatedDilog>
   );
 };
 

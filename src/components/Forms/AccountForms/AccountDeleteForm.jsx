@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./AccountDeleteForm.module.css";
 import FormModal from "../../UI/Modal/FormModal";
+import Header from "../../UI/Header";
 import {
   sendMutationRequest,
   queryClient,
@@ -45,6 +46,7 @@ const AccountDeleteForm = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
+      <Header>Remove Account</Header>
       <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
         <div>
           <p>Account# {props.account.account_no} will be deleted!</p>

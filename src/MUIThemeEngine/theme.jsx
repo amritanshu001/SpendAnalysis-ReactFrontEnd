@@ -8,6 +8,15 @@ const MuiThemeProvider = (props) => {
   const theme = useMemo(
     () =>
       createTheme({
+        palette: {
+          mode: mode,
+          primary: {
+            main: "#5f3e93",
+          },
+          secondary: {
+            main: "#72933e",
+          },
+        },
         components: {
           MuiAccordion: {
             styleOverrides: {

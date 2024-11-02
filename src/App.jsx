@@ -57,7 +57,7 @@ const App = (props) => {
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider>
         <Navbar></Navbar>
-        <Paper elevation={0} sx={{ marginTop: 5 }}>
+        <Paper elevation={0} sx={{ minHeight: "100vh" }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route element={<LoginRouteProtect />}>

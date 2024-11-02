@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./UserAccountForm.module.css";
 import FormModal from "../../UI/Modal/FormModal";
+import Header from "../../UI/Header";
 import {
   sendMutationRequest,
   queryClient,
@@ -55,6 +56,7 @@ const UserAccountForm = ({ data, onCancel }) => {
 
   return (
     <FormModal onBackdropClick={onCancel}>
+      <Header>Edit Account Details</Header>
       <form className={styles.form} onSubmit={accountEditHandler}>
         <div className={styles.inputs}>
           <div className={styles.readonly}>
