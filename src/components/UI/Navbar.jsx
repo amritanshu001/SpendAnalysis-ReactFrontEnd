@@ -81,7 +81,7 @@ const NewNavbar = () => {
         anchor="left"
         onClose={toggleDrawer(false)}
       >
-        <NewNavLinks />
+        <NewNavLinks onLinkClick={toggleDrawer(false)} />
       </Drawer>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="fixed" enableColorOnDark>

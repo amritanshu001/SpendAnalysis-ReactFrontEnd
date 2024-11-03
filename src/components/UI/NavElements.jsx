@@ -9,12 +9,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
-import LoginIcon from "@mui/icons-material/Login";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import UploadIcon from "@mui/icons-material/Upload";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { useSelector } from "react-redux";
 import router from "../../lib/metadata";
 
@@ -100,7 +94,7 @@ const NavElements = (props) => {
 
 const ListItemContent = (props) => {
   return (
-    <ListItem disablePadding>
+    <ListItem disablePadding onClick={props.onLinkClick}>
       <ListItemButton component={NavLink} to={props.route}>
         <ListItemIcon>
           <props.icon color="warning" />
@@ -114,7 +108,7 @@ const ListItemContent = (props) => {
   );
 };
 
-export const NewNavLinks = () => {
+export const NewNavLinks = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
 
@@ -147,6 +141,7 @@ export const NewNavLinks = () => {
             route={route.path}
             title={route.pathName}
             icon={route.icon}
+            onLinkClick={props.onLinkClick}
           />
         ))}
       </List>
