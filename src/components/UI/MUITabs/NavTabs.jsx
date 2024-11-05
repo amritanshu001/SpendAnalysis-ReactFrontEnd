@@ -54,8 +54,8 @@ export default function NavTabs() {
       <AnimatedTabs
         value={navState}
         onChange={handleChange}
-        textColor="primary"
-        indicatorColor="primary"
+        textColor="secondary"
+        indicatorColor="secondary"
         variant="scrollable"
         scrollButtons
         allowScrollButtonsMobile

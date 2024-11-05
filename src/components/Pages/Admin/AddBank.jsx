@@ -238,7 +238,7 @@ const AddBank = (props) => {
         Bank Details
         <Tooltip title="Add New Bank" placement="top-start" arrow>
           <AnimatedIconButton
-            color="primary"
+            color="secondary"
             aria-label="add"
             onClick={addBankClickHandler}
             whileHover={{ rotate: 90 }}

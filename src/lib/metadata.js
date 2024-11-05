@@ -60,7 +60,7 @@ const homeContent = [
     title: "Admin Page (Restricted Access)",
     access: "admin",
     pathName: "Admin Page",
-    path: "/admin",
+    path: "/admin/addbank",
     icon: SupervisorAccountIcon,
     description:
       "Users with admin access can perform various admin tasks like: ",

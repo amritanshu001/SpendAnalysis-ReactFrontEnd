@@ -19,7 +19,18 @@ const MUIAccordion = (props) => {
       defaultExpanded={props.defaultExpanded}
       onChange={props.onChange}
       disabled={props.disabled}
-      sx={props.sx}
+      sx={{
+        width: "90%",
+        margin: "auto",
+        marginTop: "0.5rem",
+        fontWeight: "bold",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "light"
+            ? theme.palette.secHeader.main
+            : theme.palette.secHeader.dark,
+        color: "white",
+        ...props.sx,
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}

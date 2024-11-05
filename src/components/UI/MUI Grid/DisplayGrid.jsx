@@ -79,6 +79,12 @@ const DisplayGrid = forwardRef((props, ref) => {
         margin: "auto",
         marginTop: 2,
         marginBottom: 2,
+        "& .MuiButton-root": {
+          color: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.secondary.dark
+              : theme.palette.secondary.light,
+        },
         "& .table__header": {
           backgroundColor: "#405d27",
           color: "#f3f2f2",

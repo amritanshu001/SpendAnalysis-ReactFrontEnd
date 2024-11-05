@@ -16,20 +16,22 @@ const MuiThemeProvider = (props) => {
           secondary: {
             main: "#72933e",
           },
+          header: {
+            main: "#002e94",
+            dark: "#002067",
+            light: "#3357a9",
+          },
+          secHeader: {
+            main: "#667d52",
+            dark: "#475739",
+            light: "#849774",
+          },
         },
         components: {
           MuiAccordion: {
             styleOverrides: {
-              root: {
-                width: "90%",
-                margin: "auto",
-                marginTop: "0.5rem",
-                fontWeight: "bold",
-                backgroundColor: "#405d27",
-                color: "white",
-              },
               region: {
-                backgroundColor: "white",
+                backgroundColor: mode === "light" ? "white" : "#37474f",
               },
             },
           },

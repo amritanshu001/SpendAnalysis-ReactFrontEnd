@@ -1,8 +1,7 @@
 import React from "react";
-import styles from "./NavElements.module.css";
+
 import { NavLink } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
-import MenuOptions from "./UserMenu/MenuOptions";
+
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -12,96 +11,29 @@ import ListItemText from "@mui/material/ListItemText";
 import { useSelector } from "react-redux";
 import router from "../../lib/metadata";
 
-const activeLink = ({ isActive }) =>
-  isActive ? styles["link-active"] : undefined;
-
-const NavElements = (props) => {
-  const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
-  const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
-
-  return (
-    <nav className={props.className}>
-      <ul>
-        <li>
-          <NavLink to="/" onClick={props.hideSideBar} className={activeLink}>
-            Home
-          </NavLink>
-        </li>
-        {!isUserLoggedIn && (
-          <li>
-            <NavLink
-              to="/login"
-              onClick={props.hideSideBar}
-              className={activeLink}
-            >
-              Login
-            </NavLink>
-          </li>
-        )}
-        {isUserLoggedIn && (
-          <li>
-            <NavLink
-              to="/spendanalysis"
-              onClick={props.hideSideBar}
-              className={activeLink}
-            >
-              Spend Analysis
-            </NavLink>
-          </li>
-        )}
-        {isUserLoggedIn && (
-          <li>
-            <NavLink
-              to="/manageaccount"
-              onClick={props.hideSideBar}
-              className={activeLink}
-            >
-              Manage Accounts
-            </NavLink>
-          </li>
-        )}
-        {isUserLoggedIn && (
-          <li>
-            <NavLink
-              to="/uploadstatement"
-              onClick={props.hideSideBar}
-              className={activeLink}
-            >
-              Upload Statement
-            </NavLink>
-          </li>
-        )}
-        {isUserLoggedIn && isUserAdmin && (
-          <li>
-            <NavLink
-              to="/admin/addbank"
-              onClick={props.hideSideBar}
-              className={activeLink}
-            >
-              Admin Page
-            </NavLink>
-          </li>
-        )}
-      </ul>
-      <AnimatePresence>
-        {isUserLoggedIn && (
-          <MenuOptions key="menu" hideSideBar={props.hideSideBar} />
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-};
-
 const ListItemContent = (props) => {
+  console.log({
+    location: "ListItemContent",
+    onLinkClickProp: props.onLinkClick,
+  });
   return (
-    <ListItem disablePadding onClick={props.onLinkClick}>
-      <ListItemButton component={NavLink} to={props.route}>
+    <ListItem disablePadding>
+      <ListItemButton
+        component={NavLink}
+        to={props.route}
+        onClick={props.onLinkClick}
+      >
         <ListItemIcon>
           <props.icon color="warning" />
         </ListItemIcon>
         <ListItemText
           primary={props.title}
-          sx={{ color: (theme) => theme.palette.secondary.dark }}
+          sx={{
+            color: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.secondary.dark
+                : theme.palette.secondary.light,
+          }}
         />
       </ListItemButton>
     </ListItem>
@@ -148,5 +80,3 @@ export const NewNavLinks = (props) => {
     </Box>
   );
 };
-
-export default NavElements;
