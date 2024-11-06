@@ -43,6 +43,9 @@ const NewNavbar = () => {
         anchor="left"
         onClose={toggleDrawer(false)}
         variant="temporary"
+        sx={{
+          ariaHidden: "false",
+        }}
       >
         <NewNavLinks onLinkClick={toggleDrawer(false)} />
       </Drawer>
