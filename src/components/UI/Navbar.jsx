@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeTwoToneIcon from "@mui/icons-material/LightModeTwoTone";
 import { themeModeAction } from "../../store/theme-slice";
+import Sidebar from "./Sidebar";
 
 import MenuOptions from "./UserMenu/MenuOptions";
 import { NewNavLinks } from "./NavElements";
@@ -38,7 +39,7 @@ const NewNavbar = () => {
 
   return (
     <>
-      <Drawer
+      {/* <Drawer
         open={drawerOpen}
         anchor="left"
         onClose={toggleDrawer(false)}
@@ -47,8 +48,13 @@ const NewNavbar = () => {
           ariaHidden: "false",
         }}
       >
-        <NewNavLinks onLinkClick={toggleDrawer(false)} />
-      </Drawer>
+        <NewNavLinks onLinkClick={toggleDrawer(false)} /> */}
+      {drawerOpen && (
+        <Sidebar hideSideBar={toggleDrawer(false)}>
+          <NewNavLinks onLinkClick={toggleDrawer(false)} />
+        </Sidebar>
+      )}
+      {/* </Drawer> */}
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="fixed" enableColorOnDark>
           <Toolbar>

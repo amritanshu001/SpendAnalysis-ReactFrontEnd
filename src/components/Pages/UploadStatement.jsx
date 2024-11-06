@@ -11,13 +11,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
 import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
+import UploadFiles from "../UI/UploadFiles/UploadFiles";
 
 import Header from "../UI/Header";
 const apiURL = import.meta.env.VITE_API_URL;
 import { useRef } from "react";
 
 import { useLocation } from "react-router-dom";
-
 const mapAccounts = (account) => {
   return (
     <option key={account.id} value={account.id}>
@@ -149,12 +149,11 @@ const UploadStatement = (props) => {
             </div>
           </div>
           <div className={styles["file-input"]}>
-            <input
-              type="file"
+            <UploadFiles
+              multiple={false}
               ref={fileInputRef}
-              id="inputfile"
-              name="inputfile"
-            ></input>
+              buttonName="Choose Statement File"
+            />
           </div>
           <div className={styles.actions}>
             <Button
