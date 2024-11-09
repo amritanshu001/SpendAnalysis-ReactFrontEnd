@@ -52,7 +52,7 @@ const MenuOptions = (props) => {
           messageText: "You have been successfully logged out!",
         })
       );
-      redirect("/login", { replace: true });
+      redirect("/login", { replace: true, state: null });
       console.log("Logged Out successfully");
     },
   });

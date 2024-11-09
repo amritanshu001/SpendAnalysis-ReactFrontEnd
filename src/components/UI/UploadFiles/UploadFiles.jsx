@@ -20,10 +20,15 @@ export default forwardRef((props, ref) => {
     <Button
       component="label"
       role={undefined}
-      variant="outlined"
-      color="secondary"
+      variant="contained"
+      color={props.color}
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
+      size="large"
+      sx={{
+        width: "70%",
+        mx: "auto",
+      }}
     >
       {props.buttonName}
       <VisuallyHiddenInput type="file" ref={ref} multiple={props.multiple} />

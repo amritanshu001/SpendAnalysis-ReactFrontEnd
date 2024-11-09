@@ -113,7 +113,7 @@ const ResetPassword = () => {
   useEffect(() => {
     setTimeout(() => {
       if (isPasswordResetError || isPassswordResetSuccess) {
-        history("/login", { replace: true });
+        history("/login", { replace: true, state: null });
       }
     }, 2000);
   }, [isPasswordResetError, isPassswordResetSuccess]);

@@ -1,10 +1,18 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const LoginProtect = () => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
-  return isUserLoggedIn ? <Outlet /> : <Navigate to="/login" />;
+  const location = useLocation();
+  return isUserLoggedIn ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to="/login"
+      state={{ fromLocation: location.pathname, authorized: false }}
+    />
+  );
 };
 
 export default LoginProtect;

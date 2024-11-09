@@ -55,7 +55,7 @@ const ChangePassword = (props) => {
             "Password has been changed successfully. Please login with your new password.",
         })
       );
-      redirect("/login", { replace: true });
+      redirect("/login", { replace: true, state: null });
       console.log("Logged Out successfully");
     },
   });

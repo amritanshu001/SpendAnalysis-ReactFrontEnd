@@ -13,20 +13,26 @@ import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import UploadFiles from "../UI/UploadFiles/UploadFiles";
 
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText,
+  MenuItem,
+  Stack,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import Box from "../UI/Box/MUIBox";
+
 import Header from "../UI/Header";
 const apiURL = import.meta.env.VITE_API_URL;
 import { useRef } from "react";
 
 import { useLocation } from "react-router-dom";
-const mapAccounts = (account) => {
-  return (
-    <option key={account.id} value={account.id}>
-      {account.bank_name}--{account.account_no}
-    </option>
-  );
-};
 
-const UploadStatement = (props) => {
+const NewUploadStatement = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
   const location = useLocation();
 
@@ -34,9 +40,10 @@ const UploadStatement = (props) => {
     useFetchAccounts(authToken);
 
   const fileInputRef = useRef();
-  const [accountId, setAccountId] = useState(0);
+  const [accountId, setAccountId] = useState("");
   const [insertCount, setInsertCount] = useState({});
-  const [validation, setValidation] = useState(null);
+  const [accountValidation, setAccountValidation] = useState(null);
+  const [fileValidation, setFileValidation] = useState(null);
 
   const {
     mutate: uploadFile,
@@ -70,15 +77,18 @@ const UploadStatement = (props) => {
     event.preventDefault();
     setInsertCount({});
 
-    if (accountId === 0) {
-      setValidation("Please select an account");
+    if (accountId === "") {
+      setAccountValidation("Please select an account");
+      setFileValidation(null);
       return;
     }
     if (!fileInputRef.current.files[0]) {
-      setValidation("Please select a file to upload");
+      setFileValidation("Please select a file to upload");
+      setAccountValidation(null);
       return;
     }
-    setValidation(null);
+    setAccountValidation(null);
+    setFileValidation(null);
 
     const formData = new FormData();
     formData.append("file", fileInputRef.current.files[0]);
@@ -92,7 +102,7 @@ const UploadStatement = (props) => {
       },
     };
     uploadFile({ requestConfig: fileConfig });
-    setAccountId(0);
+    setAccountId("");
     fileInputRef.current.value = "";
   };
 
@@ -120,41 +130,115 @@ const UploadStatement = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Upload Statement</Header>
-      <Container
+      <Box
         initial={{ opacity: 0.25, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        sx={{
+          boxShadow: 10,
+          border: (theme) =>
+            `1px ${
+              theme.palette.mode === "light"
+                ? theme.palette.secondary.light
+                : theme.palette.secondary.dark
+            } solid`,
+
+          maxWidth: "40rem",
+          margin: "auto",
+          p: "1rem",
+          borderRadius: 2,
+        }}
       >
         <form
           encType="multipart/form-data"
           className={styles.form}
           onSubmit={uploadFileHandler}
         >
-          <div className={styles.select}>
-            <label>Select Account</label>
-            <div className={styles.refetch}>
-              <select onChange={onSelectChangeHandler} value={accountId}>
-                <option value={0}>---</option>
-                {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
-              </select>
-              <RefetchIcon
-                onClick={refetchAccounts}
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                sx={{
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-              />
-            </div>
-          </div>
-          <div className={styles["file-input"]}>
+          <Stack
+            direction="row"
+            gap={1}
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              my: "1rem",
+            }}
+          >
+            <FormControl
+              error={accountValidation !== null}
+              size="small"
+              sx={{ minWidth: "250px" }}
+            >
+              <InputLabel id="account-select" color="secondary">
+                Select an Account
+              </InputLabel>
+              <Select
+                label="Select an Account"
+                labelId="account-select"
+                displayEmpty
+                value={accountId}
+                onChange={onSelectChangeHandler}
+                sx={{ boxShadow: 1 }}
+              >
+                {accounts &&
+                  accounts.length > 0 &&
+                  accounts.map((account) => (
+                    <MenuItem key={account.id} value={account.id}>
+                      {account.bank_name}--{account.account_no}
+                    </MenuItem>
+                  ))}
+              </Select>
+              {accountValidation && (
+                <FormHelperText>{accountValidation}</FormHelperText>
+              )}
+            </FormControl>
+            <Tooltip title="Clear account" placement="bottom-start" arrow>
+              <span>
+                <IconButton
+                  onClick={() => setAccountId("")}
+                  disabled={accountId === ""}
+                >
+                  <RemoveCircleIcon
+                    sx={{
+                      color: (theme) =>
+                        accountId === ""
+                          ? theme.palette.action.disabled
+                          : theme.palette.error.main,
+                    }}
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <RefetchIcon
+              onClick={refetchAccounts}
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+              sx={{
+                color: (theme) =>
+                  theme.palette.mode === "light"
+                    ? theme.palette.primary.dark
+                    : theme.palette.primary.light,
+                fontWeight: "bold",
+              }}
+            />
+          </Stack>
+
+          <FormControl
+            error={fileValidation !== null}
+            sx={{
+              alignItems: "center",
+            }}
+          >
             <UploadFiles
               multiple={false}
               ref={fileInputRef}
               buttonName="Choose Statement File"
+              color={fileValidation !== null ? "error" : "secondary"}
             />
-          </div>
+            {fileValidation && (
+              <FormHelperText>{fileValidation}</FormHelperText>
+            )}
+          </FormControl>
+
           <div className={styles.actions}>
             <Button
               whileHover={{ scale: 1.1 }}
@@ -163,12 +247,11 @@ const UploadStatement = (props) => {
               Upload Data
             </Button>
           </div>
-          {validation && <p className={styles.error}>{validation}</p>}
         </form>
-      </Container>
+      </Box>
       {serverResponse}
     </React.Fragment>
   );
 };
 
-export default UploadStatement;
+export default NewUploadStatement;

@@ -44,7 +44,7 @@ import { useSelector } from "react-redux";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 
 import UploadStatement from "./components/Pages/UploadStatement";
 
@@ -53,6 +53,16 @@ import { queryClient } from "../src/lib/endpoint-configs";
 const App = (props) => {
   const globalMessage = useSelector((state) => state.globalMessages.messages);
   const showMessage = useSelector((state) => state.globalMessages.showMessage);
+  const location = useLocation();
+  let authError = { status: null, messageText: null };
+
+  if (location.state) {
+    authError = {
+      status: "error",
+      messageText: `Access to ${location.state.fromLocation} is not allowed with current authorization. Redirecting to ${location.pathname}`,
+    };
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider>
@@ -140,6 +150,9 @@ const App = (props) => {
         </Paper>
         <AnimatePresence>
           {showMessage && <Footer message={globalMessage} />}
+        </AnimatePresence>
+        <AnimatePresence>
+          {location.state && <Footer message={authError} />}
         </AnimatePresence>
       </MuiThemeProvider>
     </QueryClientProvider>

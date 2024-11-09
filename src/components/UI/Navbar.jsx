@@ -15,6 +15,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeTwoToneIcon from "@mui/icons-material/LightModeTwoTone";
 import { themeModeAction } from "../../store/theme-slice";
 import Sidebar from "./Sidebar";
+import { useLocation } from "react-router-dom";
 
 import MenuOptions from "./UserMenu/MenuOptions";
 import { NewNavLinks } from "./NavElements";
@@ -24,18 +25,17 @@ const NewNavbar = () => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const mode = useSelector((state) => state.themeMode.mode);
   const dispatch = useDispatch();
+  const location = useLocation();
   const toggleTheme = () => {
     dispatch(themeModeAction.toggleMode());
   };
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const closeDrawer = () => setDrawerOpen(false);
-
   const toggleDrawer = (state) => () => {
     setDrawerOpen(state);
   };
 
-  console.log({ location: "Navbar", drawerStatus: drawerOpen });
+  // console.log({ location: location });
 
   return (
     <>
@@ -51,7 +51,10 @@ const NewNavbar = () => {
         <NewNavLinks onLinkClick={toggleDrawer(false)} /> */}
       {drawerOpen && (
         <Sidebar hideSideBar={toggleDrawer(false)}>
-          <NewNavLinks onLinkClick={toggleDrawer(false)} />
+          <NewNavLinks
+            onLinkClick={toggleDrawer(false)}
+            currentPath={location.pathname}
+          />
         </Sidebar>
       )}
       {/* </Drawer> */}

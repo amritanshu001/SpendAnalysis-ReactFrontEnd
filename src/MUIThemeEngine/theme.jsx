@@ -1,6 +1,18 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  ThemeProvider,
+  alpha,
+  getContrastRatio,
+} from "@mui/material/styles";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+
+const colorPalleteGenerator = (color) => ({
+  main: alpha(color, 0.7),
+  light: alpha(color, 0.5),
+  dark: alpha(color, 0.9),
+  contrastText: getContrastRatio(color, "#fff") > 4.5 ? "#fff" : "#111",
+});
 
 const MuiThemeProvider = (props) => {
   const mode = useSelector((state) => state.themeMode.mode);
@@ -20,6 +32,7 @@ const MuiThemeProvider = (props) => {
             main: "#002e94",
             dark: "#002067",
             light: "#3357a9",
+            // ...colorPalleteGenerator("#002e94"),
           },
           secHeader: {
             main: "#667d52",

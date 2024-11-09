@@ -32,7 +32,7 @@ const UnRegister = (props) => {
             "You have been successfully deregistered and logged out!",
         })
       );
-      redirect("/login", { replace: true });
+      redirect("/login", { replace: true, state: null });
       console.log("Logged Out successfully");
     },
   });

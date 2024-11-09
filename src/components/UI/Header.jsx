@@ -30,12 +30,12 @@ const NewHeader = (props) => {
         // color: "#002e94",
         color: (theme) =>
           theme.palette.mode === "light"
-            ? theme.palette.header.main
+            ? theme.palette.header.dark
             : theme.palette.header.light,
         borderBottom: (theme) =>
           `2px solid ${
             theme.palette.mode === "light"
-              ? theme.palette.header.main
+              ? theme.palette.header.dark
               : theme.palette.header.light
           }`,
         paddingBottom: "0.25rem",

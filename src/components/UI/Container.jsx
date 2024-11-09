@@ -8,7 +8,7 @@ const Container = forwardRef((props, ref) => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       ref={ref}
-      className={`${styles.container} ${props.className}`}
+      className={styles.container}
     >
       {props.children}
     </motion.div>

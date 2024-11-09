@@ -21,7 +21,6 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
 import React, { useState, useEffect } from "react";
-// import useHttp from "../../hooks/useHTTP";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -50,7 +49,7 @@ const Login = (props) => {
           messageText: "Login Successful. Welcome " + data.email_id,
         })
       );
-      redirect("/", { replace: true });
+      redirect("/", { replace: true, state: null });
     },
     onError: (err) => {
       dispatch(

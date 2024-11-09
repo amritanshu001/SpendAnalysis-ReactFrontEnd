@@ -12,16 +12,13 @@ import { useSelector } from "react-redux";
 import router from "../../lib/metadata";
 
 const ListItemContent = (props) => {
-  console.log({
-    location: "ListItemContent",
-    onLinkClickProp: props.onLinkClick,
-  });
   return (
     <ListItem disablePadding>
       <ListItemButton
         component={NavLink}
         to={props.route}
         onClick={props.onLinkClick}
+        selected={props.selected}
       >
         <ListItemIcon>
           <props.icon color="warning" />
@@ -43,6 +40,7 @@ const ListItemContent = (props) => {
 export const NewNavLinks = (props) => {
   const isUserLoggedIn = useSelector((state) => state.userAuth.userLoggedIn);
   const isUserAdmin = useSelector((state) => state.userAuth.userIsAdmin);
+  const currentPath = props.currentPath;
 
   const validRoutes = router.filter((route) => {
     if (route.access === "all") {
@@ -74,6 +72,7 @@ export const NewNavLinks = (props) => {
             title={route.pathName}
             icon={route.icon}
             onLinkClick={props.onLinkClick}
+            selected={route.path === currentPath}
           />
         ))}
       </List>
