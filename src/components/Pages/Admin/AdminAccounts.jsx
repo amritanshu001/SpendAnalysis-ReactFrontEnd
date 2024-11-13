@@ -193,10 +193,10 @@ const AdminAccounts = (props) => {
         <DisplayGrid
           rows={inactiveAccounts}
           columns={txnCols}
-          boxWidth="95%"
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0.25, y: 100 }}
           transition={{ duration: 0.5 }}
+          sx={{ width: "90%" }}
         />
       )}
     </>

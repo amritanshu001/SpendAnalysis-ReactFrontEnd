@@ -1,10 +1,8 @@
-import styles from "./Login.module.css";
-import Input from "../UI/Input";
+import { NewInput } from "../UI/Input";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
-import Container from "../UI/Container";
-import ThreeDotsWave, { BouncingBall } from "../UI/Feedback/BouncingBalls";
-import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
+import LoginIcon from "@mui/icons-material/Login";
+import Box from "../UI/Box/MUIBox";
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -20,13 +18,14 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { sendMutationRequest } from "../../lib/endpoint-configs";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { motion, AnimatePresence } from "framer-motion";
+import { Typography, Stack, Link as NavLink } from "@mui/material";
 
 const AnimatedLink = motion(Link);
 
-const Login = (props) => {
+const LoginPage = () => {
   const dispatch = useDispatch();
   const redirect = useNavigate();
   const location = useLocation();
@@ -61,41 +60,6 @@ const Login = (props) => {
     },
   });
 
-  const [loginOption, setLoginOption] = useState(true);
-
-  const { mutate: sendUserRegistration, isPending: registrationPending } =
-    useMutation({
-      mutationFn: sendMutationRequest,
-      onSuccess: (data) => {
-        dispatch(
-          showAndHideMessages({
-            status: "success",
-            messageText:
-              "Registration successful! Your User Id is " + data.user_id,
-          })
-        );
-        setLoginOption(true);
-      },
-      onError: (err) => {
-        dispatch(
-          showAndHideMessages({
-            status: "error",
-            messageText: err.status + ":" + err.message,
-          })
-        );
-      },
-    });
-
-  //Setting input Validation hooks
-  const {
-    inputValue: enteredUserName,
-    inputIsValid: userNameValid,
-    isError: userNameError,
-    inputBlurHandler: userNameBlurHandler,
-    inputChangeHandler: userNameChangeHandler,
-    resetInput: resetUserName,
-  } = useInputValidator(passwordValidator);
-
   const {
     inputValue: enteredEmail,
     inputIsValid: emailIsValid,
@@ -114,106 +78,36 @@ const Login = (props) => {
     resetInput: resetPassword,
   } = useInputValidator(passwordValidator);
 
-  const {
-    inputValue: enteredConfPassword,
-    inputIsValid: confPasswordIsValid,
-    isError: confPasswordError,
-    inputBlurHandler: confPasswordBlurHandler,
-    inputChangeHandler: confPasswordChangeHandler,
-    resetInput: resetConfPassword,
-  } = useInputValidator(passwordValidator);
-
-  const optionToggleHandler = () => {
-    setLoginOption((option) => !option);
-  };
-
   const onSubmitHandler = (event) => {
     event.preventDefault();
+    // loginErrorReset();
+    const loginConfig = {
+      url: apiURL + "/userlogin",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email_id: enteredEmail,
+        password: enteredPassword,
+      }),
+    };
 
-    if (loginOption) {
-      // loginErrorReset();
-      const loginConfig = {
-        url: apiURL + "/userlogin",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email_id: enteredEmail,
-          password: enteredPassword,
-        }),
-      };
+    sendLoginRequest({ requestConfig: loginConfig });
 
-      sendLoginRequest({ requestConfig: loginConfig });
-
-      resetPassword();
-      resetEmail();
-    } else {
-      const registerConfig = {
-        url: apiURL + "/registration",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_name: enteredUserName,
-          email_id: enteredEmail,
-          password: enteredPassword,
-        }),
-      };
-      sendUserRegistration({ requestConfig: registerConfig });
-
-      resetPassword();
-      resetUserName();
-      resetEmail();
-      resetConfPassword();
-    }
+    resetPassword();
+    resetEmail();
   };
-
-  let passwordMatch = enteredPassword === enteredConfPassword;
-
-  let formIsValid =
-    emailIsValid &&
-    passwordIsValid &&
-    confPasswordIsValid &&
-    passwordMatch &&
-    userNameValid;
-
-  let confirmError = confPasswordError || !passwordMatch;
-
-  if (loginOption) {
-    formIsValid = emailIsValid && passwordIsValid;
-  }
-
-  let buttonName;
-  if (loginOption) {
-    if (isLoginPending) {
-      buttonName = "Logging In...";
-    } else {
-      buttonName = "Login";
-    }
-  } else {
-    buttonName = "Register";
-  }
-
-  //After Effects
-
-  useEffect(() => {
-    if (loginOption) {
-      resetConfPassword();
-      resetUserName();
-    }
-  }, [loginOption]);
-
-  let enableHyperLink = !(loginOption
-    ? loginOption && isLoginPending
-    : !loginOption && registrationPending);
+  const formIsValid = emailIsValid && passwordIsValid;
+  const buttonName = isLoginPending ? "Logging In..." : "Login";
 
   return (
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
-      <Header>{loginOption ? "Login" : "Register"}</Header>
-      <Container
+      <Header>Login</Header>
+      <Box
+        component="form"
+        onSubmit={onSubmitHandler}
         variants={{
           hidden: { opacity: 0, y: -10 },
           visible: { opacity: 1, y: 0 },
@@ -222,133 +116,121 @@ const Login = (props) => {
         animate="visible"
         exit="hidden"
         layout
+        sx={{
+          width: "90%",
+          maxWidth: "25rem",
+          mx: "auto",
+          p: "1rem",
+          border: (theme) => `1px solid ${theme.palette.primary.main}`,
+          borderRadius: 2,
+          boxShadow: 10,
+          display: "flex",
+          flexDirection: "column",
+          "& .MuiTextField-root": {
+            m: "1rem auto",
+            width: "90%",
+          },
+        }}
       >
-        <motion.form
-          onSubmit={onSubmitHandler}
-          className={styles["login-form"]}
-          layout
-        >
+        <AnimatePresence>
+          <NewInput
+            key="email"
+            id="email"
+            type="email"
+            name="email"
+            label="Email Id"
+            value={enteredEmail}
+            onBlur={emailBlurHandler}
+            onChange={emailChangeHandler}
+            disabled={isLoginPending}
+            error={emailIsError}
+            errorText={emailIsError ? "Enter correct email format" : null}
+          />
+          <NewInput
+            key={"password"}
+            id="password"
+            type="password"
+            name="password"
+            label="Enter Password"
+            value={enteredPassword}
+            onBlur={passwordBlurHandler}
+            onChange={passwordChangeHandler}
+            disabled={isLoginPending}
+            error={passwordError}
+            errorText={
+              passwordError
+                ? "Password should be atleast 8 characters long"
+                : null
+            }
+          />
+        </AnimatePresence>
+        <Stack direction="column" textAlign="center" gap={2}>
+          <Button
+            type="submit"
+            disabled={!formIsValid}
+            whileHover={{ scale: formIsValid ? 1.1 : 1 }}
+            transition={{ type: "spring", stiffness: 500 }}
+            variant="contained"
+            icon={<LoginIcon />}
+            loading={isLoginPending}
+          >
+            {buttonName}
+          </Button>
           <AnimatePresence>
-            {!loginOption && (
-              <Input
-                key="username"
-                id="username"
-                type="text"
-                name="username"
-                value={enteredUserName}
-                onBlur={userNameBlurHandler}
-                onChange={userNameChangeHandler}
-                disabled={isLoginPending}
-                className={userNameError ? styles.invalid : ""}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-              >
-                User Name
-              </Input>
-            )}
-
-            <Input
-              key="email"
-              id="email"
-              type="email"
-              name="email"
-              value={enteredEmail}
-              onBlur={emailBlurHandler}
-              onChange={emailChangeHandler}
-              disabled={isLoginPending}
-              className={emailIsError ? styles.invalid : ""}
-            >
-              Email Id
-            </Input>
-            <Input
-              key={"password"}
-              id="password"
-              type="password"
-              name="password"
-              value={enteredPassword}
-              onBlur={passwordBlurHandler}
-              onChange={passwordChangeHandler}
-              disabled={isLoginPending}
-              className={passwordError ? styles.invalid : ""}
-            >
-              Password
-            </Input>
-            {!loginOption && (
-              <React.Fragment>
-                <Input
-                  key={"conf"}
-                  id="confpassword"
-                  type="password"
-                  name="confpassword"
-                  value={enteredConfPassword}
-                  onBlur={confPasswordBlurHandler}
-                  onChange={confPasswordChangeHandler}
-                  disabled={isLoginPending}
-                  className={confPasswordError ? styles.invalid : ""}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+            {!isLoginPending && (
+              <>
+                <NavLink
+                  component={AnimatedLink}
+                  to="/request-resetpassword"
+                  whileHover={{ scale: 1.1, color: "#FF3161" }}
+                  exit={{ x: 60, opacity: 0 }}
+                  sx={{
+                    fontWeight: "bold",
+                    color: (theme) => theme.palette.primary.light,
+                  }}
+                  key="link"
                 >
-                  Confirm Password
-                </Input>
-                {confirmError && (
-                  <p className={styles.error}>Passwords Dont Match</p>
-                )}
-              </React.Fragment>
-            )}
-          </AnimatePresence>
-          <div className={styles.actions}>
-            <Button
-              type="submit"
-              disabled={!formIsValid}
-              whileHover={{ scale: formIsValid ? 1.1 : 1 }}
-              transition={{ type: "spring", stiffness: 500 }}
-            >
-              {buttonName}
-            </Button>
-            <AnimatePresence>
-              {enableHyperLink && (
-                <>
-                  <motion.button
-                    type="button"
-                    onClick={optionToggleHandler}
-                    className={styles.toggler}
-                    whileHover={{ scale: 1.05 }}
+                  Forgot your password?
+                </NavLink>
+
+                <Stack
+                  direction="row"
+                  key="register"
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ display: "inline", paddingTop: "0.4rem" }}
+                  >
+                    Don't have an account?
+                  </Typography>
+                  <NavLink
+                    component={AnimatedLink}
+                    to="/sign-up"
+                    whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 200 }}
                     exit={{ x: 60, opacity: 0 }}
-                    key="button"
+                    sx={{
+                      p: 1,
+                      fontSize: "1.2rem",
+                      fontWeight: "bold",
+                      color: (theme) =>
+                        theme.palette.mode === "light"
+                          ? theme.palette.info.dark
+                          : theme.palette.info.light,
+                    }}
                   >
-                    {loginOption ? "New User?" : "Login"}
-                  </motion.button>
-                  <AnimatedLink
-                    to="/request-resetpassword"
-                    whileHover={{ scale: 1.1, color: "#FF3161" }}
-                    exit={{ x: 60, opacity: 0 }}
-                    key="link"
-                  >
-                    Reset Password
-                  </AnimatedLink>
-                </>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.form>
-      </Container>
-      {registrationPending && (
-        <div className={styles["server-loading"]}>
-          <p>Setting up your account...</p>
-          <SpinnerCircular color="success" />
-        </div>
-      )}
-      {isLoginPending && (
-        <div className={styles["server-loading"]}>
-          <p>Logging you in....</p>
-          <SpinnerCircular color="success" />
-        </div>
-      )}
+                    Sign Up!
+                  </NavLink>
+                </Stack>
+              </>
+            )}
+          </AnimatePresence>
+        </Stack>
+      </Box>
     </React.Fragment>
   );
 };
 
-export default Login;
+export default LoginPage;

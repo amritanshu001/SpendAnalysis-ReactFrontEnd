@@ -434,7 +434,7 @@ const ManageUsers = () => {
           <DisplayGrid
             rows={users}
             columns={txnCols}
-            boxWidth="95%"
+            sx={{ width: "95%" }}
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0.25, y: 100 }}
             transition={{ duration: 0.5 }}

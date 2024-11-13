@@ -200,10 +200,11 @@ const ManageAccounts = (props) => {
             key="grid"
             rows={accountData}
             columns={txnCols}
-            boxWidth="80%"
+            // boxWidth="80%"
             animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0.25, y: 100 }}
             transition={{ duration: 0.5 }}
+            sx={{ width: "80%" }}
           />
         )}
       </AnimatePresence>

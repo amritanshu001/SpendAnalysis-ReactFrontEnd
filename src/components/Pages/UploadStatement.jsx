@@ -12,6 +12,7 @@ import { useFetchAccounts } from "../../hooks/useTanstackQueryFetch";
 import { sendMutationRequest, queryClient } from "../../lib/endpoint-configs";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import UploadFiles from "../UI/UploadFiles/UploadFiles";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 import {
   FormControl,
@@ -114,9 +115,9 @@ const NewUploadStatement = (props) => {
       </div>
     );
   }
-  if (isFlieUploadPending) {
-    serverResponse = <div className={styles["server-loading"]}>Loading...</div>;
-  }
+  // if (isFlieUploadPending) {
+  //   serverResponse = <div className={styles["server-loading"]}>Loading...</div>;
+  // }
   if (isFileUploadSuccess) {
     serverResponse = (
       <div className={styles["server-success"]}>
@@ -134,6 +135,8 @@ const NewUploadStatement = (props) => {
         initial={{ opacity: 0.25, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        component="form"
+        onSubmit={uploadFileHandler}
         sx={{
           boxShadow: 10,
           border: (theme) =>
@@ -142,112 +145,110 @@ const NewUploadStatement = (props) => {
                 ? theme.palette.secondary.light
                 : theme.palette.secondary.dark
             } solid`,
-
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          justifyContent: "center",
           maxWidth: "40rem",
           margin: "auto",
           p: "1rem",
           borderRadius: 2,
         }}
       >
-        <form
-          encType="multipart/form-data"
-          className={styles.form}
-          onSubmit={uploadFileHandler}
+        <Stack
+          direction="row"
+          gap={1}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            my: "1rem",
+          }}
         >
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              my: "1rem",
-            }}
-          >
-            <FormControl
-              error={accountValidation !== null}
-              size="small"
-              sx={{ minWidth: "250px" }}
-            >
-              <InputLabel id="account-select" color="secondary">
-                Select an Account
-              </InputLabel>
-              <Select
-                label="Select an Account"
-                labelId="account-select"
-                displayEmpty
-                value={accountId}
-                onChange={onSelectChangeHandler}
-                sx={{ boxShadow: 1 }}
-              >
-                {accounts &&
-                  accounts.length > 0 &&
-                  accounts.map((account) => (
-                    <MenuItem key={account.id} value={account.id}>
-                      {account.bank_name}--{account.account_no}
-                    </MenuItem>
-                  ))}
-              </Select>
-              {accountValidation && (
-                <FormHelperText>{accountValidation}</FormHelperText>
-              )}
-            </FormControl>
-            <Tooltip title="Clear account" placement="bottom-start" arrow>
-              <span>
-                <IconButton
-                  onClick={() => setAccountId("")}
-                  disabled={accountId === ""}
-                >
-                  <RemoveCircleIcon
-                    sx={{
-                      color: (theme) =>
-                        accountId === ""
-                          ? theme.palette.action.disabled
-                          : theme.palette.error.main,
-                    }}
-                  />
-                </IconButton>
-              </span>
-            </Tooltip>
-            <RefetchIcon
-              onClick={refetchAccounts}
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              sx={{
-                color: (theme) =>
-                  theme.palette.mode === "light"
-                    ? theme.palette.primary.dark
-                    : theme.palette.primary.light,
-                fontWeight: "bold",
-              }}
-            />
-          </Stack>
-
           <FormControl
-            error={fileValidation !== null}
-            sx={{
-              alignItems: "center",
-            }}
+            error={accountValidation !== null}
+            size="small"
+            sx={{ minWidth: "250px" }}
           >
-            <UploadFiles
-              multiple={false}
-              ref={fileInputRef}
-              buttonName="Choose Statement File"
-              color={fileValidation !== null ? "error" : "secondary"}
-            />
-            {fileValidation && (
-              <FormHelperText>{fileValidation}</FormHelperText>
+            <InputLabel id="account-select" color="secondary">
+              Select an Account
+            </InputLabel>
+            <Select
+              label="Select an Account"
+              labelId="account-select"
+              displayEmpty
+              value={accountId}
+              onChange={onSelectChangeHandler}
+              sx={{ boxShadow: 1 }}
+            >
+              {accounts &&
+                accounts.length > 0 &&
+                accounts.map((account) => (
+                  <MenuItem key={account.id} value={account.id}>
+                    {account.bank_name}--{account.account_no}
+                  </MenuItem>
+                ))}
+            </Select>
+            {accountValidation && (
+              <FormHelperText>{accountValidation}</FormHelperText>
             )}
           </FormControl>
+          <Tooltip title="Clear account" placement="bottom-start" arrow>
+            <span>
+              <IconButton
+                onClick={() => setAccountId("")}
+                disabled={accountId === ""}
+              >
+                <RemoveCircleIcon
+                  sx={{
+                    color: (theme) =>
+                      accountId === ""
+                        ? theme.palette.action.disabled
+                        : theme.palette.error.main,
+                  }}
+                />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <RefetchIcon
+            onClick={refetchAccounts}
+            whileHover={{ rotate: 360 }}
+            transition={{ duration: 0.5 }}
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.primary.dark
+                  : theme.palette.primary.light,
+              fontWeight: "bold",
+            }}
+          />
+        </Stack>
 
-          <div className={styles.actions}>
-            <Button
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              Upload Data
-            </Button>
-          </div>
-        </form>
+        <FormControl
+          error={fileValidation !== null}
+          sx={{
+            alignItems: "center",
+          }}
+        >
+          <UploadFiles
+            multiple={false}
+            ref={fileInputRef}
+            buttonName="Choose Statement File"
+            color={fileValidation !== null ? "error" : "secondary"}
+          />
+          {fileValidation && <FormHelperText>{fileValidation}</FormHelperText>}
+        </FormControl>
+
+        <Button
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 300 }}
+          type="submit"
+          variant="contained"
+          loading={isFlieUploadPending}
+          icon={<FileUploadIcon />}
+          sx={{ width: "30%", m: "1rem auto " }}
+        >
+          {isFlieUploadPending ? "Uploading..." : "Upload Data"}
+        </Button>
       </Box>
       {serverResponse}
     </React.Fragment>

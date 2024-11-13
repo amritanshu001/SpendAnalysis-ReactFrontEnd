@@ -105,9 +105,15 @@ const metaData = [
   },
   {
     path: "/login",
-    title: "Login/Register",
+    title: "Sign In",
     description:
-      "User can register themselves on the site and set their password OR can login into the system with the registered credentials.",
+      "User can login into the system with the registered credentials.",
+  },
+  {
+    path: "/sign-up",
+    title: "Register",
+    description:
+      "User can register themselves on the site and set their password.",
   },
 
   {

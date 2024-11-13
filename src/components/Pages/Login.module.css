@@ -18,7 +18,7 @@
   color:#82b74b;
   font: inherit;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
 
 }
 .actions a:hover {
@@ -30,8 +30,7 @@
   align-self: center;
 }
 
-.toggler,
-.toggler:hover {
+.toggler{
   font-weight: bold;
   background-color: transparent;
   margin-top: 1rem;
@@ -39,6 +38,7 @@
   padding: 0.15rem 1.5rem;
   color: #c6ff00;
   outline: none;
+  font-size: 1.25rem;
 }
 
 .toggler:hover {

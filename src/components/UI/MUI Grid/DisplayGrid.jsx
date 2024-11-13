@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+// import { Box } from "@mui/material";
+import Box from "../Box/MUIBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
@@ -75,7 +76,7 @@ const DisplayGrid = forwardRef((props, ref) => {
       ref={ref}
       sx={{
         // height: props.height ? props.height : null,
-        width: props.boxWidth,
+        ...props.sx,
         margin: "auto",
         marginTop: 2,
         marginBottom: 2,

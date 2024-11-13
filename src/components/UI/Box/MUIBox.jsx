@@ -14,9 +14,13 @@ const MUIBox = (props) => {
             ? theme.palette.grey[50]
             : theme.palette.grey[900],
       }}
+      variants={{ ...props.variants }}
       initial={props.initial}
       animate={props.animate}
       transition={props.transition}
+      layout={props.layout}
+      component={props.component}
+      onSubmit={props.onSubmit}
     >
       {props.children}
     </AnimatedBox>

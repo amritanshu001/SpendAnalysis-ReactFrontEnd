@@ -1,6 +1,7 @@
 import styles from "./Input.module.css";
 import { motion } from "framer-motion";
 import { forwardRef } from "react";
+import { TextField } from "@mui/material";
 
 const Input = forwardRef((props, ref) => {
   return (
@@ -19,5 +20,24 @@ const Input = forwardRef((props, ref) => {
     </div>
   );
 });
+
+export const NewInput = (props) => {
+  return (
+    <TextField
+      id={props.id}
+      label={props.label}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      onChange={props.onChange}
+      onBlur={props.onBlur}
+      disabled={props.disabled}
+      error={props.error}
+      helperText={props.errorText}
+      variant="outlined"
+      sx={{ ...props.sx }}
+    />
+  );
+};
 
 export default motion(Input);

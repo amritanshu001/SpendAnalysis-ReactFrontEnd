@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
 const Login = React.lazy(() => import("./components/Pages/Login"));
+const Register = React.lazy(() => import("./components/Pages/Register"));
 const Home = React.lazy(() => import("./components/Pages/Home"));
 const AddBank = React.lazy(() => import("./components/Pages/Admin/AddBank"));
 const Footer = React.lazy(() => import("./components/UI/Footer"));
@@ -72,6 +73,9 @@ const App = (props) => {
             <Route path="/" element={<Home />} />
             <Route element={<LoginRouteProtect />}>
               <Route path="/login" element={<Login />} />
+            </Route>
+            <Route element={<LoginRouteProtect />}>
+              <Route path="/sign-up" element={<Register />} />
             </Route>
             <Route element={<LoginProtect />}>
               <Route
