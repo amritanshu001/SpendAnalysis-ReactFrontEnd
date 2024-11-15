@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import styles from "./UserDelete.module.css";
+
 import FormModal from "../../UI/Modal/FormModal";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
@@ -10,9 +10,10 @@ import { logUserOutActions } from "../../../store/auth-slice";
 import { showAndHideMessages } from "../../../store/message-slice";
 import { passwordValidator, isFieldBlank } from "../../../lib/validators";
 
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import Box from "../../UI/Box/MUIBox";
+import { NewInput } from "../../UI/Input";
+import { Alert, Stack, Divider } from "@mui/material";
+import Button from "../../UI/Button";
 
 const textCompare = (text1, text2) => {
   return !(text1 === text2);
@@ -138,85 +139,82 @@ const ChangePassword = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
+      {/* <Header>Change Password</Header> */}
       <Box
         component="form"
         onSubmit={changePasswordHandler}
-        className={styles.form}
+        sx={{
+          p: "1rem",
+          m: 0,
+          display: "flex",
+          flexDirection: "column",
+          "& .MuiTextField-root": {
+            m: "1rem auto",
+            width: "90%",
+          },
+        }}
       >
-        <Box>
-          <TextField
-            id="old-password-input"
-            label="Old Password"
-            type="password"
-            autoComplete="current-password"
-            margin="dense"
-            fullWidth={true}
-            color="success"
-            inputRef={oldPasswordRef}
-            error={!!oldPasswordErrorCompare || !!oldPasswordError}
-            helperText={oldPasswordError}
-          />
+        <NewInput
+          id="old-password-input"
+          label="Old Password"
+          type="password"
+          autoComplete="current-password"
+          inputRef={oldPasswordRef}
+          error={!!oldPasswordErrorCompare || !!oldPasswordError}
+          errorText={oldPasswordError}
+          sx={{ width: "100%" }}
+        />
 
-          <TextField
-            id="repeat-old-password-input"
-            label="Re-type Old Password"
-            type="password"
-            autoComplete="current-password"
-            margin="dense"
-            fullWidth={true}
-            color="success"
-            inputRef={repeatOldPasswordRef}
-            error={oldPasswordErrorCompare || oldRepeatPasswordError}
-            helperText={oldRepeatPasswordError}
-          />
-          {oldPasswordErrorCompare && (
-            <Typography color="error" align="center" variant="subtitle1">
-              {oldPasswordErrorCompare}
-            </Typography>
-          )}
-        </Box>
-        <Box>
-          <TextField
-            id="new-password-input"
-            label="New Password"
-            type="password"
-            autoComplete="current-password"
-            margin="dense"
-            fullWidth={true}
-            color="success"
-            inputRef={newPasswordRef}
-            error={newPasswordErrorCompare || newPasswordError}
-            helperText={newPasswordError}
-          />
+        <NewInput
+          id="repeat-old-password-input"
+          label="Re-type Old Password"
+          type="password"
+          autoComplete="current-password"
+          inputRef={repeatOldPasswordRef}
+          error={oldPasswordErrorCompare || oldRepeatPasswordError}
+          errorText={oldPasswordErrorCompare}
+          sx={{ width: "100%" }}
+        />
 
-          <TextField
-            id="new-repeat-password-input"
-            label="Re-type New Password"
-            type="password"
-            autoComplete="current-password"
-            margin="dense"
-            fullWidth={true}
-            color="success"
-            inputRef={repeatNewPasswordRef}
-            error={newPasswordErrorCompare || newRepeatPasswordError}
-            helperText={newRepeatPasswordError}
-          />
-          {newPasswordErrorCompare && (
-            <Typography color="error" align="center" variant="subtitle1">
-              {newPasswordErrorCompare}
-            </Typography>
-          )}
-        </Box>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+        <Divider />
+
+        <NewInput
+          id="new-password-input"
+          label="New Password"
+          type="password"
+          autoComplete="current-password"
+          inputRef={newPasswordRef}
+          error={newPasswordErrorCompare || newPasswordError}
+          errorText={newPasswordError}
+          sx={{ width: "100%" }}
+        />
+
+        <NewInput
+          id="new-repeat-password-input"
+          label="Re-type New Password"
+          type="password"
+          autoComplete="current-password"
+          inputRef={repeatNewPasswordRef}
+          error={newPasswordErrorCompare || newRepeatPasswordError}
+          errorText={newPasswordErrorCompare}
+          sx={{ width: "100%" }}
+        />
+
+        <Stack direction="row" gap={2}>
+          <Button type="submit">
             {isPending ? "Updating..." : "Change Password"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </Stack>
         {isError && (
-          <p className="error">{error.status + ":" + error.message}</p>
+          <Alert color="error">{error.status + ":" + error.message}</Alert>
         )}
       </Box>
     </FormModal>

@@ -35,6 +35,7 @@ export const NewInput = (props) => {
       error={props.error}
       helperText={props.errorText}
       variant="outlined"
+      inputRef={props.inputRef}
       sx={{ ...props.sx }}
     />
   );

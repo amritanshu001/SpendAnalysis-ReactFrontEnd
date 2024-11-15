@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
-import styles from "./RequestResetPassword.module.css";
 
-import Input from "../UI/Input";
+import { NewInput } from "../UI/Input";
+import Box from "../UI/Box/MUIBox";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
-import Container from "../UI/Container";
 import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
-
-import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
+import { showAndHideMessages } from "../../store/message-slice";
+import { useDispatch } from "react-redux";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import { useMutation } from "@tanstack/react-query";
@@ -18,22 +18,10 @@ import { sendMutationRequest } from "../../lib/endpoint-configs";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const siteAddress = document.location.origin + document.location.pathname;
-const sucessMessage = (
-  <div className={styles["server-success"]}>
-    <p>
-      <strong>
-        Password Reset link has been sent successfully to the email provided.
-      </strong>
-    </p>
-    <p>
-      If the email is registered in our systems, you will receive a password
-      reset link on your mail. Please click on the link to reset your password.
-    </p>
-  </div>
-);
 
 const ResetPassword = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const {
     inputValue: enteredEmail,
     inputIsValid: emailIsValid,
@@ -43,31 +31,26 @@ const ResetPassword = () => {
     resetInput: resetEmail,
   } = useInputValidator(emailValidator);
 
-  const {
-    mutate: sendPasswordResetRequest,
-    isPending: passwordResetLoading,
-    isError: isPasswordResetError,
-    error: passwordResetError,
-    isSuccess: passwordResetReqSuccess,
-  } = useMutation({ mutationFn: sendMutationRequest });
-
-  let serverMessage = null;
-
-  if (passwordResetLoading) {
-    serverMessage = <SpinnerCircular color="success" />;
-  }
-
-  if (isPasswordResetError) {
-    serverMessage = (
-      <div className={styles["server-error"]}>
-        {passwordResetError.status + ":" + passwordResetError.message}
-      </div>
-    );
-  }
-
-  if (passwordResetReqSuccess) {
-    serverMessage = sucessMessage;
-  }
+  const { mutate: sendPasswordResetRequest, isPending: passwordResetLoading } =
+    useMutation({
+      mutationFn: sendMutationRequest,
+      onSuccess: (data) =>
+        dispatch(
+          showAndHideMessages({
+            status: "success",
+            messageText:
+              "Success. If the email is registered in our systems, you will receive a password reset link on your mail. Please click on the link to reset your password. The link is valid for 24 hours",
+          })
+        ),
+      onError: (err) => {
+        dispatch(
+          showAndHideMessages({
+            status: "error",
+            messageText: err.status + ":" + err.message,
+          })
+        );
+      },
+    });
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -92,33 +75,57 @@ const ResetPassword = () => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <Header>Reset Password Request</Header>
-      <Container>
-        <form onSubmit={onSubmitHandler} className={styles["reset-form"]}>
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            value={enteredEmail}
-            onBlur={emailBlurHandler}
-            onChange={emailChangeHandler}
-            disabled={passwordResetLoading}
-            className={emailIsError ? styles.invalid : ""}
-          >
-            Email Id
-          </Input>
-          <div className={styles.actions}>
-            <Button
-              type="submit"
-              disabled={!emailIsValid}
-              whileHover={{ scale: emailIsValid ? 1.1 : 1 }}
-              transition={{ type: "spring", stiffness: 500 }}
-            >
-              Send Reset Link
-            </Button>
-          </div>
-        </form>
-      </Container>
-      {serverMessage}
+      <Box
+        component="form"
+        onSubmit={onSubmitHandler}
+        variants={{
+          hidden: { opacity: 0, y: -10 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        layout
+        sx={{
+          width: "90%",
+          maxWidth: "25rem",
+          mx: "auto",
+          p: "1rem",
+          border: (theme) => `1px solid ${theme.palette.primary.main}`,
+          borderRadius: 2,
+          boxShadow: 10,
+          display: "flex",
+          flexDirection: "column",
+          "& .MuiTextField-root": {
+            m: "1rem auto",
+            width: "90%",
+          },
+        }}
+      >
+        <NewInput
+          id="email"
+          type="email"
+          name="email"
+          label="Email Id"
+          value={enteredEmail}
+          onBlur={emailBlurHandler}
+          onChange={emailChangeHandler}
+          disabled={passwordResetLoading}
+          error={emailIsError}
+          errorText={emailIsError ? "Enter email in correct format" : null}
+        />
+
+        <Button
+          type="submit"
+          disabled={!emailIsValid}
+          whileHover={{ scale: emailIsValid ? 1.1 : 1 }}
+          transition={{ type: "spring", stiffness: 500 }}
+          icon={<RestartAltIcon />}
+          loading={passwordResetLoading}
+        >
+          Send Reset Link
+        </Button>
+      </Box>
     </React.Fragment>
   );
 };

@@ -25,6 +25,7 @@ const NewButton = (props) => {
       type={props.type}
       onClick={props.onClick}
       disabled={props.disabled}
+      color={props.color}
       variant={"variant" in props ? props.variant : "contained"}
       endIcon={props.icon}
       loading={props.loading}

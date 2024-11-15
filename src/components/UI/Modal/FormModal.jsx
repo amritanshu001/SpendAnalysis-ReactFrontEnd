@@ -26,7 +26,7 @@ const FormModal = (props) => {
   );
 };
 
-const NewModal = ({ onBackdropClick, children, ...props }) => {
+export const NewModal = ({ onBackdropClick, children, ...props }) => {
   const modalStatus = useSelector((state) => state.formModal.showModal);
   return (
     <AnimatedDilog
