@@ -18,6 +18,7 @@ const FormModal = (props) => {
       onClose={props.onBackdropClick}
       sx={{
         ...props.sx,
+        backdropFilter: "blur(5px)",
         "& .MuiPaper-root": {
           width: "80%",
         },
