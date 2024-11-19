@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
 import { queryClient } from "../../../lib/endpoint-configs";
+import EditIcon from "@mui/icons-material/Edit";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -47,6 +48,7 @@ const EditBankForm = (props) => {
         isError={isEditBankError}
         payload={props.editFormData.data}
         onSave={editBankSaveHandler}
+        icon={<EditIcon />}
         editing
       />
     </FormModal>

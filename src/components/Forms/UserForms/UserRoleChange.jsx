@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./UserRoleChange.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import {
   sendMutationRequest,
@@ -8,6 +7,15 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 const apiURL = import.meta.env.VITE_API_URL;
+import {
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  Alert,
+} from "@mui/material";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
 
 const UserRoleChange = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
@@ -43,28 +51,44 @@ const UserRoleChange = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={changeUserRoleHandler} className={styles.form}>
-        <div>
-          <p>
+      <Box component="form" onSubmit={changeUserRoleHandler}>
+        <DialogTitle variant="h4">Change Role</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
             User {props.user.userName} will be{" "}
             {props.admin ? "upgraded" : "donwgraded"} to{" "}
             {props.admin ? "Admin" : "User"}
             {props.admin ? " and will have advanced privilages!" : "."}
-          </p>
-          <p className={styles.message}> Do you want to proceed?</p>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+          </DialogContentText>
+          <DialogContentText
+            sx={{
+              fontWeight: "bold",
+              color: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.highlightColor.main
+                  : theme.palette.highlightColor.dark,
+            }}
+          >
+            Do you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" loading={isPending}>
             {isPending ? "Changing Role..." : "Confirm"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
         {isError && (
-          <p className="error">{error.status + ":" + error.message}</p>
+          <Alert severity="error">{error.status + ":" + error.message}</Alert>
         )}
-      </form>
+      </Box>
     </FormModal>
   );
 };

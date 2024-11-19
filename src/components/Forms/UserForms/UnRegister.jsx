@@ -6,6 +6,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
+import Header from "../../UI/Header";
+import { Typography, Stack, Alert } from "@mui/material";
+
 import { logUserOutActions } from "../../../store/auth-slice";
 import { showAndHideMessages } from "../../../store/message-slice";
 
@@ -53,27 +58,56 @@ const UnRegister = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={deRegisterUserHandler} className={styles.form}>
-        <div>
-          <p>
-            You are unregistering from our site!? We are sad to see you go!
-            Please note that if you proceed, you will not be able to login to
-            our systems without Admin intervention.
-          </p>
-          <p className={styles.message}> Do you want to proceed?</p>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+      <Box
+        onSubmit={deRegisterUserHandler}
+        component="form"
+        sx={{
+          p: "1rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          bgcolor: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[50]
+              : theme.palette.grey[900],
+        }}
+      >
+        <Typography variant="h4">Are you sure?</Typography>
+        <Typography variant="body1">
+          You are unregistering from our site!? We are sad to see you go! Please
+          note that if you proceed, you will not be able to login to our systems
+          without Admin intervention.
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: "bold",
+            color: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.highlightColor.main
+                : theme.palette.highlightColor.dark,
+          }}
+        >
+          Do you want to proceed?
+        </Typography>
+
+        <Stack direction={"row"} gap={2}>
+          <Button type="submit" className={styles["imp-button"]}>
             {isPending ? "De-Register" : "Confirm"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </Stack>
         {isError && (
-          <p className="error">{error.status + ":" + error.message}</p>
+          <Alert variant="error">{error.status + ":" + error.message}</Alert>
         )}
-      </form>
+      </Box>
     </FormModal>
   );
 };

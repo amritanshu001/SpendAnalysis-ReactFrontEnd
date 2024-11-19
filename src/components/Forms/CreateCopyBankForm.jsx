@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import styles from "./CreateCopyBankForm.module.css";
-import Input from "../UI/Input";
-import Header from "../UI/Header";
+import { NewInput } from "../UI/Input";
 import SpinnerCircular from "../UI/Feedback/SpinnerCircular";
 
-import Select from "react-select";
 import { useFetchDates } from "../../hooks/useTanstackQueryFetch";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
+
+import {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Alert,
+  Stack,
+} from "@mui/material";
+import MUISelect from "../UI/MUISelect/MUISelect";
+import Box from "../UI/Box/MUIBox";
+import Button from "../UI/Button";
 
 import useInputValidator from "../../hooks/useInputValidator";
 import {
@@ -17,14 +25,13 @@ import {
 
 const CreateCopyBankForm = (props) => {
   const [dateformats, setDateformats] = useState(
-    "creating" in props
-      ? 0
-      : { value: props.payload.date_id, label: props.payload.date_format }
+    "creating" in props ? "" : props.payload.date_id
   );
 
   const {
     data: fetchedDates,
     isError,
+    error: dateFecthError,
     isLoading,
     isPending,
     isSuccess,
@@ -140,7 +147,7 @@ const CreateCopyBankForm = (props) => {
   );
 
   const dateformatChangeHandler = (event) => {
-    setDateformats(event);
+    setDateformats(event.target.value);
   };
 
   let buttonProcessing;
@@ -160,22 +167,8 @@ const CreateCopyBankForm = (props) => {
     buttonProcessed = "Copy & Create Bank";
   }
 
-  let options = [];
-  if (isSuccess) {
-    options = fetchedDates.map((date) => {
-      return {
-        value: date.id,
-        label: date.date_format,
-      };
-    });
-  }
-
   const resetHandler = () => {
-    setDateformats(
-      "creating" in props
-        ? 0
-        : { value: props.payload.id, label: props.payload.date_format }
-    );
+    setDateformats("creating" in props ? "" : props.payload.id);
     resetBalance();
     resetBankName();
     resetRemarks();
@@ -189,7 +182,7 @@ const CreateCopyBankForm = (props) => {
   };
 
   let formIsValid =
-    dateformats &&
+    dateformats !== "" &&
     bankNameValid &&
     balanceValid &&
     withdrawalValid &&
@@ -210,44 +203,61 @@ const CreateCopyBankForm = (props) => {
       bank_name: bankName,
       chq_no_col: +cheque,
       crdt_amt_col: +credit,
-      date_id: dateformats.value,
+      date_id: dateformats,
       start_row: +start,
       txn_date_col: +transaction,
       txn_rmrk_col: +remarks,
       val_date_col: +value,
       with_amt_col: +withdrawal,
-      id: "creating" in props ? "" : props.payload.id,
+      id: "creating" in props ? 0 : props.payload.id,
     };
     props.onSave(bankData);
   };
 
   return (
     <React.Fragment>
-      <Header>{buttonProcessed}</Header>
-      <form className={styles.form} onSubmit={bankFormSubmitHandler}>
-        <div className={styles.readonly}>
-          <Input
+      <Box
+        component="form"
+        onSubmit={bankFormSubmitHandler}
+        sx={{
+          "& .MuiDialogContent-root": {
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            paddingTop: 1,
+          },
+        }}
+      >
+        <DialogTitle variant="h4">{buttonProcessed}</DialogTitle>
+        <DialogContent>
+          <NewInput
             type="text"
             name="bankname"
             id="bankname"
+            label="Bank Name"
             value={bankName}
             onBlur={bankNameBlurHandler}
             onChange={bankNameChangeHandler}
-            className={bankNameError ? styles.inputerror : ""}
-          >
-            Bank Name
-          </Input>
-        </div>
-        <div className={styles.dateformat}>
-          <label htmlFor="dateformats">Date Format</label>
-          <div className={styles.refetch}>
-            <Select
-              className={styles.reactselect}
-              value={dateformats}
-              isClearable={true}
-              isSearchable={true}
+            error={bankNameError}
+            // className={bankNameError ? styles.inputerror : ""}
+          />
+
+          <Stack direction={"row"} justifyContent={"flex-start"} gap={4}>
+            <MUISelect
+              label="Date Format"
+              error={isError}
+              errorText={dateFecthError}
               onChange={dateformatChangeHandler}
-              options={options}
+              value={dateformats}
+              id="date-select"
+              list={
+                fetchedDates && fetchedDates.length > 0
+                  ? fetchedDates.map((date) => ({
+                      id: date.id,
+                      displayName: date.date_format,
+                    }))
+                  : []
+              }
             />
             {isLoading && <SpinnerCircular color="warning" size="2rem" />}
             <RefetchIcon
@@ -255,121 +265,124 @@ const CreateCopyBankForm = (props) => {
               whileHover={{ rotate: 360, scale: 1.3 }}
               transition={{ duration: 0.5 }}
             />
-          </div>
-        </div>
-        <div className={styles.entrycols}>
-          <Input
-            value={start}
-            onBlur={startBlurHandler}
-            onChange={startChangeHandler}
-            type="number"
-            name="start_row"
-            id="start_row"
-            className={startError ? styles.inputerror : ""}
-          >
-            Starting from [row]
-          </Input>
-          <Input
-            value={value}
-            onBlur={valueBlurHandler}
-            onChange={valueChangeHandler}
-            type="number"
-            name="value-date"
-            id="value-date"
-            className={valueError ? styles.inputerror : ""}
-          >
-            Value Date [col]
-          </Input>
-        </div>
-        <div className={styles.entrycols}>
-          <Input
-            type="number"
-            value={transaction}
-            onBlur={transactionBlurHandler}
-            onChange={transactionChangeHandler}
-            name="txn-date"
-            id="txn-date"
-            className={transactionError ? styles.inputerror : ""}
-          >
-            Transaction Date [col]
-          </Input>
-          <Input
-            type="number"
-            value={cheque}
-            onBlur={chequeBlurHandler}
-            onChange={chequeChangeHandler}
-            name="cheque"
-            id="cheque"
-            className={chequeError ? styles.inputerror : ""}
-          >
-            Cheque No. [col]
-          </Input>
-        </div>
-        <div className={styles.entrycols}>
-          <Input
-            type="number"
-            value={credit}
-            onBlur={creditBlurHandler}
-            onChange={creditChangeHandler}
-            name="credit"
-            id="credit"
-            className={creditError ? styles.inputerror : ""}
-          >
-            Credit Amount [col]
-          </Input>
-          <Input
-            type="number"
-            value={withdrawal}
-            onBlur={withdrawalBlurHandler}
-            onChange={withdrawalChangeHandler}
-            name="withdrawal"
-            id="withdrawal"
-            className={withdrawalError ? styles.inputerror : ""}
-          >
-            Withdrawl Amount [col]
-          </Input>
-        </div>
-        <div className={styles.entrycols}>
-          <Input
-            type="number"
-            value={balance}
-            onBlur={balanceBlurHandler}
-            onChange={balanceChangeHandler}
-            name="balance"
-            id="balance"
-            className={balanceError ? styles.inputerror : ""}
-          >
-            Balance [col]
-          </Input>
-          <Input
-            type="number"
-            value={remarks}
-            onBlur={remarksBlurHandler}
-            onChange={remarksChangeHandler}
-            name="remarks"
-            id="remarks"
-            className={remarksError ? styles.inputerror : ""}
-          >
-            Remarks [col]
-          </Input>
-        </div>
+          </Stack>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <NewInput
+              value={start}
+              onBlur={startBlurHandler}
+              onChange={startChangeHandler}
+              type="number"
+              name="start_row"
+              id="start_row"
+              error={startError}
+              label={"Starting from [row]"}
+            />
+            <NewInput
+              value={value}
+              onBlur={valueBlurHandler}
+              onChange={valueChangeHandler}
+              type="number"
+              name="value-date"
+              id="value-date"
+              label="Value Date [col]"
+              error={valueError}
+            />
+          </Stack>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <NewInput
+              type="number"
+              value={transaction}
+              onBlur={transactionBlurHandler}
+              onChange={transactionChangeHandler}
+              name="txn-date"
+              id="txn-date"
+              error={transactionError}
+              label="Transaction Date [col]"
+            />
+            <NewInput
+              type="number"
+              value={cheque}
+              onBlur={chequeBlurHandler}
+              onChange={chequeChangeHandler}
+              name="cheque"
+              id="cheque"
+              error={chequeError}
+              label="Cheque No. [col]"
+            />
+          </Stack>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <NewInput
+              type="number"
+              value={credit}
+              onBlur={creditBlurHandler}
+              onChange={creditChangeHandler}
+              name="credit"
+              id="credit"
+              error={creditError}
+              label="Credit Amount [col]"
+            />
 
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="button" onClick={resetHandler}>
-            Reset
-          </button>
-          <button type="submit" disabled={!formIsValid}>
+            <NewInput
+              type="number"
+              value={withdrawal}
+              onBlur={withdrawalBlurHandler}
+              onChange={withdrawalChangeHandler}
+              name="withdrawal"
+              id="withdrawal"
+              error={withdrawalError}
+              label="Withdrawl Amount [col]"
+            />
+          </Stack>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <NewInput
+              type="number"
+              value={balance}
+              onBlur={balanceBlurHandler}
+              onChange={balanceChangeHandler}
+              name="balance"
+              id="balance"
+              error={balanceError}
+              label="Balance [col]"
+            />
+            <NewInput
+              type="number"
+              value={remarks}
+              onBlur={remarksBlurHandler}
+              onChange={remarksChangeHandler}
+              name="remarks"
+              id="remarks"
+              error={remarksError}
+              label="Remarks [col]"
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            type="submit"
+            disabled={!formIsValid}
+            icon={props.icon}
+            loading={props.loading}
+          >
             {props.loading ? buttonProcessing : buttonProcessed}
-          </button>
-        </div>
-      </form>
+          </Button>
+
+          <Button type="button" onClick={resetHandler} variant="outlined">
+            Reset
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Box>
       {props.isError && (
-        <div className={styles["server-error"]}>
+        <Alert severity="error">
           {props.error.status + ": " + props.error.message}
-        </div>
+        </Alert>
       )}
     </React.Fragment>
   );

@@ -1,8 +1,6 @@
 import styles from "./AddBank.module.css";
 
-import Container from "../../UI/Container";
 import Header from "../../UI/Header";
-// import FormModal from "../UI/Modal/FormModal";
 import { RowCopyIcon, RowEditIcon } from "../../UI/MUI Grid/DisplayGrid";
 import DisplayGrid from "../../UI/MUI Grid/DisplayGrid";
 
@@ -32,9 +30,7 @@ let bankFormData = {};
 
 const AddBank = (props) => {
   const location = useLocation();
-  // const bankData = useSelector((state) => state.banks.banks);
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const modalStatus = useSelector((state) => state.formModal.showModal);
   const [bankAction, setBankAction] = useState(null);
 
   const disptach = useDispatch();
@@ -216,17 +212,17 @@ const AddBank = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <AnimatePresence>
-        {bankAction === "Create" && modalStatus && (
+        {bankAction === "Create" && (
           <CreateBankForm key="create" hideModalHandler={hideModalHandler} />
         )}
-        {bankAction === "Edit" && modalStatus && (
+        {bankAction === "Edit" && (
           <EditBankForm
             key="edit"
             hideModalHandler={hideModalHandler}
             editFormData={bankFormData}
           />
         )}
-        {bankAction === "Copy" && modalStatus && (
+        {bankAction === "Copy" && (
           <CopyBankForm
             key="copy"
             hideModalHandler={hideModalHandler}

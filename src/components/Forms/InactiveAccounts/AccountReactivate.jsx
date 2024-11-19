@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./AccountReactivate.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import {
   sendMutationRequest,
@@ -7,6 +6,15 @@ import {
 } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Alert,
+} from "@mui/material";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AccountReactivate = (props) => {
@@ -40,26 +48,48 @@ const AccountReactivate = (props) => {
       },
     };
     reactivateAccount({ requestConfig: activateAccountConfig });
-    // props.onDelete(props.account.id);
   };
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={reactivateFormSubmitHandler} className={styles.form}>
-        <div>
-          <p>Account# {props.account.account_no} will be reactivated.</p>
-          <p className={styles.message}> Do you want to proceed?</p>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+      <Box onSubmit={reactivateFormSubmitHandler} component="form">
+        <DialogTitle variant="h4">Reactivate User</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ fontSize: "1.25rem" }}>
+            Account# {props.account.account_no} will be reactivated.
+          </DialogContentText>
+
+          <DialogContentText
+            sx={{
+              fontWeight: "bold",
+              color: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.highlightColor.dark
+                  : theme.palette.highlightColor.main,
+            }}
+          >
+            Do you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit">
             {isPending ? "Deleting..." : "Confirm Reactivation"}
-          </button>
-        </div>
-        {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
-      </form>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+        {isError && (
+          <Alert severity="error">
+            {error.status + ":" + errorEditAccount.message}
+          </Alert>
+        )}
+      </Box>
     </FormModal>
   );
 };

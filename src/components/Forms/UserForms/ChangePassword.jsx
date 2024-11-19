@@ -12,7 +12,7 @@ import { passwordValidator, isFieldBlank } from "../../../lib/validators";
 
 import Box from "../../UI/Box/MUIBox";
 import { NewInput } from "../../UI/Input";
-import { Alert, Stack, Divider } from "@mui/material";
+import { Alert, DialogTitle, Divider, DialogActions } from "@mui/material";
 import Button from "../../UI/Button";
 
 const textCompare = (text1, text2) => {
@@ -139,7 +139,6 @@ const ChangePassword = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      {/* <Header>Change Password</Header> */}
       <Box
         component="form"
         onSubmit={changePasswordHandler}
@@ -154,6 +153,7 @@ const ChangePassword = (props) => {
           },
         }}
       >
+        <DialogTitle variant="h4">Change Password</DialogTitle>
         <NewInput
           id="old-password-input"
           label="Old Password"
@@ -171,7 +171,7 @@ const ChangePassword = (props) => {
           type="password"
           autoComplete="current-password"
           inputRef={repeatOldPasswordRef}
-          error={oldPasswordErrorCompare || oldRepeatPasswordError}
+          error={!!oldPasswordErrorCompare || !!oldRepeatPasswordError}
           errorText={oldPasswordErrorCompare}
           sx={{ width: "100%" }}
         />
@@ -184,7 +184,7 @@ const ChangePassword = (props) => {
           type="password"
           autoComplete="current-password"
           inputRef={newPasswordRef}
-          error={newPasswordErrorCompare || newPasswordError}
+          error={!!newPasswordErrorCompare || !!newPasswordError}
           errorText={newPasswordError}
           sx={{ width: "100%" }}
         />
@@ -195,12 +195,12 @@ const ChangePassword = (props) => {
           type="password"
           autoComplete="current-password"
           inputRef={repeatNewPasswordRef}
-          error={newPasswordErrorCompare || newRepeatPasswordError}
+          error={!!newPasswordErrorCompare || !!newRepeatPasswordError}
           errorText={newPasswordErrorCompare}
           sx={{ width: "100%" }}
         />
 
-        <Stack direction="row" gap={2}>
+        <DialogActions>
           <Button type="submit">
             {isPending ? "Updating..." : "Change Password"}
           </Button>
@@ -212,7 +212,7 @@ const ChangePassword = (props) => {
           >
             Cancel
           </Button>
-        </Stack>
+        </DialogActions>
         {isError && (
           <Alert color="error">{error.status + ":" + error.message}</Alert>
         )}

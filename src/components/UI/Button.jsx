@@ -30,6 +30,7 @@ const NewButton = (props) => {
       endIcon={props.icon}
       loading={props.loading}
       loadingPosition="end"
+      form={props.form}
       sx={props.sx}
     >
       {props.children}

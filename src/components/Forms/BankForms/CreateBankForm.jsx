@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
 import { queryClient } from "../../../lib/endpoint-configs";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -46,6 +47,7 @@ const CreateBankForm = (props) => {
         loading={isPending}
         error={error}
         isError={isError}
+        icon={<NoteAddIcon />}
         creating
       />
     </FormModal>

@@ -5,6 +5,16 @@ import Header from "../../UI/Header";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { NewInput } from "../../UI/Input";
+import Button from "../../UI/Button";
+import Box from "../../UI/Box/MUIBox";
+import {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Alert,
+  Stack,
+} from "@mui/material";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -17,7 +27,13 @@ import styles from "./CreateDateFormatForm.module.css";
 
 const CreateDateFormatForm = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
+  const [dateFormatError, setDateFormatError] = useState(null);
+  const [dateDescError, setDateDescError] = useState(null);
+  const [pyDateError, setPyDateError] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const dateFormatRef = useRef("");
+  const dateDescRef = useRef("");
+  const dateTechRef = useRef("");
 
   const { mutate: createDateFormat, isPending } = useMutation({
     mutationFn: sendMutationRequest,
@@ -30,16 +46,29 @@ const CreateDateFormatForm = (props) => {
 
   const createDateFormatHandler = (event) => {
     event.preventDefault();
-    console.log("Date Format: ");
-    if (
-      dateDescRef.current.value === "" ||
-      dateFormatRef.current.value === "" ||
-      dateTechRef.current.value === ""
-    ) {
-      setErrorMessage("All Fields are mandatory!");
+
+    if (dateFormatRef.current.value === "") {
+      setDateFormatError("Date format cannot be blank");
+      setDateDescError(null);
+      setPyDateError(null);
       return;
     }
-    setErrorMessage(null);
+    if (dateDescRef.current.value === "") {
+      setDateFormatError(null);
+      setDateDescError("Date description cannot be blank");
+      setPyDateError(null);
+      return;
+    }
+    if (dateTechRef.current.value === "") {
+      setDateFormatError(null);
+      setDateDescError(null);
+      setPyDateError("Technical date format cannot be blank");
+      return;
+    }
+
+    setDateFormatError(null);
+    setDateDescError(null);
+    setPyDateError(null);
     const createDateFormatConfig = {
       url: apiURL + "/dateformats",
       method: "POST",
@@ -57,35 +86,68 @@ const CreateDateFormatForm = (props) => {
     // props.onDelete(props.account.id);
   };
 
-  const dateFormatRef = useRef("");
-  const dateDescRef = useRef("");
-  const dateTechRef = useRef("");
-
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <Header>Create New Date Format</Header>
-      <form className={styles.form} onSubmit={createDateFormatHandler}>
-        <div>
-          <label>Date Format</label>
-          <input type="text" id="dateformat" ref={dateFormatRef} />
-        </div>
-        <div>
-          <label>Description</label>
-          <textarea
+      <Box
+        component="form"
+        onSubmit={createDateFormatHandler}
+        sx={{
+          "& .MuiDialogContent-root": {
+            paddingTop: 1,
+          },
+        }}
+      >
+        <DialogTitle variant="h4">Create New Date Format</DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <NewInput
+            type="text"
+            id="dateformat"
+            inputRef={dateFormatRef}
+            label="Date Format"
+            error={!!dateFormatError}
+            errorText={dateFormatError}
+            required
+          />
+
+          <NewInput
             type="text"
             id="desc"
-            rows={3}
-            cols={30}
-            ref={dateDescRef}
+            label="Description"
+            multiline
+            inputRef={dateDescRef}
+            error={!!dateDescError}
+            errorText={dateDescError}
+            required
           />
-        </div>
-        <div>
-          <label>Technical Format</label>
-          <input type="text" id="techformat" ref={dateTechRef} />
-        </div>
-        {errorMessage && <p className={styles.message}>{errorMessage}</p>}
-        <div className={styles.actions}>
-          <motion.button
+
+          <NewInput
+            type="text"
+            id="techformat"
+            inputRef={dateTechRef}
+            label="Technical Format"
+            error={!!pyDateError}
+            errorText={pyDateError}
+            required
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            type="submit"
+            transition={{ type: "spring", stiffness: 500 }}
+            whileHover={{
+              scale: 1.1,
+            }}
+          >
+            {"Create Date Format"}
+          </Button>
+          <Button
             whileHover={{
               backgroundColor: "#ab003c",
               scale: 1.1,
@@ -94,20 +156,14 @@ const CreateDateFormatForm = (props) => {
             transition={{ type: "spring", stiffness: 500 }}
             type="button"
             onClick={props.onCancel}
+            variant="outlined"
+            color="error"
           >
             Cancel
-          </motion.button>
-          <motion.button
-            type="submit"
-            transition={{ type: "spring", stiffness: 500 }}
-            whileHover={{
-              scale: 1.1,
-            }}
-          >
-            {"Create Date Format"}
-          </motion.button>
-        </div>
-      </form>
+          </Button>
+        </DialogActions>
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+      </Box>
     </FormModal>
   );
 };

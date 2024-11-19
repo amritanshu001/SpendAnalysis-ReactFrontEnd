@@ -1,13 +1,19 @@
 import React from "react";
-import styles from "./AccountDeleteForm.module.css";
 import FormModal from "../../UI/Modal/FormModal";
-import Header from "../../UI/Header";
 import {
   sendMutationRequest,
   queryClient,
 } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
+import {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+} from "@mui/material";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AccountDeleteForm = (props) => {
@@ -41,27 +47,43 @@ const AccountDeleteForm = (props) => {
       },
     };
     deleteAccount({ requestConfig: deleteAccountConfig });
-    // props.onDelete(props.account.id);
   };
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <Header>Remove Account</Header>
-      <form onSubmit={deleteFormSubmitHandler} className={styles.form}>
-        <div>
-          <p>Account# {props.account.account_no} will be deleted!</p>
-          <p className={styles.message}> Do you want to proceed?</p>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+      <Box onSubmit={deleteFormSubmitHandler} component="form">
+        <DialogTitle variant="h4">Remove Account</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Account# {props.account.account_no} will be deleted!
+          </DialogContentText>
+          <DialogContentText
+            sx={{
+              fontWeight: "bold",
+              color: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.highlightColor.main
+                  : theme.palette.highlightColor.dark,
+            }}
+          >
+            Do you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit">
             {isPending ? "Deleting..." : "Confirm Delete"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
         {isError && <p>{error.status + ":" + errorEditAccount.message}</p>}
-      </form>
+      </Box>
     </FormModal>
   );
 };

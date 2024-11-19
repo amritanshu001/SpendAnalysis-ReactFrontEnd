@@ -19,7 +19,7 @@ const Header = (props) => {
 const NewHeader = (props) => {
   return (
     <AnimatedTypography
-      variant="h4"
+      variant={"variant" in props ? props.variant : "h4"}
       initial={{ opacity: 0, x: 500 }}
       animate={{ opacity: 1, x: 0 }}
       gutterBottom

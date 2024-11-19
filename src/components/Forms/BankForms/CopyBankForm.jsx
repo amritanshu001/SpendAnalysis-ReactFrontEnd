@@ -4,7 +4,7 @@ import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useSelector } from "react-redux";
 import FormModal from "../../UI/Modal/FormModal";
 import CreateCopyBankForm from "../CreateCopyBankForm";
-
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import { queryClient } from "../../../lib/endpoint-configs";
 
 const apiURL = import.meta.env.VITE_API_URL;
@@ -48,6 +48,7 @@ const CopyBankForm = (props) => {
         error={createBankError}
         isError={isCreateBankError}
         payload={props.copyFormData.data}
+        icon={<FolderCopyIcon />}
         copying
       />
     </FormModal>

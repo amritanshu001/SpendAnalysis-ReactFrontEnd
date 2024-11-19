@@ -7,6 +7,15 @@ import {
 } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import {
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  Alert,
+} from "@mui/material";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const UserDelete = (props) => {
@@ -42,26 +51,41 @@ const UserDelete = (props) => {
 
   return (
     <FormModal onBackdropClick={props.onCancel}>
-      <form onSubmit={deleteUserHandler} className={styles.form}>
-        <div>
-          <p>
+      <Box onSubmit={deleteUserHandler} component="form">
+        <DialogContent>
+          <DialogContentText>
             User {props.user.userName} will be <strong>deleted forever</strong>.
             This action <strong>cannot be reverted!!!</strong>
-          </p>
-          <p className={styles.message}> Do you want to proceed?</p>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={props.onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className={styles["imp-button"]}>
+          </DialogContentText>
+          <DialogContentText
+            sx={{
+              fontWeight: "bold",
+              color: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.highlightColor.main
+                  : theme.palette.highlightColor.dark,
+            }}
+          >
+            Do you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" loading={isPending}>
             {isPending ? "Deleting..." : "Confirm"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={props.onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
         {isError && (
           <p className="error">{error.status + ":" + error.message}</p>
         )}
-      </form>
+      </Box>
     </FormModal>
   );
 };

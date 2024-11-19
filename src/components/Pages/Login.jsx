@@ -144,6 +144,7 @@ const LoginPage = () => {
             onChange={emailChangeHandler}
             disabled={isLoginPending}
             error={emailIsError}
+            required
             errorText={emailIsError ? "Enter correct email format" : null}
           />
           <NewInput
@@ -157,6 +158,7 @@ const LoginPage = () => {
             onChange={passwordChangeHandler}
             disabled={isLoginPending}
             error={passwordError}
+            required
             errorText={
               passwordError
                 ? "Password should be atleast 8 characters long"

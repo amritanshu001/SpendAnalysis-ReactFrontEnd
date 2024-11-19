@@ -39,6 +39,9 @@ const MuiThemeProvider = (props) => {
             dark: "#475739",
             light: "#849774",
           },
+          highlightColor: {
+            ...colorPalleteGenerator("#fc4274"),
+          },
         },
         components: {
           MuiAccordion: {

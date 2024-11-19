@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import styles from "./UserAccountForm.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import Header from "../../UI/Header";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
+import { NewInput } from "../../UI/Input";
 import {
   sendMutationRequest,
   queryClient,
@@ -9,9 +12,17 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 const apiURL = import.meta.env.VITE_API_URL;
-import { Alert } from "@mui/material";
+import {
+  Alert,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Stack,
+  Checkbox,
+} from "@mui/material";
 
-const UserAccountForm = ({ data, onCancel }) => {
+const UserAccountForm = ({ data, onCancel, ...props }) => {
   const [accountJoint, setAccountJoint] = useState(data.joint);
   const authToken = useSelector((state) => state.userAuth.authToken);
   const [validation, setValidation] = useState(null);
@@ -56,49 +67,81 @@ const UserAccountForm = ({ data, onCancel }) => {
 
   return (
     <FormModal onBackdropClick={onCancel}>
-      <Header>Edit Account Details</Header>
-      <form className={styles.form} onSubmit={accountEditHandler}>
-        <div className={styles.inputs}>
-          <div className={styles.readonly}>
-            <label htmlFor="account_no">Account#</label>
-            <input id="account_no" readOnly={true} value={data.account_no} />
-          </div>
-          <div className={styles.readonly}>
-            <label htmlFor="bank_name">Bank Name</label>
-            <input id="bank_name" readOnly={true} value={data.bank_name} />
-          </div>
-        </div>
-        <div className={styles.checkbox}>
-          <div>
-            <input
-              type="checkbox"
-              defaultChecked={data.active}
-              disabled={true}
-            ></input>
-            <label>Active</label>
-          </div>
-          <div onClick={jointChangeHandler}>
-            <input
-              type="checkbox"
-              checked={accountJoint}
-              onChange={jointChangeHandler}
-            ></input>
-            <label>Joint</label>
-          </div>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={onCancel}>
-            Cancel
-          </button>
-          <button type="submit">
+      <Box
+        className={styles.form}
+        onSubmit={accountEditHandler}
+        component="form"
+        sx={{
+          "& .MuiDialogContent-root": {
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            paddingTop: 1,
+          },
+        }}
+      >
+        <DialogTitle variant="h4">Edit Account Details</DialogTitle>
+        <DialogContent>
+          <Stack gap={2} direction={"row"} justifyContent="space-around">
+            <NewInput
+              label="Account #"
+              disabled
+              value={data.account_no}
+              id={"account_no"}
+            />
+            <NewInput
+              label="Bank Name"
+              disabled
+              value={data.bank_name}
+              id={"bank_name"}
+            />
+          </Stack>
+          <Stack gap={4} direction={"row"} justifyContent="flex-start">
+            <FormControlLabel
+              label="Active"
+              control={
+                <Checkbox
+                  checked={data.active}
+                  disabled
+                  color="secondary"
+                  size="large"
+                />
+              }
+            />
+            <FormControlLabel
+              onClick={jointChangeHandler}
+              label="Joint"
+              control={
+                <Checkbox
+                  checked={accountJoint}
+                  onChange={jointChangeHandler}
+                  color="secondary"
+                  size="large"
+                />
+              }
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit">
             {isPending ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
+          </Button>
+          <Button
+            type="button"
+            onClick={onCancel}
+            variant="outlined"
+            color="error"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
         {isError && (
-          <p>{errorEditAccount.status + ":" + errorEditAccount.message}</p>
+          <Alert severity="error">
+            {errorEditAccount.status + ":" + errorEditAccount.message}
+          </Alert>
         )}
         {validation && <Alert severity="warning">{validation}</Alert>}
-      </form>
+      </Box>
     </FormModal>
   );
 };

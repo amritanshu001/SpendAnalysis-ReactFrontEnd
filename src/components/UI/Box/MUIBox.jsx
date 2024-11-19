@@ -1,12 +1,13 @@
 import { Box } from "@mui/material";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { forwardRef } from "react";
 
 const AnimatedBox = motion(Box);
 
-const MUIBox = (props) => {
+const MUIBox = forwardRef((props, ref) => {
   return (
-    <AnimatedBox
+    <Box
+      ref={ref}
       sx={{
         ...props.sx,
         bgcolor: (theme) =>
@@ -14,17 +15,13 @@ const MUIBox = (props) => {
             ? theme.palette.grey[50]
             : theme.palette.grey[900],
       }}
-      variants={{ ...props.variants }}
-      initial={props.initial}
-      animate={props.animate}
-      transition={props.transition}
-      layout={props.layout}
       component={props.component}
       onSubmit={props.onSubmit}
+      id={props.id}
     >
       {props.children}
-    </AnimatedBox>
+    </Box>
   );
-};
+});
 
-export default MUIBox;
+export default motion(MUIBox);

@@ -9,9 +9,22 @@ import { queryClient } from "../../../lib/endpoint-configs";
 import { useFetchBanks } from "../../../hooks/useTanstackQueryFetch";
 import RefetchIcon from "../../UI/Refetch/RefetchIcon";
 import Header from "../../UI/Header";
+import Box from "../../UI/Box/MUIBox";
+import Button from "../../UI/Button";
+import { NewInput } from "../../UI/Input";
+import Select from "../../UI/MUISelect/MUISelect";
 import { motion } from "framer-motion";
 
 import FormModal from "../../UI/Modal/FormModal";
+import {
+  DialogActions,
+  DialogContent,
+  Stack,
+  DialogTitle,
+  Checkbox,
+  FormControlLabel,
+  Alert,
+} from "@mui/material";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -40,10 +53,11 @@ const CreateAccountForm = (props) => {
     },
   });
 
-  const [selectedBankId, setSelectedBankId] = useState(0);
+  const [selectedBankId, setSelectedBankId] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountJoint, setAccountJoint] = useState(false);
-  const [validation, setValidation] = useState(null);
+  const [inputValidation, setInputValidation] = useState(null);
+  const [selectValidation, setSelectValidation] = useState(null);
 
   const selectChangeHandler = (event) => {
     setSelectedBankId(event.target.value);
@@ -63,15 +77,18 @@ const CreateAccountForm = (props) => {
     //validation
 
     if (accountNumber.length === 0) {
-      setValidation("Account Number cannot be blank");
+      setInputValidation("Account Number cannot be blank");
+      setSelectValidation(null);
       return;
     }
-    if (selectedBankId === 0) {
-      setValidation("Please select a Bank");
+    if (selectedBankId === "") {
+      setSelectValidation("Please select a Bank");
+      setInputValidation(null);
       return;
     }
 
-    setValidation(null);
+    setSelectValidation(null);
+    setInputValidation(null);
 
     const newAccountConfig = {
       url: apiURL + "/accounts",
@@ -92,50 +109,81 @@ const CreateAccountForm = (props) => {
   return (
     <>
       <FormModal onBackdropClick={props.onCancel}>
-        <Header>Add New Account</Header>
-        <form className={styles.form} onSubmit={addAccountHandler}>
-          <div className={styles.readonly}>
-            <label>Account#</label>
-            <input
+        <Box
+          component="form"
+          onSubmit={addAccountHandler}
+          sx={{
+            p: 2,
+            "& .MuiDialogContent-root": {
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              paddingTop: 1,
+            },
+          }}
+        >
+          <DialogTitle variant="h4">Add New Account</DialogTitle>
+          <DialogContent>
+            <NewInput
               type="text"
               onChange={changeAccountNumberHandler}
               value={accountNumber}
+              label="Account #"
+              sx={{ width: "60%" }}
+              error={!!inputValidation}
+              errorText={inputValidation}
             />
-          </div>
-          <div className={styles.readonly}>
-            <label htmlFor="bank_name">Bank Name</label>
-            <div className={styles.refetch}>
-              <select
+            <Stack direction={"row"} gap={2}>
+              <Select
                 id="bank_name"
                 value={selectedBankId}
                 onChange={selectChangeHandler}
-              >
-                <option value={0}>---</option>
-                {banks && banks.length > 0 && banks.map(mapBanks)}
-              </select>
+                error={!!selectValidation}
+                errorText={selectValidation}
+                label={"Bank Name"}
+                list={
+                  banks && banks.length > 0
+                    ? banks.map((bank) => ({
+                        ...bank,
+                        displayName: bank.bank_name,
+                      }))
+                    : []
+                }
+              />
               <RefetchIcon
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
                 onClick={refetchBanks}
                 sx={{
                   fontWeight: "bold",
-                  color: "#405d27",
+                  color: "secondary.main",
                 }}
               />
-            </div>
-          </div>
-          <div className={styles.checkbox}>
-            <div>
-              <input
-                type="checkbox"
-                checked={accountJoint}
-                onChange={jointChangeHandler}
-              ></input>
-              <label>Joint</label>
-            </div>
-          </div>
-          <div className={styles.actions}>
-            <motion.button
+              {/* </div> */}
+            </Stack>
+            <FormControlLabel
+              label="Joint Account"
+              control={
+                <Checkbox
+                  size="large"
+                  onChange={jointChangeHandler}
+                  checked={accountJoint}
+                  color="secondary"
+                />
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              type="submit"
+              transition={{ type: "spring", stiffness: 500 }}
+              whileHover={{
+                scale: 1.1,
+              }}
+            >
+              {isPending ? "Creating..." : "Create Account"}
+            </Button>
+            <Button
               whileHover={{
                 backgroundColor: "#ab003c",
                 scale: 1.1,
@@ -144,22 +192,16 @@ const CreateAccountForm = (props) => {
               transition={{ type: "spring", stiffness: 500 }}
               type="button"
               onClick={props.onCancel}
+              variant="outlined"
+              color="error"
             >
               Cancel
-            </motion.button>
-            <motion.button
-              type="submit"
-              transition={{ type: "spring", stiffness: 500 }}
-              whileHover={{
-                scale: 1.1,
-              }}
-            >
-              {isPending ? "Creating..." : "Create Account"}
-            </motion.button>
-          </div>
-          {validation && <p>{validation}</p>}
-          {isError && <p>{error.status + ":" + error.message}</p>}
-        </form>
+            </Button>
+          </DialogActions>
+          {isError && (
+            <Alert severity="error">{error.status + ":" + error.message}</Alert>
+          )}
+        </Box>
       </FormModal>
     </>
   );

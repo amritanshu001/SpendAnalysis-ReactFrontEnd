@@ -73,10 +73,9 @@ const App = (props) => {
             <Route path="/" element={<Home />} />
             <Route element={<LoginRouteProtect />}>
               <Route path="/login" element={<Login />} />
-            </Route>
-            <Route element={<LoginRouteProtect />}>
               <Route path="/sign-up" element={<Register />} />
             </Route>
+
             <Route element={<LoginProtect />}>
               <Route
                 path="/spendanalysis"
@@ -155,9 +154,9 @@ const App = (props) => {
         <AnimatePresence>
           {showMessage && <Footer message={globalMessage} />}
         </AnimatePresence>
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {location.state && <Footer message={authError} />}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </MuiThemeProvider>
     </QueryClientProvider>
   );

@@ -1,43 +1,29 @@
-import Backdrop from "../Backdrop";
 import React from "react";
-import styles from "./FormModal.module.css";
-import ReactDOM from "react-dom";
+
 import { motion } from "framer-motion";
-import { useSelector, useDispatch } from "react-redux";
-import Dialog from "@mui/material/Dialog";
+import { useSelector } from "react-redux";
+import { Dialog } from "@mui/material";
 
 const AnimatedDilog = motion(Dialog);
 
 const FormModal = (props) => {
-  return ReactDOM.createPortal(
-    <>
-      <Backdrop key="backdrop" onClick={props.onBackdropClick}></Backdrop>
-      <motion.div
-        initial={{ opacity: 0, y: -300 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -300, transition: { duration: 0.3 } }}
-        key="modal-div"
-        className={`${props.className} ${styles.modal}`}
-      >
-        {props.children}
-      </motion.div>
-    </>,
-    document.getElementById("modal")
-  );
-};
-
-export const NewModal = ({ onBackdropClick, children, ...props }) => {
   const modalStatus = useSelector((state) => state.formModal.showModal);
   return (
     <AnimatedDilog
-      onClose={onBackdropClick}
       open={modalStatus}
       initial={{ opacity: 0, y: -300 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -300, transition: { duration: 0.3 } }}
       key="modal-div"
+      onClose={props.onBackdropClick}
+      sx={{
+        ...props.sx,
+        "& .MuiPaper-root": {
+          width: "80%",
+        },
+      }}
     >
-      {children}
+      {props.children}
     </AnimatedDilog>
   );
 };

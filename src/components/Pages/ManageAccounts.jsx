@@ -34,7 +34,6 @@ let formData;
 
 const ManageAccounts = (props) => {
   const authToken = useSelector((state) => state.userAuth.authToken);
-  const formModalStatus = useSelector((state) => state.formModal.showModal);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -155,18 +154,18 @@ const ManageAccounts = (props) => {
     <React.Fragment>
       <HeadMetaData pathname={location.pathname} />
       <AnimatePresence>
-        {accountAction === "Create" && formModalStatus && (
+        {accountAction === "Create" && (
           <CreateAccountForm key="create" onCancel={backdropClick} />
         )}
 
-        {accountAction === "Edit" && formModalStatus && (
+        {accountAction === "Edit" && (
           <UserAccountForm
             key="edit"
             data={formData.data}
             onCancel={backdropClick}
           />
         )}
-        {accountAction === "Delete" && formModalStatus && (
+        {accountAction === "Delete" && (
           <AccountDeleteForm
             key="delete"
             onCancel={backdropClick}

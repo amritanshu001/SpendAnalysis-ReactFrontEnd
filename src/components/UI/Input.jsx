@@ -31,11 +31,14 @@ export const NewInput = (props) => {
       value={props.value}
       onChange={props.onChange}
       onBlur={props.onBlur}
-      disabled={props.disabled}
       error={props.error}
       helperText={props.errorText}
       variant="outlined"
       inputRef={props.inputRef}
+      required={"required" in props ? !!props.required : false}
+      disabled={"disabled" in props ? !!props.disabled : false}
+      multiline={"multiline" in props ? !!props.multiline : false}
+      maxRows={4}
       sx={{ ...props.sx }}
     />
   );
