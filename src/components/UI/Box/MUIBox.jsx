@@ -9,11 +9,11 @@ const MUIBox = forwardRef((props, ref) => {
     <Box
       ref={ref}
       sx={{
-        ...props.sx,
         bgcolor: (theme) =>
           theme.palette.mode === "light"
             ? theme.palette.grey[50]
             : theme.palette.grey[900],
+        ...props.sx,
       }}
       component={props.component}
       onSubmit={props.onSubmit}

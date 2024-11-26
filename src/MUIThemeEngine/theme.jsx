@@ -47,7 +47,8 @@ const MuiThemeProvider = (props) => {
           MuiAccordion: {
             styleOverrides: {
               region: {
-                backgroundColor: mode === "light" ? "white" : "#37474f",
+                backgroundColor: mode === "light" ? "white" : "black",
+                // bgcolor: "transparent",
               },
             },
           },

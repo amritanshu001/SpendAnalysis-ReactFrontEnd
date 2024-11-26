@@ -14,6 +14,7 @@ const MUIAccordion = (props) => {
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
+      l
       expanded={props.expanded}
       disableGutters={true}
       defaultExpanded={props.defaultExpanded}
@@ -28,7 +29,11 @@ const MUIAccordion = (props) => {
           theme.palette.mode === "light"
             ? theme.palette.secHeader.main
             : theme.palette.secHeader.dark,
+        // backgroundColor: "transparent",
         color: "white",
+        // "& .MuiAccordionDetails-root": {
+        //   bgcolor: "transparent",
+        // },
         ...props.sx,
       }}
     >

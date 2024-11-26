@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import Container from "../UI/Container";
 import Button from "../UI/Button";
 
 import styles from "./UploadStatement.module.css";
@@ -115,9 +114,7 @@ const NewUploadStatement = (props) => {
       </div>
     );
   }
-  // if (isFlieUploadPending) {
-  //   serverResponse = <div className={styles["server-loading"]}>Loading...</div>;
-  // }
+
   if (isFileUploadSuccess) {
     serverResponse = (
       <div className={styles["server-success"]}>

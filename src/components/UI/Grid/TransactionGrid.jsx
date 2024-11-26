@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./TransactionGrid.module.css";
+import { Grid, Typography } from "@mui/material";
 
 const TransactionGrid = (props) => {
   return (
@@ -44,4 +45,67 @@ const TransactionGrid = (props) => {
   );
 };
 
-export default TransactionGrid;
+const NewTransactionGrid = (props) => {
+  return (
+    <Grid container item xs={4}>
+      <Grid container item>
+        {/* <p className={styles.blank}></p> */}
+        <Grid item xs={8} textAlign={"right"} paddingRight={2}>
+          <Typography>Incoming</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>Outgoing</Typography>
+        </Grid>
+      </Grid>
+      <Grid container item>
+        <Grid item xs={4}>
+          <Typography>Amount</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>
+            &#8377; {props.summary.incomingSum.toFixed(2)}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>
+            &#8377; {props.summary.outgoingSum.toFixed(2)}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container item>
+        <Grid item xs={4}>
+          <Typography> Txn #</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>{props.summary.incomingTxnCount}</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>{props.summary.outgoingTxnCount}</Typography>
+        </Grid>
+      </Grid>
+      <Grid container item>
+        <Grid item xs={4}>
+          <Typography>Avg</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>
+            &#8377;{" "}
+            {(
+              props.summary.incomingSum / props.summary.incomingTxnCount
+            ).toFixed(2)}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>
+            &#8377;{" "}
+            {(
+              props.summary.outgoingSum / props.summary.outgoingTxnCount
+            ).toFixed(2)}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default NewTransactionGrid;

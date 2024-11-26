@@ -9,7 +9,11 @@ import {
 
 const MUISelect = (props) => {
   return (
-    <FormControl error={props.error} size="small" sx={{ minWidth: "250px" }}>
+    <FormControl
+      error={props.error}
+      size="small"
+      sx={{ minWidth: "250px", ...props.sx }}
+    >
       <InputLabel id={props.id} color="secondary">
         {props.label}
       </InputLabel>

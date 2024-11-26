@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./SpendAnalysis.module.css";
 
 import Container from "../UI/Container";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import Header from "../UI/Header";
 import Input from "../UI/Input";
 import BalanceGrid from "../UI/Grid/BalanceGrid";
@@ -14,7 +15,19 @@ import HeadMetaData from "../UI/HeadMetadata/HeadMetaData";
 import { AnimatePresence } from "framer-motion";
 import RefetchIcon from "../UI/Refetch/RefetchIcon";
 import MUIAccordion from "../UI/MUIAccordian/Accordian";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Stack,
+  FormGroup,
+  Alert,
+  IconButton,
+  Tooltip,
+  Grid,
+} from "@mui/material";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import MUIBox from "../UI/Box/MUIBox";
+import { NewInput } from "../UI/Input";
+import MUISelect from "../UI/MUISelect/MUISelect";
 
 import { showAndHideMessages } from "../../store/message-slice";
 
@@ -168,7 +181,7 @@ const SpendAnalysis = (props) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [accountId, setAccountId] = useState(0);
+  const [accountId, setAccountId] = useState("");
   const [validation, setValidation] = useState(null);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -207,7 +220,7 @@ const SpendAnalysis = (props) => {
   const formSubmitHandler = (event) => {
     event.preventDefault();
 
-    if (accountId === 0) {
+    if (accountId === "") {
       setValidation("Please select Account");
       return;
     }
@@ -230,14 +243,14 @@ const SpendAnalysis = (props) => {
   }
   if (isTransactionLoadError) {
     errorWarning = (
-      <p className={styles.error}>
+      <Alert severity="error">
         {transactionLoadError.status + ":" + transactionLoadError.message}
-      </p>
+      </Alert>
     );
   }
 
   if (isTransactionLoadSuccess && transactions.length === 0) {
-    errorWarning = <div className="centered">No records Found</div>;
+    errorWarning = <Alert severity="warning">No records Found</Alert>;
   }
 
   if (isTransactionLoadSuccess && transactions.length > 0) {
@@ -418,58 +431,106 @@ const SpendAnalysis = (props) => {
         defaultExpanded={true}
         sx={{ backgroundColor: "#ada346" }}
       >
-        <Container className={styles.container}>
-          <form className={styles.form} onSubmit={formSubmitHandler}>
-            <div className={styles.select}>
-              <label>Select Account</label>
-              <div className={styles.refetch}>
-                <select onChange={onSelectChangeHandler}>
-                  <option value={0}>---</option>
-                  {accounts && accounts.length > 0 && accounts.map(mapAccounts)}
-                </select>
-                <RefetchIcon
-                  onClick={refetchAccounts}
-                  whileHover={{ rotate: 360, scale: 1.3 }}
-                  transition={{ duration: 0.5 }}
-                  sx={{
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                />
-              </div>
-            </div>
-            <div className={styles.dates}>
-              <Input
-                id="frm_date"
-                type="date"
-                name="frm_date"
-                value={fromDate}
-                onChange={fromDateChangeHandler}
-              >
-                From Date
-              </Input>
-              <Input
-                id="to_date"
-                type="date"
-                name="to_date"
-                value={toDate}
-                onChange={toDateChangeHandler}
-              >
-                To Date
-              </Input>
-            </div>
-            <div className={styles.actions}>
-              <Button
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 400 }}
-                type="submit"
-              >
-                Fetch Transactions
-              </Button>
-            </div>
-            {validation && <p className={styles.error}>{validation}</p>}
-          </form>
-        </Container>
+        <MUIBox
+          onSubmit={formSubmitHandler}
+          component="form"
+          sx={{
+            p: 1,
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: "30rem",
+            m: "auto",
+            backgroundColor: "transparent",
+            gap: 2,
+          }}
+        >
+          <Stack direction="row">
+            <MUISelect
+              onChange={onSelectChangeHandler}
+              label="Select Account"
+              value={accountId}
+              sx={{ width: "70%", m: "auto" }}
+              list={
+                accounts && accounts.length
+                  ? accounts.map((account) => ({
+                      id: account.id,
+                      displayName: `${account.bank_name}--${account.account_no}`,
+                    }))
+                  : []
+              }
+            />
+            <Tooltip title="Clear account" placement="bottom-start" arrow>
+              <span>
+                <IconButton
+                  onClick={() => setAccountId("")}
+                  disabled={accountId === ""}
+                >
+                  <RemoveCircleIcon
+                    sx={{
+                      color: (theme) =>
+                        accountId === ""
+                          ? theme.palette.action.disabled
+                          : theme.palette.error.main,
+                    }}
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <RefetchIcon
+              onClick={refetchAccounts}
+              whileHover={{ rotate: 360, scale: 1.3 }}
+              transition={{ duration: 0.5 }}
+              sx={{
+                color: (theme) =>
+                  theme.palette.mode === "light"
+                    ? "secondary.dark"
+                    : "secondary.light",
+                fontWeight: "bold",
+              }}
+            />
+          </Stack>
+          <FormGroup row>
+            <Input
+              id="frm_date"
+              type="date"
+              name="frm_date"
+              value={fromDate}
+              onChange={fromDateChangeHandler}
+              label="From Date"
+              sx={{
+                width: "40%",
+              }}
+            />
+            <Input
+              id="to_date"
+              type="date"
+              name="to_date"
+              value={toDate}
+              onChange={toDateChangeHandler}
+              label="To Date"
+              sx={{
+                width: "40%",
+              }}
+            />
+          </FormGroup>
+
+          <Button
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 400 }}
+            type="submit"
+            icon={<ReceiptIcon />}
+            loading={isTransactionsLoading}
+            // sx={{ alignSelf: "flex-start" }}
+          >
+            Fetch Transactions
+          </Button>
+
+          {validation && (
+            <Alert severity="error" onClose={() => setValidation(null)}>
+              {validation}
+            </Alert>
+          )}
+        </MUIBox>
       </MUIAccordion>
 
       <AnimatePresence>
@@ -481,10 +542,21 @@ const SpendAnalysis = (props) => {
               expanded={accordiansState.summary}
               onChange={summaryChangeHandler}
             >
-              <Box className={styles.summary}>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="space-around"
+                sx={{
+                  "& .MuiTypography-root": {
+                    color: (theme) =>
+                      theme.palette.mode === "light" ? "black" : "white",
+                  },
+                }}
+              >
                 <BalanceGrid openingBal={openingBal} closingBal={closingBal} />
                 <TransactionGrid summary={statementSummary} />
-              </Box>
+              </Grid>
             </MUIAccordion>
             <MUIAccordion
               key="trend"
