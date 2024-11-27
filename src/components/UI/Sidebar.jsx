@@ -27,7 +27,6 @@ const Sidebar = (props) => {
               ? theme.palette.grey["100"]
               : theme.palette.grey["800"],
         }}
-        // className={styles["sidebar-show"]}
       >
         {props.children}
       </AnimatedBox>

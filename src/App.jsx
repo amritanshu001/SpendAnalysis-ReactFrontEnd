@@ -1,9 +1,7 @@
-import styles from "./App.module.css";
-
 import React from "react";
 
 import MuiThemeProvider from "./MUIThemeEngine/theme";
-import { Paper, Container } from "@mui/material";
+import { Paper } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
 
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));

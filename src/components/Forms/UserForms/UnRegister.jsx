@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./UserDelete.module.css";
 import FormModal from "../../UI/Modal/FormModal";
 import { sendMutationRequest } from "../../../lib/endpoint-configs";
 import { useMutation } from "@tanstack/react-query";
@@ -8,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 import Box from "../../UI/Box/MUIBox";
 import Button from "../../UI/Button";
-import Header from "../../UI/Header";
 import { Typography, Stack, Alert } from "@mui/material";
 
 import { logUserOutActions } from "../../../store/auth-slice";
@@ -92,9 +90,7 @@ const UnRegister = (props) => {
         </Typography>
 
         <Stack direction={"row"} gap={2}>
-          <Button type="submit" className={styles["imp-button"]}>
-            {isPending ? "De-Register" : "Confirm"}
-          </Button>
+          <Button type="submit">{isPending ? "De-Register" : "Confirm"}</Button>
           <Button
             type="button"
             onClick={props.onCancel}

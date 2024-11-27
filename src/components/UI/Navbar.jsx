@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 
-import {
-  IconButton,
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Drawer,
-} from "@mui/material";
+import { IconButton, AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -39,16 +32,6 @@ const NewNavbar = () => {
 
   return (
     <>
-      {/* <Drawer
-        open={drawerOpen}
-        anchor="left"
-        onClose={toggleDrawer(false)}
-        variant="temporary"
-        sx={{
-          ariaHidden: "false",
-        }}
-      >
-        <NewNavLinks onLinkClick={toggleDrawer(false)} /> */}
       {drawerOpen && (
         <Sidebar hideSideBar={toggleDrawer(false)}>
           <NewNavLinks

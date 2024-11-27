@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import styles from "./SpendChart.module.css";
+
 import createTrend from "trendline";
-import Select from "react-select";
-import { Container, Typography, Stack } from "@mui/material";
+
+import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material";
 import MUISelect from "../MUISelect/MUISelect";
 import Box from "../Box/MUIBox";

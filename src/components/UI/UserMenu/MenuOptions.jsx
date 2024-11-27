@@ -1,18 +1,21 @@
 import React, { useRef } from "react";
 
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import {
+  Avatar,
+  Menu,
+  MenuItem,
+  Divider,
+  IconButton,
+  Typography,
+  Tooltip,
+  Stack,
+} from "@mui/material";
+
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Stack from "@mui/material/Stack";
-import { Box } from "@mui/material";
+
 import { motion } from "framer-motion";
 
 import { useSelector, useDispatch } from "react-redux";
