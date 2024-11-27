@@ -1,13 +1,28 @@
 import React from "react";
-import { Autocomplete, TextField, Stack } from "@mui/material";
-import RefetchIcon from "../Refetch/RefetchIcon";
+import { Autocomplete, TextField } from "@mui/material";
 
 const MUIAutocomplete = (props) => {
+  let options = [];
+  if ("groupBy" in props) {
+    if (!("sorter" in props)) {
+      throw Error("sorter function prop required with groupby prop");
+    } else {
+      options = props.options.sort(sorter);
+    }
+  } else {
+    options = props.options;
+  }
   return (
-    <Stack direction="row" gap={2}>
-      <Autocomplete></Autocomplete>
-      <RefetchIcon />
-    </Stack>
+    <Autocomplete
+      options={options}
+      renderOption={props.renderOption}
+      groupBy={props.groupBy}
+      getOptionLabel={props.getOptionLabel}
+      isOptionEqualToValue={props.isOptionEqualToValue}
+      value={props.value}
+      onChange={props.onChange}
+      renderInput={(params) => <TextField {...params} label={props.label} />}
+    />
   );
 };
 

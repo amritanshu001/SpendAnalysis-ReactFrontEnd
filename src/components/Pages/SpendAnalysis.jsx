@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./SpendAnalysis.module.css";
 
-import Container from "../UI/Container";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import Header from "../UI/Header";
 import Input from "../UI/Input";
@@ -429,7 +427,7 @@ const SpendAnalysis = (props) => {
       <MUIAccordion
         title="Inputs"
         defaultExpanded={true}
-        sx={{ backgroundColor: "#ada346" }}
+        sx={{ backgroundColor: "primary.main" }}
       >
         <MUIBox
           onSubmit={formSubmitHandler}

@@ -3,7 +3,7 @@ import styles from "./App.module.css";
 import React from "react";
 
 import MuiThemeProvider from "./MUIThemeEngine/theme";
-import Paper from "@mui/material/Paper";
+import { Paper, Container } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
 
 const Navbar = React.lazy(() => import("./components/UI/Navbar"));
@@ -68,7 +68,16 @@ const App = (props) => {
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider>
         <Navbar></Navbar>
-        <Paper elevation={0} sx={{ minHeight: "100vh" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            minHeight: "100vh",
+            // bgcolor: (theme) =>
+            //   theme.palette.mode === "dark"
+            //     ? theme.palette.grey[900]
+            //     : theme.palette.grey[200],
+          }}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route element={<LoginRouteProtect />}>

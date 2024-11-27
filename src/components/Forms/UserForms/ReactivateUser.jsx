@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Alert,
 } from "@mui/material";
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -51,6 +52,7 @@ const ReactivateUser = (props) => {
   return (
     <FormModal onBackdropClick={props.onCancel}>
       <Box
+        component="form"
         onSubmit={reactivateUserHandler}
         sx={{
           display: "flex",
@@ -89,7 +91,7 @@ const ReactivateUser = (props) => {
           </Button>
         </DialogActions>
         {isError && (
-          <p className="error">{error.status + ":" + error.message}</p>
+          <Alert severity="error">{error.status + ":" + error.message}</Alert>
         )}
       </Box>
     </FormModal>

@@ -25,15 +25,13 @@ const MUIAccordion = (props) => {
         margin: "auto",
         marginTop: "0.5rem",
         fontWeight: "bold",
-        backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.secHeader.main
-            : theme.palette.secHeader.dark,
-        // backgroundColor: "transparent",
+        // backgroundColor: (theme) =>
+        //   theme.palette.mode === "light"
+        //     ? theme.palette.secondary.dark
+        //     : theme.palette.secondary.main,
+        bgcolor: "secondary.dark",
         color: "white",
-        // "& .MuiAccordionDetails-root": {
-        //   bgcolor: "transparent",
-        // },
+
         ...props.sx,
       }}
     >
