@@ -27,7 +27,6 @@ const NewHeader = (props) => {
         width: "90%",
         maxWidth: "40rem",
         margin: "2rem auto",
-        // color: "#002e94",
         color: (theme) =>
           theme.palette.mode === "light"
             ? theme.palette.header.dark

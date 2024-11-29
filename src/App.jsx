@@ -61,7 +61,6 @@ const App = (props) => {
       messageText: `Access to ${location.state.fromLocation} is not allowed with current authorization. Redirecting to ${location.pathname}`,
     };
   }
-
   return (
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider>
@@ -70,10 +69,6 @@ const App = (props) => {
           elevation={0}
           sx={{
             minHeight: "100vh",
-            // bgcolor: (theme) =>
-            //   theme.palette.mode === "dark"
-            //     ? theme.palette.grey[900]
-            //     : theme.palette.grey[200],
           }}
         >
           <Routes>

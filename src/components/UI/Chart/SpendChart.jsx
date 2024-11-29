@@ -97,31 +97,6 @@ const SpendChart = (props) => {
         },
       },
     },
-    // plugins: {
-    //   legend: {
-    //     position: "top",
-    //     fullSize: false,
-    //     title: {
-    //       display: true,
-    //       text: "Legend",
-    //       color:
-    //         theme.palette.mode === "light"
-    //           ? theme.palette.warning.dark
-    //           : theme.palette.warning.light,
-    //       font: {
-    //         family: "Roboto sam-serif",
-    //         size: 14,
-    //         weight: "bold",
-    //       },
-    //     },
-    //     labels: {
-    //       color:
-    //         theme.palette.mode === "light"
-    //           ? theme.palette.secondary.dark
-    //           : theme.palette.secondary.light,
-    //     },
-    //   },
-    // },
   };
   const data = {
     labels: monthYears,
@@ -180,7 +155,13 @@ const SpendChart = (props) => {
     ],
   };
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+      }}
+    >
       <Chart type="bar" data={data} options={options} />
       <Stack
         direction={{ xs: "column", lg: "row" }}
@@ -195,6 +176,7 @@ const SpendChart = (props) => {
           label="From"
           value={fromDate}
           onChange={fromDateChangeHandler}
+          options={monthYears}
           list={monthYears.map((monthItem) => ({
             id: monthItem,
             displayName: monthItem,
@@ -206,9 +188,11 @@ const SpendChart = (props) => {
           label="To"
           value={toDate}
           onChange={toDateChangeHandler}
-          list={toDateOptions.map((monthItem) => {
-            return { id: monthItem, displayName: monthItem };
-          })}
+          options={toDateOptions}
+          list={toDateOptions.map((monthItem) => ({
+            id: monthItem,
+            displayName: monthItem,
+          }))}
         />
       </Stack>
     </Box>

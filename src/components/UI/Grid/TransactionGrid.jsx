@@ -47,10 +47,11 @@ const TransactionGrid = (props) => {
 
 const NewTransactionGrid = (props) => {
   return (
-    <Grid container item xs={4}>
+    <Grid container item xs={4} textAlign={"center"}>
       <Grid container item>
-        {/* <p className={styles.blank}></p> */}
-        <Grid item xs={8} textAlign={"right"} paddingRight={2}>
+        <Grid item xs={4}></Grid>
+
+        <Grid item xs={4}>
           <Typography>Incoming</Typography>
         </Grid>
         <Grid item xs={4}>

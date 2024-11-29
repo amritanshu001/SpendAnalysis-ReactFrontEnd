@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "./ErrorPage.module.css";
 
 import Navbar from "../UI/Navbar";
 import Header from "../UI/Header";
 import Button from "../UI/Button";
 import SearchOptimizer from "../Metadata/SearchOptimizer";
+import { Typography } from "@mui/material";
 
 export const ErrorPage = ({ error, resetErrorBoundary }) => {
   return (
@@ -19,8 +19,23 @@ export const ErrorPage = ({ error, resetErrorBoundary }) => {
       />
       <Navbar />
       <Header>{"An Error Occured"}</Header>
-      <div className={styles["error-body"]}>{error.message}</div>
-      <Button onClick={resetErrorBoundary}>Reset Error</Button>
+      <Typography
+        component="div"
+        sx={{
+          width: "90%",
+          fontFamily: "inherit",
+          margin: "auto",
+          textAlign: "center",
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "brown",
+        }}
+      >
+        {error.message}
+      </Typography>
+      <Button onClick={resetErrorBoundary} color="error">
+        Reset Error
+      </Button>
     </React.Fragment>
   );
 };

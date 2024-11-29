@@ -4,6 +4,7 @@ import {
   alpha,
   getContrastRatio,
 } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
@@ -35,9 +36,9 @@ const MuiThemeProvider = (props) => {
             // ...colorPalleteGenerator("#002e94"),
           },
           secHeader: {
-            main: "#667d52",
-            dark: "#475739",
-            light: "#849774",
+            main: "#2196f3",
+            light: "#69a1ff",
+            dark: "#1769aa",
           },
           highlightColor: {
             ...colorPalleteGenerator("#fc4274"),
@@ -52,12 +53,32 @@ const MuiThemeProvider = (props) => {
               },
             },
           },
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+                  width: "8px",
+                  height: "8px",
+                },
+                "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+                  borderRadius: 2,
+                  backgroundColor: "#6b6b6b",
+                  minHeight: 12,
+                },
+              },
+            },
+          },
         },
       }),
     [mode]
   );
 
-  return <ThemeProvider theme={theme}>{props.children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      {props.children}
+    </ThemeProvider>
+  );
 };
 
 export default MuiThemeProvider;

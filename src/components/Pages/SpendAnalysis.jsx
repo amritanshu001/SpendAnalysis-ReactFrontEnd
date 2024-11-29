@@ -427,7 +427,12 @@ const SpendAnalysis = (props) => {
       <MUIAccordion
         title="Inputs"
         defaultExpanded={true}
-        sx={{ backgroundColor: "primary.main" }}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark"
+              ? theme.palette.secHeader.light
+              : theme.palette.secHeader.dark,
+        }}
       >
         <MUIBox
           onSubmit={formSubmitHandler}
@@ -518,6 +523,7 @@ const SpendAnalysis = (props) => {
             type="submit"
             icon={<ReceiptIcon />}
             loading={isTransactionsLoading}
+
             // sx={{ alignSelf: "flex-start" }}
           >
             Fetch Transactions

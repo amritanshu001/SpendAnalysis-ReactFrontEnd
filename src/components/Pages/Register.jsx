@@ -167,6 +167,7 @@ const Register = (props) => {
             onChange={userNameChangeHandler}
             disabled={registrationPending}
             error={userNameError}
+            required
             errorText={
               userNameError
                 ? "User Name should be atleast 8 character long"
@@ -185,6 +186,7 @@ const Register = (props) => {
             onChange={emailChangeHandler}
             disabled={registrationPending}
             error={emailIsError}
+            required
             errorText={emailIsError ? "Enter correct email format" : null}
           />
           <NewInput
@@ -198,6 +200,7 @@ const Register = (props) => {
             onChange={passwordChangeHandler}
             disabled={registrationPending}
             error={passwordError}
+            required
             errorText={
               passwordError
                 ? "Password should be atleast 8 character long"
@@ -214,6 +217,7 @@ const Register = (props) => {
             value={enteredConfPassword}
             onBlur={confPasswordBlurHandler}
             onChange={confPasswordChangeHandler}
+            required
             disabled={registrationPending}
             error={confirmError}
             errorText={confirmError ? "Passwords do'nt match" : null}
