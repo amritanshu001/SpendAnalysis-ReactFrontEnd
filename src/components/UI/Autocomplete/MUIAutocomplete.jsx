@@ -25,6 +25,9 @@ const MUIAutocomplete = (props) => {
       onClose={props.onClose}
       renderInput={(params) => <TextField {...params} label={props.label} />}
       sx={{
+        "& .MuiInputBase-input": {
+          height: { xs: "0.75rem", sm: "1rem", lg: "1.25rem" },
+        },
         ...props.sx,
       }}
     />

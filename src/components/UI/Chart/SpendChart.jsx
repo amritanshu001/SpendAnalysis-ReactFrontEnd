@@ -178,7 +178,7 @@ const SpendChart = (props) => {
           onChange={fromDateChangeHandler}
           options={monthYears}
           sx={{
-            width: "25%",
+            width: { lg: "25%", xs: "70%", sm: "50%" },
           }}
         />
 
@@ -189,7 +189,7 @@ const SpendChart = (props) => {
           onChange={toDateChangeHandler}
           options={toDateOptions}
           sx={{
-            width: "25%",
+            width: { lg: "25%", xs: "70%", sm: "50%" },
           }}
         />
       </Stack>
