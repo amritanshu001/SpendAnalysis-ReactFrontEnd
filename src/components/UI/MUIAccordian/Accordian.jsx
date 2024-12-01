@@ -21,17 +21,12 @@ const MUIAccordion = (props) => {
       onChange={props.onChange}
       disabled={props.disabled}
       sx={{
-        width: "90%",
+        width: "95%",
         margin: "auto",
         marginTop: "0.5rem",
         fontWeight: "bold",
-        // backgroundColor: (theme) =>
-        //   theme.palette.mode === "light"
-        //     ? theme.palette.secondary.dark
-        //     : theme.palette.secondary.main,
         bgcolor: "secondary.dark",
         color: "white",
-
         ...props.sx,
       }}
     >

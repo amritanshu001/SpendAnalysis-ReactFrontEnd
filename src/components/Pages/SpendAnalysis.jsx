@@ -492,7 +492,7 @@ const SpendAnalysis = (props) => {
               }}
             />
           </Stack>
-          <FormGroup row>
+          <FormGroup row sx={{ justifyContent: "center" }}>
             <Input
               id="frm_date"
               type="date"

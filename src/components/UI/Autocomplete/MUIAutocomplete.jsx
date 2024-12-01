@@ -14,6 +14,7 @@ const MUIAutocomplete = (props) => {
   }
   return (
     <Autocomplete
+      id={props.id}
       options={options}
       renderOption={props.renderOption}
       groupBy={props.groupBy}
@@ -21,7 +22,11 @@ const MUIAutocomplete = (props) => {
       isOptionEqualToValue={props.isOptionEqualToValue}
       value={props.value}
       onChange={props.onChange}
+      onClose={props.onClose}
       renderInput={(params) => <TextField {...params} label={props.label} />}
+      sx={{
+        ...props.sx,
+      }}
     />
   );
 };

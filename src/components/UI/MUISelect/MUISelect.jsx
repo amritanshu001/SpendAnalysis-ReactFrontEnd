@@ -5,9 +5,24 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  IconButton,
 } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ClearIcon from "@mui/icons-material/Clear";
+
+const SelectClearIcon = (props) => {
+  return (
+    <IconButton onClick={props.onClick} size="small">
+      <ClearIcon color="error" />
+    </IconButton>
+  );
+};
 
 const MUISelect = (props) => {
+  let show = false;
+  if ("clearValue" in props) {
+    show = true;
+  }
   return (
     <FormControl
       error={props.error}
@@ -24,6 +39,11 @@ const MUISelect = (props) => {
         value={props.value}
         onChange={props.onChange}
         sx={{ boxShadow: 1 }}
+        // endAdornment={props.value === "" ? null : <SelectClearIcon />}
+        IconComponent={() => {
+          // props.value?
+          return <ArrowDropDownIcon />;
+        }}
       >
         {props.list.map((listItem) => (
           <MenuItem key={listItem.id} value={listItem.id}>

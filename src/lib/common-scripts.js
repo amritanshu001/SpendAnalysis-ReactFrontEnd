@@ -39,16 +39,16 @@ export const compareDates = (chartData, filterData, greater = true) => {
 };
 
 export const filterDates = (chartItem, fromDate, toDate) => {
-  if (toDate === "" && fromDate === "") {
+  if (!toDate && !fromDate) {
     return true;
   }
-  if (toDate === "" && fromDate !== "") {
+  if (!toDate && fromDate) {
     return compareDates(chartItem, fromDate);
   }
-  if (toDate !== "" && fromDate === "") {
+  if (toDate && !fromDate) {
     return compareDates(chartItem, toDate, false);
   }
-  if (toDate !== "" && fromDate !== "") {
+  if (toDate && fromDate) {
     return (
       compareDates(chartItem, fromDate) &&
       compareDates(chartItem, toDate, false)

@@ -42,8 +42,9 @@ ChartJS.register(
 );
 
 const SpendChart = (props) => {
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
   const theme = useTheme();
 
   const monthYears = props.chartData
@@ -53,22 +54,21 @@ const SpendChart = (props) => {
         getMonthName(chartItem.date.month) + "," + chartItem.date.year
     );
 
-  const toDateOptions =
-    fromDate === ""
-      ? monthYears
-      : props.chartData
-          .filter((chartItem) => compareDates(chartItem, fromDate))
-          .map(
-            (chartItem) =>
-              getMonthName(chartItem.date.month) + "," + chartItem.date.year
-          );
+  const toDateOptions = !fromDate
+    ? monthYears
+    : props.chartData
+        .filter((chartItem) => compareDates(chartItem, fromDate))
+        .map(
+          (chartItem) =>
+            getMonthName(chartItem.date.month) + "," + chartItem.date.year
+        );
 
-  const fromDateChangeHandler = (event) => {
-    setFromDate(event.target.value);
+  const fromDateChangeHandler = (event, newValue) => {
+    setFromDate(newValue);
   };
 
-  const toDateChangeHandler = (event) => {
-    setToDate(event.target.value);
+  const toDateChangeHandler = (event, newValue) => {
+    setToDate(newValue);
   };
 
   const trendData = props.chartData
@@ -171,28 +171,26 @@ const SpendChart = (props) => {
         py={1}
         gap={2}
       >
-        <MUISelect
+        <Autocomplete
           id="from-date"
           label="From"
           value={fromDate}
           onChange={fromDateChangeHandler}
           options={monthYears}
-          list={monthYears.map((monthItem) => ({
-            id: monthItem,
-            displayName: monthItem,
-          }))}
+          sx={{
+            width: "25%",
+          }}
         />
 
-        <MUISelect
+        <Autocomplete
           id="to-date"
           label="To"
           value={toDate}
           onChange={toDateChangeHandler}
           options={toDateOptions}
-          list={toDateOptions.map((monthItem) => ({
-            id: monthItem,
-            displayName: monthItem,
-          }))}
+          sx={{
+            width: "25%",
+          }}
         />
       </Stack>
     </Box>
